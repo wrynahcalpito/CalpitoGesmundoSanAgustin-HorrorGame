@@ -40,8 +40,7 @@ public class Main extends Application {
         //MAIN CODE
         Item camera = new Item("camera", "tool", "A camera given to you take any photos you wish to capture", "camera.jpg"); 
         user.getItem(camera);
-        user.takePhoto("testphoto1.jpg");
-        user.takePhoto("testphoto2.png");
+        user.takePhoto("testphoto.jpg");
     
         //INITIALIZING BORDER PANE (MAIN GAME LAYOUT)
         BorderPane main = new BorderPane();
@@ -56,9 +55,9 @@ public class Main extends Application {
         main.setCenter(GameDisplay());
         main.setBottom(InventoryDisplay());*/
         
-        main.setCenter(GalleryDisplay()); //add the condition that this will appear with Gallery Icon
-        //main.setCenter(SettingsDisplay()); //add the condition that this will appear with Esc
-        //main.setCenter(ControlsDisplay()); //add the condition that this will appear when Controls button is clicked
+        //main.setCenter(GalleryDisplay()); //add the condition that this will appear with Gallery Icon
+        main.setCenter(SettingsDisplay()); //add the condition that this will appear with Esc
+        //main.setCenter(ControlsDisplay());
         
         primaryStage.show();
     }
@@ -199,6 +198,7 @@ public class Main extends Application {
     private Node GalleryDisplay(){
         HBox gallery = new HBox();
         Button[] btn = new Button[3];
+        gallery.setOpacity(0.7);
         
         for(int i = 0; i < 3; i++) {
             btn[i] = new Button("Button-"+i);
@@ -234,31 +234,34 @@ public class Main extends Application {
     private Pane SettingsDisplay() {
         GridPane settings = new GridPane();
         settings.setBackground(new Background(new BackgroundFill(Color.web("f0f1f2", 1.0), CornerRadii.EMPTY, Insets.EMPTY)));
+        Image newPhoto = new Image(Main.class.getResourceAsStream("testphoto2.png"));
+        settings.setOpacity(0.7);
                 
         settings.add(new Text("Settings"), 0, 0);
         settings.add(new Text(user.getName()), 0, 1);
-        settings.add(new Text("Room #" + currentLevel), 0, 2);
+        settings.add(new Text(""), 0, 2);
+        settings.add(new Text("Room #" + currentLevel), 0, 3);
         
-        settings.add(new FlowPane(BarsDisplay(user.getHealth(), user.getMaxHealth())), 0, 3);
-        settings.add(new Text("Health"), 0, 4);
-        settings.add(new FlowPane(BarsDisplay(user.getSanity(), user.getMaxSanity())), 0, 5);
-        settings.add(new Text("Sanity"), 0, 6);
-        settings.add(new FlowPane(BarsDisplay(user.getEnergy(), user.getMaxEnergy())), 0, 7);
-        settings.add(new Text("Energy"), 0, 8);
-        settings.add(new FlowPane(BarsDisplay(user.getHunger(), user.getMaxHunger())), 0, 9);
-        settings.add(new Text("Hunger"), 0, 10);
-        settings.add(new Text("Skill Level: " + user.getSkillLevel()), 0, 11);
+        settings.add(new FlowPane(BarsDisplay(user.getHealth(), user.getMaxHealth())), 0, 4);
+        settings.add(new Text("Health"), 0, 5);
+        settings.add(new FlowPane(BarsDisplay(user.getSanity(), user.getMaxSanity())), 0, 6);
+        settings.add(new Text("Sanity"), 0, 7);
+        settings.add(new FlowPane(BarsDisplay(user.getEnergy(), user.getMaxEnergy())), 0, 8);
+        settings.add(new Text("Energy"), 0, 9);
+        settings.add(new FlowPane(BarsDisplay(user.getHunger(), user.getMaxHunger())), 0, 10);
+        settings.add(new Text("Hunger"), 0, 11);
+        settings.add(new Text("Skill Level: " + user.getSkillLevel()), 0, 12);
         
-        settings.add(new Slider(1, 100, 100), 1, 3);
-        settings.add(new Text("BGM"), 1, 4);
-        settings.add(new Slider(1, 100, 100), 1, 5);
-        settings.add(new Text("SFX"), 1, 6);
-        settings.add(new Slider(1, 100, 100), 1, 7);
-        settings.add(new Text("Dialogue"), 1, 8);
-        settings.add(new Slider(1, 100, 100), 1, 9);
-        settings.add(new Text("Display Size"), 1, 10);
-        settings.add(new Button("Controls"), 1, 11);
-        
+        settings.add(new Slider(1, 100, 100), 1, 4);
+        settings.add(new Text("BGM"), 1, 5);
+        settings.add(new Slider(1, 100, 100), 1, 6);
+        settings.add(new Text("SFX"), 1, 7);
+        settings.add(new Slider(1, 100, 100), 1, 8);
+        settings.add(new Text("Dialogue"), 1, 9);
+        settings.add(new Slider(1, 100, 100), 1, 10);
+        settings.add(new Text("Display Size"), 1, 11);
+        settings.add(new Button("Controls"), 1, 12);
+
         settings.setAlignment(Pos.CENTER);
         return settings;
     }
