@@ -3,6 +3,7 @@ package main;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -13,6 +14,10 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.FlowPane;
@@ -46,17 +51,27 @@ public class Main extends Application {
         BorderPane main = new BorderPane();
         Scene lvl1 = new Scene(main);
         primaryStage.setScene(lvl1);
-        main.setBackground(new Background(new BackgroundFill(Color.web("000000", 1.0), CornerRadii.EMPTY, Insets.EMPTY)));
+        //BACKGROUND
+        Image backgroundImage = new Image(Main.class.getResourceAsStream("backgroundImage.jpg"));
+        BackgroundImage bgImage = new BackgroundImage(
+                backgroundImage,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(100,100,true,true,true,true)
+                );
+        Background bg = new Background(bgImage);
+        main.setBackground(bg);
         
         //SETTING ELEMENTS
-        /*main.setTop(HeaderDisplay());
+        main.setTop(HeaderDisplay());
         main.setLeft(LeftStatsDisplay());
         main.setRight(RightStatsDisplay());
         main.setCenter(GameDisplay());
-        main.setBottom(InventoryDisplay());*/
+        main.setBottom(InventoryDisplay());
         
         //main.setCenter(GalleryDisplay()); //add the condition that this will appear with Gallery Icon
-        main.setCenter(SettingsDisplay()); //add the condition that this will appear with Esc
+        //main.setCenter(SettingsDisplay()); //add the condition that this will appear with Esc
         //main.setCenter(ControlsDisplay());
         
         primaryStage.show();
@@ -89,7 +104,7 @@ public class Main extends Application {
     private Node BarsDisplay(int statValue, int maxStatValue) {
         FlowPane bar = new FlowPane();
         
-        Rectangle barIN = new Rectangle(statValue/maxStatValue, 20.0, Color.RED);
+        Rectangle barIN = new Rectangle((statValue/maxStatValue)*500, 20.0, Color.RED);
         bar.getChildren().add(barIN);
         Rectangle barOUT = new Rectangle((maxStatValue - statValue)/maxStatValue, 20.0, Color.WHITE);
         bar.getChildren().add(barOUT);
@@ -139,7 +154,15 @@ public class Main extends Application {
     
     private Node GameDisplay() {
         FlowPane gameDisplay = new FlowPane();
-        //insert 3D models 
+        //insert 3D models but pictures for now
+        Image npc = new Image(Main.class.getResourceAsStream("npc.png"));
+        ImageView gameView = new ImageView();
+        gameView.setTranslateX(100);
+        gameView.setTranslateY(150);
+        gameView.setFitHeight(800);
+        gameView.setPreserveRatio(true);
+        gameView.setImage(npc);
+        gameDisplay.getChildren().add(gameView);
         
         return gameDisplay;
     }
