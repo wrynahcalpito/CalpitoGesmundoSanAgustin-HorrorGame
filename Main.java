@@ -1,6 +1,8 @@
 package main;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
@@ -12,6 +14,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
@@ -35,8 +38,8 @@ import javafx.stage.Stage;
 public class Main extends Application {
         
     int currentLevel = 0;
-    
-    Protagonist user = new Protagonist("Wrynah");
+    Protagonist user = new Protagonist("Kobe");
+    BorderPane main = new BorderPane();
         
     @Override
     public void start(Stage primaryStage) {
@@ -48,7 +51,6 @@ public class Main extends Application {
         user.takePhoto("testphoto.jpg");
     
         //INITIALIZING BORDER PANE (MAIN GAME LAYOUT)
-        BorderPane main = new BorderPane();
         Scene lvl1 = new Scene(main);
         primaryStage.setScene(lvl1);
         //BACKGROUND
@@ -67,12 +69,19 @@ public class Main extends Application {
         main.setTop(HeaderDisplay());
         main.setLeft(LeftStatsDisplay());
         main.setRight(RightStatsDisplay());
-        main.setCenter(GameDisplay());
+        //main.setCenter(GameDisplay());
         main.setBottom(InventoryDisplay());
         
-        //main.setCenter(GalleryDisplay()); //add the condition that this will appear with Gallery Icon
-        //main.setCenter(SettingsDisplay()); //add the condition that this will appear with Esc
-        //main.setCenter(ControlsDisplay());
+        main.setCenter(GalleryDisplay());
+        
+        /*main.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                switch (event.getCode()) {
+                    case ESC: lvl1.setCenter(SettingsDisplay());
+                }
+            }
+        }); //add the condition that this will appear with Esc*/
         
         primaryStage.show();
     }
@@ -167,6 +176,42 @@ public class Main extends Application {
         return gameDisplay;
     }
     
+    private Node GalleryDisplay(){
+        HBox gallery = new HBox();
+        Button[] btn = new Button[3];
+        gallery.setOpacity(0.7);
+        
+        for(int i = 0; i < 3; i++) {
+            btn[i] = new Button("Button-"+i);
+
+            if(user.getGallery()[i] == null) {
+                btn[i] = new Button("Button-"+i);
+                ImageView galleryView = new ImageView();
+                galleryView.setFitHeight(300);
+                galleryView.setFitWidth(400);
+                Image photo = new Image(Main.class.getResourceAsStream("null.png"));
+                galleryView.setImage(photo);
+                btn[i].setGraphic(galleryView);
+                btn[i].setContentDisplay(GRAPHIC_ONLY);
+            }
+            else if(user.getGallery()[i] != null) {
+                btn[i] = new Button("Button-"+i);
+                ImageView galleryView = new ImageView();
+                galleryView.setFitHeight(300);
+                galleryView.setFitWidth(400);
+                Image photo = new Image(Main.class.getResourceAsStream(user.getGallery()[i]));    
+                galleryView.setImage(photo);
+                btn[i].setGraphic(galleryView);
+                btn[i].setContentDisplay(GRAPHIC_ONLY);
+            }
+            
+            gallery.getChildren().add(btn[i]);
+        }
+        gallery.setAlignment(Pos.CENTER);
+         
+        return gallery;
+    }
+    
     private Pane InventoryDisplay() {
         GridPane inventoryGrid = new GridPane();
         Button[] btn = new Button[10];
@@ -204,7 +249,7 @@ public class Main extends Application {
         itemView.setImage(item);
         btn[9].setGraphic(itemView);
         btn[9].setContentDisplay(GRAPHIC_ONLY);
-                
+        
         int j = 0;
         for(Button b : btn) {
             if (j < 10) {
@@ -215,43 +260,11 @@ public class Main extends Application {
         
         inventoryGrid.setAlignment(Pos.BOTTOM_CENTER);
         
-        return inventoryGrid;
-    }
-    
-    private Node GalleryDisplay(){
-        HBox gallery = new HBox();
-        Button[] btn = new Button[3];
-        gallery.setOpacity(0.7);
+        btn[9].setOnAction((ActionEvent event) -> {
+            main.setCenter(GalleryDisplay());
+        });
         
-        for(int i = 0; i < 3; i++) {
-            btn[i] = new Button("Button-"+i);
-
-            if(user.getGallery()[i] == null) {
-                btn[i] = new Button("Button-"+i);
-                ImageView galleryView = new ImageView();
-                galleryView.setFitHeight(300);
-                galleryView.setFitWidth(400);
-                Image photo = new Image(Main.class.getResourceAsStream("null.png"));
-                galleryView.setImage(photo);
-                btn[i].setGraphic(galleryView);
-                btn[i].setContentDisplay(GRAPHIC_ONLY);
-            }
-            else if(user.getGallery()[i] != null) {
-                btn[i] = new Button("Button-"+i);
-                ImageView galleryView = new ImageView();
-                galleryView.setFitHeight(300);
-                galleryView.setFitWidth(400);
-                Image photo = new Image(Main.class.getResourceAsStream(user.getGallery()[i]));    
-                galleryView.setImage(photo);
-                btn[i].setGraphic(galleryView);
-                btn[i].setContentDisplay(GRAPHIC_ONLY);
-            }
-            
-            gallery.getChildren().add(btn[i]);
-        }
-        gallery.setAlignment(Pos.CENTER);
-         
-        return gallery;
+        return inventoryGrid;
     }
     
     private Pane SettingsDisplay() {
@@ -283,9 +296,17 @@ public class Main extends Application {
         settings.add(new Text("Dialogue"), 1, 9);
         settings.add(new Slider(1, 100, 100), 1, 10);
         settings.add(new Text("Display Size"), 1, 11);
-        settings.add(new Button("Controls"), 1, 12);
+        
+        Button controlsBtn = new Button("Controls");
+        settings.add(controlsBtn, 1, 12);
+        main.setCenter(ControlsDisplay());
 
         settings.setAlignment(Pos.CENTER);
+        
+        controlsBtn.setOnAction((ActionEvent event) -> {
+            main.setCenter(ControlsDisplay());
+        });
+        
         return settings;
     }
     
