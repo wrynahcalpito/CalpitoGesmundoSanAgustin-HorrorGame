@@ -48,11 +48,14 @@ public class Main extends Application {
         //MAIN CODE
         Item camera = new Item("camera", "tool", "A camera given to you take any photos you wish to capture", "camera.jpg"); 
         user.getItem(camera);
-        user.takePhoto("testphoto.jpg");
+        user.takePhoto("testphoto1.jpg");
+        user.takePhoto("testphoto2.png");
     
         //INITIALIZING BORDER PANE (MAIN GAME LAYOUT)
         Scene lvl1 = new Scene(main);
         primaryStage.setScene(lvl1);
+        
+
         //BACKGROUND
         Image backgroundImage = new Image(Main.class.getResourceAsStream("backgroundImage.jpg"));
         BackgroundImage bgImage = new BackgroundImage(
@@ -69,11 +72,9 @@ public class Main extends Application {
         main.setTop(HeaderDisplay());
         main.setLeft(LeftStatsDisplay());
         main.setRight(RightStatsDisplay());
-        //main.setCenter(GameDisplay());
+        main.setCenter(GameDisplay());
         main.setBottom(InventoryDisplay());
-        
-        main.setCenter(GalleryDisplay());
-        
+                
         /*main.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
@@ -270,7 +271,6 @@ public class Main extends Application {
     private Pane SettingsDisplay() {
         GridPane settings = new GridPane();
         settings.setBackground(new Background(new BackgroundFill(Color.web("f0f1f2", 1.0), CornerRadii.EMPTY, Insets.EMPTY)));
-        Image newPhoto = new Image(Main.class.getResourceAsStream("testphoto2.png"));
         settings.setOpacity(0.7);
                 
         settings.add(new Text("Settings"), 0, 0);
