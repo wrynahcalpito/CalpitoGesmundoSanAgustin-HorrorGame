@@ -356,39 +356,41 @@ public class Main extends Application {
         controlSettings.add(new Text("Controls"), 0, 0);
         
         controlSettings.add(new Text("Forward"), 0, 1);
-        controlSettings.add(new TextField("W"), 1, 1);
+        controlSettings.add(new TextField("W"), 2, 1);
         
         controlSettings.add(new Text("Left"), 0, 2);
-        controlSettings.add(new TextField("A"), 1, 2);
+        controlSettings.add(new TextField("A"), 2, 2);
         
         controlSettings.add(new Text("Backward"), 0, 3);
-        controlSettings.add(new TextField("S"), 1, 3);
+        controlSettings.add(new TextField("S"), 2, 3);
         
         controlSettings.add(new Text("Right"), 0, 4);
-        controlSettings.add(new TextField("D"), 1, 4);
+        controlSettings.add(new TextField("D"), 2, 4);
         
         controlSettings.add(new Text("Inspect"), 0, 5);
-        controlSettings.add(new TextField("Q"), 1, 5);
+        controlSettings.add(new TextField("Q"), 2, 5);
         
         controlSettings.add(new Text("Settings"), 0, 6);
-        controlSettings.add(new TextField("ESC"), 1, 6);
+        controlSettings.add(new TextField("ESC"), 2, 6);
         
         controlSettings.add(new Text("Forward"), 0, 7);
-        controlSettings.add(new TextField("W"), 1, 7);
+        controlSettings.add(new TextField("W"), 2, 7);
         
         controlSettings.add(new Text("Gallery"), 0, 8);
-        controlSettings.add(new TextField("0"), 1, 8);
+        controlSettings.add(new TextField("0"), 2, 8);
         
         controlSettings.add(new Text("Jump"), 0, 9);
-        controlSettings.add(new TextField("SPACE"), 1, 9);
+        controlSettings.add(new TextField("SPACE"), 2, 9);
         
         controlSettings.add(new Text("Sprint"), 0, 10);
-        controlSettings.add(new TextField("CTRL"), 1, 10);
+        controlSettings.add(new TextField("CTRL"), 2, 10);
         
+        controlSettings.add(new Text("                                                                          "),1,0);
         controlSettings.add(new Text("Crouch"), 0, 11);
-        controlSettings.add(new TextField("SHIFT"), 1, 11);
+        controlSettings.add(new TextField("SHIFT"), 2, 11);
         controlSettings.setBackground(new Background(new BackgroundFill(Color.web("f0f1f2", 1.0), CornerRadii.EMPTY, Insets.EMPTY)));
         controlSettings.setOpacity(0.6);
+        controlSettings.setPadding(new Insets(10,10,10,10));
         
         controls.add(controlSettings, 0, 11);
         
