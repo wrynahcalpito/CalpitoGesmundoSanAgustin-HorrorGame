@@ -385,7 +385,7 @@ public class Main extends Application {
         controlSettings.add(new Text("Sprint"), 0, 10);
         controlSettings.add(new TextField("CTRL"), 2, 10);
         
-        controlSettings.add(new Text("                                                                          "),1,0);
+        controlSettings.add(new Text("           "),1,0);
         controlSettings.add(new Text("Crouch"), 0, 11);
         controlSettings.add(new TextField("SHIFT"), 2, 11);
         controlSettings.setBackground(new Background(new BackgroundFill(Color.web("f0f1f2", 1.0), CornerRadii.EMPTY, Insets.EMPTY)));
