@@ -75,7 +75,7 @@ public class Main extends Application {
         main.setCenter(GameDisplay());
         main.setBottom(InventoryDisplay());
         //main.setCenter(GalleryDisplay());
-        //main.setCenter(SettingsDisplay());
+        main.setCenter(SettingsDisplay());
                 
         /*main.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
@@ -116,7 +116,7 @@ public class Main extends Application {
     private Node BarsDisplay(int statValue, int maxStatValue) {
         FlowPane bar = new FlowPane();
         
-        Rectangle barIN = new Rectangle((statValue/maxStatValue)*500, 20.0, Color.RED);
+        Rectangle barIN = new Rectangle((statValue/maxStatValue)*300, 20.0, Color.RED);
         bar.getChildren().add(barIN);
         Rectangle barOUT = new Rectangle((maxStatValue - statValue)/maxStatValue, 20.0, Color.WHITE);
         bar.getChildren().add(barOUT);
@@ -169,12 +169,13 @@ public class Main extends Application {
         //insert 3D models but pictures for now
         Image npc = new Image(Main.class.getResourceAsStream("npc.png"));
         ImageView gameView = new ImageView();
-        gameView.setTranslateX(100);
+        gameView.setTranslateX(250);
         gameView.setTranslateY(150);
         gameView.setFitHeight(800);
         gameView.setPreserveRatio(true);
         gameView.setImage(npc);
         gameDisplay.getChildren().add(gameView);
+        gameDisplay.setPrefWrapLength(1920);
         
         return gameDisplay;
     }
@@ -211,7 +212,7 @@ public class Main extends Application {
             gallery.getChildren().add(btn[i]);
         }
         gallery.setAlignment(Pos.CENTER);
-         
+           
         return gallery;
     }
     
@@ -272,19 +273,22 @@ public class Main extends Application {
     
     private Pane SettingsDisplay() {
         GridPane settings = new GridPane();
-        settings.setBackground(new Background(new BackgroundFill(Color.web("f0f1f2", 1.0), CornerRadii.EMPTY, Insets.EMPTY)));
-        settings.setMinWidth(800);
-        settings.setMaxWidth(800);
-        settings.setOpacity(0.7);
+        settings.setStyle("-fx-background-color: transparent;");
         
+        GridPane settingMenu = new GridPane();
         GridPane settingStats = new GridPane();
         GridPane settingSliders = new GridPane();
+        GridPane filler = new GridPane();
+        filler.setBackground(new Background(new BackgroundFill(Color.web("f0f1f2", 1.0), CornerRadii.EMPTY, Insets.EMPTY)));
+        filler.setOpacity(0.6);
                 
-        settings.add(new Text("SETTINGS MENU"), 0, 0);
-        settings.add(new Text(""), 0, 1);
-        settings.add(new Text(user.getName()), 0, 2);
-        settings.add(new Text("Room #" + currentLevel), 0, 3);
-        settings.add(new Text(""), 0, 4);
+        settingMenu.add(new Text("SETTINGS MENU"), 0, 0);
+        settingMenu.add(new Text(""), 0, 1);
+        settingMenu.add(new Text(user.getName()), 0, 2);
+        settingMenu.add(new Text("Room #" + currentLevel), 0, 3);
+        settingMenu.add(new Text(""), 0, 4);
+        settingMenu.setBackground(new Background(new BackgroundFill(Color.web("f0f1f2", 1.0), CornerRadii.EMPTY, Insets.EMPTY)));
+        settingMenu.setOpacity(0.6);
         
         settingStats.add(new Text(""), 0, 0);
         settingStats.add(new FlowPane(BarsDisplay(user.getHealth(), user.getMaxHealth())), 0, 1);
@@ -301,6 +305,8 @@ public class Main extends Application {
         settingStats.add(new Text("Hunger"), 0, 12);
         settingStats.add(new Text(""), 0, 13);
         settingStats.add(new Text("Skill Level: " + user.getSkillLevel()), 0, 14);
+        settingStats.setBackground(new Background(new BackgroundFill(Color.web("f0f1f2", 1.0), CornerRadii.EMPTY, Insets.EMPTY)));
+        settingStats.setOpacity(0.6);
         
         settingSliders.add(new Text(""), 0, 0);
         settingSliders.add(new Slider(1, 100, 100), 0, 1);
@@ -318,11 +324,14 @@ public class Main extends Application {
         
         Button controlsBtn = new Button("Controls");
         settingSliders.add(controlsBtn, 0, 13);
+        settingSliders.setBackground(new Background(new BackgroundFill(Color.web("f0f1f2", 1.0), CornerRadii.EMPTY, Insets.EMPTY)));
+        settingSliders.setOpacity(0.6);
         main.setCenter(ControlsDisplay());
         
-        settings.add(settingStats, 0, 4);
-        settings.add(new Text("     "), 1, 4);
-        settings.add(settingSliders,2,4);
+        settings.add(settingMenu, 0, 4);
+        settings.add(settingStats, 0, 5);
+        settings.add(filler, 2, 4);
+        settings.add(settingSliders,2,5);
 
         settings.setAlignment(Pos.CENTER);
         
@@ -335,42 +344,48 @@ public class Main extends Application {
     
     private Pane ControlsDisplay() {
         GridPane controls = new GridPane();
-        controls.setBackground(new Background(new BackgroundFill(Color.web("f0f1f2", 1.0), CornerRadii.EMPTY, Insets.EMPTY)));
+        controls.setStyle("-fx-background-color: transparent;");
         
-        controls.add(new Text("Controls"), 0, 0);
+        GridPane controlSettings = new GridPane();
         
-        controls.add(new Text("Forward"), 0, 1);
-        controls.add(new TextField("W"), 1, 1);
+        controlSettings.add(new Text("Controls"), 0, 0);
         
-        controls.add(new Text("Left"), 0, 2);
-        controls.add(new TextField("A"), 1, 2);
+        controlSettings.add(new Text("Forward"), 0, 1);
+        controlSettings.add(new TextField("W"), 1, 1);
         
-        controls.add(new Text("Backward"), 0, 3);
-        controls.add(new TextField("S"), 1, 3);
+        controlSettings.add(new Text("Left"), 0, 2);
+        controlSettings.add(new TextField("A"), 1, 2);
         
-        controls.add(new Text("Right"), 0, 4);
-        controls.add(new TextField("D"), 1, 4);
+        controlSettings.add(new Text("Backward"), 0, 3);
+        controlSettings.add(new TextField("S"), 1, 3);
         
-        controls.add(new Text("Inspect"), 0, 5);
-        controls.add(new TextField("Q"), 1, 5);
+        controlSettings.add(new Text("Right"), 0, 4);
+        controlSettings.add(new TextField("D"), 1, 4);
         
-        controls.add(new Text("Settings"), 0, 6);
-        controls.add(new TextField("ESC"), 1, 6);
+        controlSettings.add(new Text("Inspect"), 0, 5);
+        controlSettings.add(new TextField("Q"), 1, 5);
         
-        controls.add(new Text("Forward"), 0, 7);
-        controls.add(new TextField("W"), 1, 7);
+        controlSettings.add(new Text("Settings"), 0, 6);
+        controlSettings.add(new TextField("ESC"), 1, 6);
         
-        controls.add(new Text("Gallery"), 0, 8);
-        controls.add(new TextField("0"), 1, 8);
+        controlSettings.add(new Text("Forward"), 0, 7);
+        controlSettings.add(new TextField("W"), 1, 7);
         
-        controls.add(new Text("Jump"), 0, 9);
-        controls.add(new TextField("SPACE"), 1, 9);
+        controlSettings.add(new Text("Gallery"), 0, 8);
+        controlSettings.add(new TextField("0"), 1, 8);
         
-        controls.add(new Text("Sprint"), 0, 10);
-        controls.add(new TextField("CTRL"), 1, 10);
+        controlSettings.add(new Text("Jump"), 0, 9);
+        controlSettings.add(new TextField("SPACE"), 1, 9);
         
-        controls.add(new Text("Crouch"), 0, 11);
-        controls.add(new TextField("SHIFT"), 1, 11);
+        controlSettings.add(new Text("Sprint"), 0, 10);
+        controlSettings.add(new TextField("CTRL"), 1, 10);
+        
+        controlSettings.add(new Text("Crouch"), 0, 11);
+        controlSettings.add(new TextField("SHIFT"), 1, 11);
+        controlSettings.setBackground(new Background(new BackgroundFill(Color.web("f0f1f2", 1.0), CornerRadii.EMPTY, Insets.EMPTY)));
+        controlSettings.setOpacity(0.6);
+        
+        controls.add(controlSettings, 0, 11);
         
         controls.setAlignment(Pos.CENTER);
         return controls;
