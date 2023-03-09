@@ -1,6 +1,7 @@
 package main;
 
 import javafx.application.Application;
+import static javafx.application.Application.launch;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -274,6 +275,7 @@ public class Main extends Application {
     private Pane SettingsDisplay() {
         GridPane settings = new GridPane();
         settings.setStyle("-fx-background-color: transparent;");
+        //settings.setGridLinesVisible(true);
         
         GridPane settingMenu = new GridPane();
         GridPane settingStats = new GridPane();
@@ -289,6 +291,7 @@ public class Main extends Application {
         settingMenu.add(new Text(""), 0, 4);
         settingMenu.setBackground(new Background(new BackgroundFill(Color.web("f0f1f2", 1.0), CornerRadii.EMPTY, Insets.EMPTY)));
         settingMenu.setOpacity(0.6);
+        settingMenu.setPadding(new Insets(10,10,10,10));
         
         settingStats.add(new Text(""), 0, 0);
         settingStats.add(new FlowPane(BarsDisplay(user.getHealth(), user.getMaxHealth())), 0, 1);
@@ -307,6 +310,7 @@ public class Main extends Application {
         settingStats.add(new Text("Skill Level: " + user.getSkillLevel()), 0, 14);
         settingStats.setBackground(new Background(new BackgroundFill(Color.web("f0f1f2", 1.0), CornerRadii.EMPTY, Insets.EMPTY)));
         settingStats.setOpacity(0.6);
+        settingStats.setPadding(new Insets(0,0,10,10));
         
         settingSliders.add(new Text(""), 0, 0);
         settingSliders.add(new Slider(1, 100, 100), 0, 1);
@@ -327,6 +331,7 @@ public class Main extends Application {
         settingSliders.setBackground(new Background(new BackgroundFill(Color.web("f0f1f2", 1.0), CornerRadii.EMPTY, Insets.EMPTY)));
         settingSliders.setOpacity(0.6);
         main.setCenter(ControlsDisplay());
+        settingSliders.setPadding(new Insets(10,10,10,10));
         
         settings.add(settingMenu, 0, 4);
         settings.add(settingStats, 0, 5);
