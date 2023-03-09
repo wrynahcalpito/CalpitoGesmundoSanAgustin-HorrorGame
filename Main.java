@@ -74,6 +74,8 @@ public class Main extends Application {
         main.setRight(RightStatsDisplay());
         main.setCenter(GameDisplay());
         main.setBottom(InventoryDisplay());
+        //main.setCenter(GalleryDisplay());
+        //main.setCenter(SettingsDisplay());
                 
         /*main.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
@@ -271,35 +273,56 @@ public class Main extends Application {
     private Pane SettingsDisplay() {
         GridPane settings = new GridPane();
         settings.setBackground(new Background(new BackgroundFill(Color.web("f0f1f2", 1.0), CornerRadii.EMPTY, Insets.EMPTY)));
+        settings.setMinWidth(800);
+        settings.setMaxWidth(800);
         settings.setOpacity(0.7);
+        
+        GridPane settingStats = new GridPane();
+        GridPane settingSliders = new GridPane();
                 
-        settings.add(new Text("Settings"), 0, 0);
-        settings.add(new Text(user.getName()), 0, 1);
-        settings.add(new Text(""), 0, 2);
+        settings.add(new Text("SETTINGS MENU"), 0, 0);
+        settings.add(new Text(""), 0, 1);
+        settings.add(new Text(user.getName()), 0, 2);
         settings.add(new Text("Room #" + currentLevel), 0, 3);
+        settings.add(new Text(""), 0, 4);
         
-        settings.add(new FlowPane(BarsDisplay(user.getHealth(), user.getMaxHealth())), 0, 4);
-        settings.add(new Text("Health"), 0, 5);
-        settings.add(new FlowPane(BarsDisplay(user.getSanity(), user.getMaxSanity())), 0, 6);
-        settings.add(new Text("Sanity"), 0, 7);
-        settings.add(new FlowPane(BarsDisplay(user.getEnergy(), user.getMaxEnergy())), 0, 8);
-        settings.add(new Text("Energy"), 0, 9);
-        settings.add(new FlowPane(BarsDisplay(user.getHunger(), user.getMaxHunger())), 0, 10);
-        settings.add(new Text("Hunger"), 0, 11);
-        settings.add(new Text("Skill Level: " + user.getSkillLevel()), 0, 12);
+        settingStats.add(new Text(""), 0, 0);
+        settingStats.add(new FlowPane(BarsDisplay(user.getHealth(), user.getMaxHealth())), 0, 1);
+        settingStats.add(new Text(""), 0, 1);
+        settingStats.add(new Text("Health"), 0, 2);
+        settingStats.add(new Text(""), 0, 3);
+        settingStats.add(new FlowPane(BarsDisplay(user.getSanity(), user.getMaxSanity())), 0, 4);
+        settingStats.add(new Text("Sanity"), 0, 6);
+        settingStats.add(new Text(""), 0, 7);
+        settingStats.add(new FlowPane(BarsDisplay(user.getEnergy(), user.getMaxEnergy())), 0, 8);
+        settingStats.add(new Text("Energy"), 0, 9);
+        settingStats.add(new Text(""), 0, 10);
+        settingStats.add(new FlowPane(BarsDisplay(user.getHunger(), user.getMaxHunger())), 0, 11);
+        settingStats.add(new Text("Hunger"), 0, 12);
+        settingStats.add(new Text(""), 0, 13);
+        settingStats.add(new Text("Skill Level: " + user.getSkillLevel()), 0, 14);
         
-        settings.add(new Slider(1, 100, 100), 1, 4);
-        settings.add(new Text("BGM"), 1, 5);
-        settings.add(new Slider(1, 100, 100), 1, 6);
-        settings.add(new Text("SFX"), 1, 7);
-        settings.add(new Slider(1, 100, 100), 1, 8);
-        settings.add(new Text("Dialogue"), 1, 9);
-        settings.add(new Slider(1, 100, 100), 1, 10);
-        settings.add(new Text("Display Size"), 1, 11);
+        settingSliders.add(new Text(""), 0, 0);
+        settingSliders.add(new Slider(1, 100, 100), 0, 1);
+        settingSliders.add(new Text("BGM"), 0, 2);
+        settingSliders.add(new Text(""), 0, 3);
+        settingSliders.add(new Slider(1, 100, 100), 0, 4);
+        settingSliders.add(new Text("SFX"), 0, 5);
+        settingSliders.add(new Text(""), 0, 6);
+        settingSliders.add(new Slider(1, 100, 100), 0, 7);
+        settingSliders.add(new Text("Dialogue"), 0, 8);
+        settingSliders.add(new Text(""), 0, 9);
+        settingSliders.add(new Slider(1, 100, 100), 0, 10);
+        settingSliders.add(new Text("Display Size"), 0, 11);
+        settingSliders.add(new Text(""), 0, 12);
         
         Button controlsBtn = new Button("Controls");
-        settings.add(controlsBtn, 1, 12);
+        settingSliders.add(controlsBtn, 0, 13);
         main.setCenter(ControlsDisplay());
+        
+        settings.add(settingStats, 0, 4);
+        settings.add(new Text("     "), 1, 4);
+        settings.add(settingSliders,2,4);
 
         settings.setAlignment(Pos.CENTER);
         
