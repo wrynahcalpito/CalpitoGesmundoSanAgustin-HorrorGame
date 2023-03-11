@@ -15,6 +15,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -44,12 +45,12 @@ public class Main extends Application {
         
     @Override
     public void start(Stage primaryStage) {
-        primaryStage.setTitle("Last Night, Last Night");
+        primaryStage.setTitle("Last Night, Last Night"); 
                 
         //MAIN CODE
         Item camera = new Item("camera", "tool", "A camera given to you take any photos you wish to capture", "camera.jpg"); 
         user.getItem(camera);
-        user.takePhoto("testphoto1.jpg");
+        user.takePhoto("testphoto1.jpg"); //images used are placeholders for now
         user.takePhoto("testphoto2.png");
     
         //INITIALIZING BORDER PANE (MAIN GAME LAYOUT)
@@ -75,17 +76,15 @@ public class Main extends Application {
         main.setRight(RightStatsDisplay());
         main.setCenter(GameDisplay());
         main.setBottom(InventoryDisplay());
-        //main.setCenter(GalleryDisplay());
-        main.setCenter(SettingsDisplay());
                 
-        /*main.setOnKeyPressed(new EventHandler<KeyEvent>() {
+        main.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
-            public void handle(KeyEvent event) {
-                switch (event.getCode()) {
-                    case ESC: lvl1.setCenter(SettingsDisplay());
+            public void handle(KeyEvent ke) {
+                if (ke.getCode().equals(KeyCode.ESCAPE)) {
+                    main.setCenter(SettingsDisplay());
                 }
             }
-        }); //add the condition that this will appear with Esc*/
+        });
         
         primaryStage.show();
     }
@@ -165,7 +164,7 @@ public class Main extends Application {
         return statsRight;
     }
     
-    private Node GameDisplay() {
+    private Node GameDisplay() { //SCREEN 1
         FlowPane gameDisplay = new FlowPane();
         //insert 3D models but pictures for now
         Image npc = new Image(Main.class.getResourceAsStream("npc.png"));
@@ -181,7 +180,7 @@ public class Main extends Application {
         return gameDisplay;
     }
     
-    private Node GalleryDisplay(){
+    private Node GalleryDisplay(){ //SCREEN 2
         HBox gallery = new HBox();
         Button[] btn = new Button[3];
         gallery.setOpacity(0.7);
@@ -265,6 +264,8 @@ public class Main extends Application {
         
         inventoryGrid.setAlignment(Pos.BOTTOM_CENTER);
         
+        boolean isGalleryDisplayed = false;
+        
         btn[9].setOnAction((ActionEvent event) -> {
             main.setCenter(GalleryDisplay());
         });
@@ -272,7 +273,7 @@ public class Main extends Application {
         return inventoryGrid;
     }
     
-    private Pane SettingsDisplay() {
+    private Pane SettingsDisplay() { //SCREEN 3
         GridPane settings = new GridPane();
         settings.setStyle("-fx-background-color: transparent;");
         //settings.setGridLinesVisible(true);
