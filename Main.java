@@ -38,7 +38,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-        
+    
+    boolean back = false;
     int currentLevel = 0;
     Protagonist user = new Protagonist("Kobe");
     BorderPane main = new BorderPane();
@@ -76,12 +77,30 @@ public class Main extends Application {
         main.setRight(RightStatsDisplay());
         main.setCenter(GameDisplay());
         main.setBottom(InventoryDisplay());
-                
+
+        //MAIN KEY EVENTS
         main.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent ke) {
                 if (ke.getCode().equals(KeyCode.ESCAPE)) {
-                    main.setCenter(SettingsDisplay());
+                    if(back==false) {
+                        main.setCenter(SettingsDisplay());
+                        back = true;
+                    }
+                    else {
+                        main.setCenter(GameDisplay());
+                        back = false;
+                    }  
+                }
+                else if (ke.getCode().equals(KeyCode.DIGIT0)) {
+                    if(back==false) {
+                        main.setCenter(GalleryDisplay());
+                        back = true;
+                    }
+                    else {
+                        main.setCenter(GameDisplay());
+                        back = false;
+                    }  
                 }
             }
         });
@@ -263,11 +282,19 @@ public class Main extends Application {
         }
         
         inventoryGrid.setAlignment(Pos.BOTTOM_CENTER);
-        
-        boolean isGalleryDisplayed = false;
-        
-        btn[9].setOnAction((ActionEvent event) -> {
-            main.setCenter(GalleryDisplay());
+                
+        btn[9].setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(back==false) {
+                    main.setCenter(GalleryDisplay());
+                    back = true;
+                }
+                else {
+                    main.setCenter(GameDisplay());
+                    back = false;
+               }
+            }
         });
         
         return inventoryGrid;
@@ -276,7 +303,6 @@ public class Main extends Application {
     private Pane SettingsDisplay() { //SCREEN 3
         GridPane settings = new GridPane();
         settings.setStyle("-fx-background-color: transparent;");
-        //settings.setGridLinesVisible(true);
         
         GridPane settingMenu = new GridPane();
         GridPane settingStats = new GridPane();
@@ -331,7 +357,7 @@ public class Main extends Application {
         settingSliders.add(controlsBtn, 0, 13);
         settingSliders.setBackground(new Background(new BackgroundFill(Color.web("f0f1f2", 1.0), CornerRadii.EMPTY, Insets.EMPTY)));
         settingSliders.setOpacity(0.6);
-        main.setCenter(ControlsDisplay());
+        //main.setCenter(ControlsDisplay());
         settingSliders.setPadding(new Insets(10,10,10,10));
         
         settings.add(settingMenu, 0, 4);
@@ -389,11 +415,17 @@ public class Main extends Application {
         controlSettings.add(new Text("           "),1,0);
         controlSettings.add(new Text("Crouch"), 0, 11);
         controlSettings.add(new TextField("SHIFT"), 2, 11);
+        Button settingsBtn = new Button("Settings");
+        controlSettings.add(settingsBtn, 2, 12);
         controlSettings.setBackground(new Background(new BackgroundFill(Color.web("f0f1f2", 1.0), CornerRadii.EMPTY, Insets.EMPTY)));
         controlSettings.setOpacity(0.6);
         controlSettings.setPadding(new Insets(10,10,10,10));
         
         controls.add(controlSettings, 0, 11);
+        
+        settingsBtn.setOnAction((ActionEvent event) -> {
+            main.setCenter(SettingsDisplay());
+        });
         
         controls.setAlignment(Pos.CENTER);
         return controls;
