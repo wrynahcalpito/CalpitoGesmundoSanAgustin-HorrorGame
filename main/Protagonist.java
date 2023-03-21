@@ -8,7 +8,7 @@ public class Protagonist extends Character {
     private int health, maxHealth = 100, energy, maxEnergy = 120, sanity, maxSanity = 100, hunger, maxHunger = 100, skillLevel;
     private Item inventory[] = {null, null, null, null, null, null, null, null, null};
     private String gallery[] = {null, null, null};
-    //removed appearance, as it would be useless (game will be fully played in 1st person POV)
+    private Item itemInUse;
 
     public Protagonist(String name) {
         super(name, "Protagonist");
@@ -55,6 +55,9 @@ public class Protagonist extends Character {
     }
 
     //OPERATION METHODS
+    public void setName(String n) {
+        name = n;
+    }
     public void health() {
         health -= 1;
     }
@@ -75,10 +78,6 @@ public class Protagonist extends Character {
         i.interact();
     }
 
-    public void openInventory() {
-        System.out.printf("%s opened the inventory.%n", name);
-    }
-
     public void getItem(Item i) {
         for(int j = 0; j < 9; j++) {
             if(inventory[j] == null) {
@@ -91,8 +90,8 @@ public class Protagonist extends Character {
         }
     }
 
-    public void equipItem() {
-        System.out.printf("%s placed item in hand.%n", name);
+    public void equipItem(Item i) {
+        itemInUse = i;
     }
 
     public void useItem() {
@@ -110,9 +109,5 @@ public class Protagonist extends Character {
                 //call exception
             }
         }
-    }
-
-    public void openGallery() {
-        System.out.printf("%s opened the gallery.%n", name);
     }
 }
