@@ -40,27 +40,25 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-    Item itemInUse;
     boolean back = false;
     int currentLevel = 0;
     
-    Protagonist user = new Protagonist("Kobe");
+    Protagonist user = new Protagonist("USER");
     BorderPane main = new BorderPane();
         
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Last Night, Last Night");
+    
+        //INITIALIZING BORDER PANE (MAIN GAME LAYOUT)
+        Scene game = new Scene(main);
+        primaryStage.setScene(game);
         
-                
         //MAIN CODE
         Item camera = new Item("camera", "tool", "A camera given to you take any photos you wish to capture", "img/camera.jpg"); 
         user.getItem(camera);
         user.takePhoto("img/testphoto1.jpg"); //images used are placeholders for now
         user.takePhoto("img/testphoto2.png");
-    
-        //INITIALIZING BORDER PANE (MAIN GAME LAYOUT)
-        Scene game = new Scene(main);
-        primaryStage.setScene(game);
         
         //BACKGROUND
         Image backgroundImage = new Image(Main.class.getResourceAsStream("img/backgroundImage.jpg"));
@@ -121,6 +119,23 @@ public class Main extends Application {
         title.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 200));
         title.setFill(Color.web("800000", 1.0));
         start.getChildren().add(title);  
+        
+        TextField name = new TextField("Enter Name");
+        name.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 50));
+        name.setBlendMode(BlendMode.MULTIPLY);
+        start.getChildren().add(name);
+        
+        Button confirmName = new Button("Confirm name?");
+        confirmName.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 25));
+        confirmName.setTextFill(Color.web("800000"));
+        confirmName.setBlendMode(BlendMode.MULTIPLY);
+        start.getChildren().add(confirmName);
+        
+        confirmName.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                user.setName(name.getText());
+        }});
         
         Button startBtn = new Button("START");
         startBtn.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 100));
@@ -309,7 +324,7 @@ public class Main extends Application {
                     @Override
                     public void handle(ActionEvent event) {
                         if(back==false) {
-                            itemInUse = mainItem;
+                            user.equipItem(mainItem);
                             itemView.setFitHeight(600);
                             itemView.setFitWidth(800);
                             //main.setCenter(itemView);//need to change position
