@@ -1,9 +1,5 @@
 package main;
 
-import main.Item;
-import main.Interactive;
-import main.Character;
-
 public class Protagonist extends Character {
     private int health, maxHealth = 100, energy, maxEnergy = 120, sanity, maxSanity = 100, hunger, maxHunger = 100, skillLevel;
     private Item inventory[] = {null, null, null, null, null, null, null, null, null};
