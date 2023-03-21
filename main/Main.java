@@ -6,7 +6,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -24,7 +23,6 @@ import javafx.scene.layout.BackgroundImage;
 import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.FlowPane;
@@ -35,7 +33,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -66,7 +63,7 @@ public class Main extends Application {
         BackgroundImage bgImage = new BackgroundImage(
                 backgroundImage,
                 BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,  
                 BackgroundPosition.CENTER,
                 new BackgroundSize(100,100,true,true,true,true)
                 );
@@ -136,23 +133,23 @@ public class Main extends Application {
             @Override
             public void handle(ActionEvent event) {
                 user.setName(name.getText());
-        }});
+                
+                Button startBtn = new Button("START");
+                startBtn.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 100));
+                startBtn.setTextFill(Color.web("800000"));
+                startBtn.setBlendMode(BlendMode.MULTIPLY);
+                start.getChildren().add(startBtn);
         
-        Button startBtn = new Button("START");
-        startBtn.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 100));
-        startBtn.setTextFill(Color.web("800000"));
-        startBtn.setBlendMode(BlendMode.MULTIPLY);
-        start.getChildren().add(startBtn);
-        
-        startBtn.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                main.setTop(HeaderDisplay());
-                main.setLeft(LeftStatsDisplay());
-                main.setRight(RightStatsDisplay());
-                main.setCenter(GameDisplay());
-                main.setBottom(InventoryDisplay());
-        }});
+                startBtn.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        main.setTop(HeaderDisplay());
+                        main.setLeft(LeftStatsDisplay());
+                        main.setRight(RightStatsDisplay());
+                        main.setCenter(GameDisplay());
+                        main.setBottom(InventoryDisplay());
+                }});
+        }});      
                 
         start.setAlignment(Pos.CENTER);        
         return start;
@@ -333,6 +330,7 @@ public class Main extends Application {
                         }
                         else {
                             main.setCenter(GameDisplay());
+                            main.setBottom(InventoryDisplay());
                             back = false;
                         }
                     }
@@ -368,6 +366,7 @@ public class Main extends Application {
                 }
                 else {
                     main.setCenter(GameDisplay());
+                    main.setBottom(InventoryDisplay());
                     back = false;
                }
             }
