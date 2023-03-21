@@ -45,7 +45,7 @@ public class Main extends Application {
     
     Protagonist user = new Protagonist("USER");
     BorderPane main = new BorderPane();
-        
+    
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Last Night, Last Night");
@@ -53,6 +53,7 @@ public class Main extends Application {
         //INITIALIZING BORDER PANE (MAIN GAME LAYOUT)
         Scene game = new Scene(main);
         primaryStage.setScene(game);
+        game.getStylesheets().add(getClass().getResource("Style.css").toExternalForm());
         
         //MAIN CODE
         Item camera = new Item("camera", "tool", "A camera given to you take any photos you wish to capture", "img/camera.jpg"); 
@@ -475,23 +476,20 @@ public class Main extends Application {
         controlSettings.add(new Text("Settings"), 0, 6);
         controlSettings.add(new TextField("ESC"), 2, 6);
         
-        controlSettings.add(new Text("Forward"), 0, 7);
-        controlSettings.add(new TextField("W"), 2, 7);
+        controlSettings.add(new Text("Gallery"), 0, 7);
+        controlSettings.add(new TextField("0"), 2, 7);
         
-        controlSettings.add(new Text("Gallery"), 0, 8);
-        controlSettings.add(new TextField("0"), 2, 8);
+        controlSettings.add(new Text("Jump"), 0, 8);
+        controlSettings.add(new TextField("SPACE"), 2, 8);
         
-        controlSettings.add(new Text("Jump"), 0, 9);
-        controlSettings.add(new TextField("SPACE"), 2, 9);
-        
-        controlSettings.add(new Text("Sprint"), 0, 10);
-        controlSettings.add(new TextField("CTRL"), 2, 10);
+        controlSettings.add(new Text("Sprint"), 0, 9);
+        controlSettings.add(new TextField("CTRL"), 2, 9);
         
         controlSettings.add(new Text("           "),1,0);
-        controlSettings.add(new Text("Crouch"), 0, 11);
-        controlSettings.add(new TextField("SHIFT"), 2, 11);
+        controlSettings.add(new Text("Crouch"), 0, 10);
+        controlSettings.add(new TextField("SHIFT"), 2, 10);
         Button settingsBtn = new Button("Settings");
-        controlSettings.add(settingsBtn, 2, 12);
+        controlSettings.add(settingsBtn, 2, 11);
         controlSettings.setBackground(new Background(new BackgroundFill(Color.web("f0f1f2", 1.0), CornerRadii.EMPTY, Insets.EMPTY)));
         controlSettings.setOpacity(0.6);
         controlSettings.setPadding(new Insets(10,10,10,10));
