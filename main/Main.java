@@ -311,10 +311,13 @@ public class Main extends Application {
             else if(user.getInventory()[i] != null) {
                 btn[i] = new Button("Button-"+i);
                 ImageView itemView = new ImageView();
+                ImageView inHandView = new ImageView();
                 itemView.setFitHeight(60);
                 itemView.setFitWidth(60);
                 Image item = new Image(Main.class.getResourceAsStream(user.getInventory()[i].getAppearance()));    
                 itemView.setImage(item);
+                Image itemINHAND = new Image(Main.class.getResourceAsStream(user.getInventory()[i].getAppearance())); 
+                inHandView.setImage(itemINHAND);
                 btn[i].setGraphic(itemView);
                 btn[i].setContentDisplay(GRAPHIC_ONLY);
                 
@@ -323,9 +326,11 @@ public class Main extends Application {
                     public void handle(ActionEvent event) {
                         if(back==false) {
                             user.equipItem(mainItem);
-                            itemView.setFitHeight(600);
-                            itemView.setFitWidth(800);
-                            //main.setCenter(itemView);//need to change position
+                            inHandView.setFitHeight(200);
+                            inHandView.setFitWidth(200);
+                            inventoryGrid.add(inHandView, 9, 0);
+                            inventoryGrid.setTranslateY(-190);
+                            inventoryGrid.setTranslateX(50);
                             back = true;
                         }
                         else {
@@ -350,7 +355,7 @@ public class Main extends Application {
         int j = 0;
         for(Button b : btn) {
             if (j < 10) {
-                inventoryGrid.add(b, j, 0);
+                inventoryGrid.add(b, j, 1);
                 j++;
             }
         }
@@ -362,6 +367,7 @@ public class Main extends Application {
             public void handle(ActionEvent event) {
                 if(back==false) {
                     main.setCenter(GalleryDisplay());
+                    inventoryGrid.setTranslateX(-100);
                     back = true;
                 }
                 else {
