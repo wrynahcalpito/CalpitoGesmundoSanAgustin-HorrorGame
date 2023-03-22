@@ -42,6 +42,7 @@ public class Main extends Application {
     
     Protagonist user = new Protagonist("USER");
     BorderPane main = new BorderPane();
+    GridPane inventoryGrid = new GridPane();
     
     @Override
     public void start(Stage primaryStage) {
@@ -96,6 +97,105 @@ public class Main extends Application {
                         back = false;
                     }  
                 }
+                else if (ke.getCode().equals(KeyCode.DIGIT1)) {
+                    if(back==false) {
+                        InHandShow(0);
+                        back = true;
+                    }
+                    else {
+                        main.setCenter(GameDisplay());
+                        main.setBottom(InventoryDisplay());
+                        back = false;
+                    }
+                }
+                else if (ke.getCode().equals(KeyCode.DIGIT2)) {
+                    if(back==false) {
+                        InHandShow(1);
+                        back = true;
+                    }
+                    else {
+                        main.setCenter(GameDisplay());
+                        main.setBottom(InventoryDisplay());
+                        back = false;
+                    }
+                }
+                else if (ke.getCode().equals(KeyCode.DIGIT3)) {
+                    if(back==false) {
+                        InHandShow(2);
+                        back = true;
+                    }
+                    else {
+                        main.setCenter(GameDisplay());
+                        main.setBottom(InventoryDisplay());
+                        back = false;
+                    }
+                }
+                else if (ke.getCode().equals(KeyCode.DIGIT4)) {
+                    if(back==false) {
+                        InHandShow(3);
+                        back = true;
+                    }
+                    else {
+                        main.setCenter(GameDisplay());
+                        main.setBottom(InventoryDisplay());
+                        back = false;
+                    }
+                }
+                else if (ke.getCode().equals(KeyCode.DIGIT5)) {
+                    if(back==false) {
+                        InHandShow(4);
+                        back = true;
+                    }
+                    else {
+                        main.setCenter(GameDisplay());
+                        main.setBottom(InventoryDisplay());
+                        back = false;
+                    }
+                }
+                else if (ke.getCode().equals(KeyCode.DIGIT6)) {
+                    if(back==false) {
+                        InHandShow(5);
+                        back = true;
+                    }
+                    else {
+                        main.setCenter(GameDisplay());
+                        main.setBottom(InventoryDisplay());
+                        back = false;
+                    }
+                }
+                else if (ke.getCode().equals(KeyCode.DIGIT7)) {
+                    if(back==false) {
+                        InHandShow(6);
+                        back = true;
+                    }
+                    else {
+                        main.setCenter(GameDisplay());
+                        main.setBottom(InventoryDisplay());
+                        back = false;
+                    }
+                }
+                else if (ke.getCode().equals(KeyCode.DIGIT8)) {
+                    if(back==false) {
+                        InHandShow(7);
+                        back = true;
+                    }
+                    else {
+                        main.setCenter(GameDisplay());
+                        main.setBottom(InventoryDisplay());
+                        back = false;
+                    }
+                }
+                else if (ke.getCode().equals(KeyCode.DIGIT9)) {
+                    if(back==false) {
+                        InHandShow(8);
+                        back = true;
+                    }
+                    else {
+                        main.setCenter(GameDisplay());
+                        main.setBottom(InventoryDisplay());
+                        back = false;
+                    }
+                }
             }
         });
         
@@ -112,7 +212,7 @@ public class Main extends Application {
     //METHODS (TO KEEP MAIN METHOD CLEAN)
     private Node StartDisplay() {
         VBox start = new VBox(10);
-        
+
         Text title = new Text("Last Night, Last Night");
         title.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 200));
         title.setFill(Color.web("800000", 1.0));
@@ -224,7 +324,6 @@ public class Main extends Application {
     
     private Node GameDisplay() { //SCREEN 1
         FlowPane gameDisplay = new FlowPane();
-        //insert 3D models but pictures for now
         Image npc = new Image(Main.class.getResourceAsStream("img/npc.png"));
         ImageView gameView = new ImageView();
         gameView.setTranslateX(250);
@@ -290,8 +389,23 @@ public class Main extends Application {
         return gallery;
     }
     
+    private Node InHandShow(int i) {
+        Item mainItem = user.getInventory()[i];
+        user.equipItem(mainItem);
+        
+        ImageView inHandView = new ImageView();
+        Image itemINHAND = new Image(Main.class.getResourceAsStream(user.getInventory()[0].getAppearance()));
+        inHandView.setImage(itemINHAND);                
+        inHandView.setFitHeight(200);
+        inHandView.setFitWidth(200);                
+        inventoryGrid.add(inHandView, 9, 0);
+        inventoryGrid.setTranslateY(-190);
+        inventoryGrid.setTranslateX(50);
+        
+        return inHandView;
+    } 
+    
     private Pane InventoryDisplay() {
-        GridPane inventoryGrid = new GridPane();
         Button[] btn = new Button[10];
         
         for(int i = 0; i < 9; i++) {
