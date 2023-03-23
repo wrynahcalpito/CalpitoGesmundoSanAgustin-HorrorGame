@@ -227,6 +227,7 @@ public class Main extends Application {
         confirmName.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 25));
         confirmName.setTextFill(Color.web("800000"));
         confirmName.setBlendMode(BlendMode.MULTIPLY);
+        confirmName.getStyleClass().add("lightButton");
         start.getChildren().add(confirmName);
         
         confirmName.setOnAction(new EventHandler<ActionEvent>() {
@@ -238,6 +239,7 @@ public class Main extends Application {
                 startBtn.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 100));
                 startBtn.setTextFill(Color.web("800000"));
                 startBtn.setBlendMode(BlendMode.MULTIPLY);
+                startBtn.getStyleClass().add("lightButton");
                 start.getChildren().add(startBtn);
         
                 startBtn.setOnAction(new EventHandler<ActionEvent>() {
@@ -354,6 +356,7 @@ public class Main extends Application {
                 galleryView.setImage(photo);
                 btn[i].setGraphic(galleryView);
                 btn[i].setContentDisplay(GRAPHIC_ONLY);
+                btn[i].getStyleClass().add("darkButton");
             }
             else if(user.getGallery()[i] != null) {
                 btn[i] = new Button("Button-"+i);
@@ -364,6 +367,7 @@ public class Main extends Application {
                 galleryView.setImage(photo);
                 btn[i].setGraphic(galleryView);
                 btn[i].setContentDisplay(GRAPHIC_ONLY);
+                btn[i].getStyleClass().add("darkButton");
                 
                 btn[i].setOnAction(new EventHandler<ActionEvent>() {
                     @Override
@@ -421,6 +425,7 @@ public class Main extends Application {
                 itemView.setImage(item);
                 btn[i].setGraphic(itemView);
                 btn[i].setContentDisplay(GRAPHIC_ONLY);
+                btn[i].getStyleClass().add("darkButton");
             }
             else if(user.getInventory()[i] != null) {
                 btn[i] = new Button("Button-"+i);
@@ -434,6 +439,7 @@ public class Main extends Application {
                 inHandView.setImage(itemINHAND);
                 btn[i].setGraphic(itemView);
                 btn[i].setContentDisplay(GRAPHIC_ONLY);
+                btn[i].getStyleClass().add("darkButton");
                 
                 btn[i].setOnAction(new EventHandler<ActionEvent>() {
                     @Override
@@ -465,6 +471,7 @@ public class Main extends Application {
         itemView.setImage(item);
         btn[9].setGraphic(itemView);
         btn[9].setContentDisplay(GRAPHIC_ONLY);
+        btn[9].getStyleClass().add("darkButton");
         
         int j = 0;
         for(Button b : btn) {
@@ -549,6 +556,7 @@ public class Main extends Application {
         settingSliders.add(new Text(""), 0, 12);
         
         Button controlsBtn = new Button("Controls");
+        controlsBtn.getStyleClass().add("lightButton");
         settingSliders.add(controlsBtn, 0, 13);
         settingSliders.setBackground(new Background(new BackgroundFill(Color.web("f0f1f2", 1.0), CornerRadii.EMPTY, Insets.EMPTY)));
         settingSliders.setOpacity(0.6);
@@ -608,6 +616,7 @@ public class Main extends Application {
         controlSettings.add(new Text("Crouch"), 0, 10);
         controlSettings.add(new TextField("SHIFT"), 2, 10);
         Button settingsBtn = new Button("Settings");
+        settingsBtn.getStyleClass().add("lightButton");
         controlSettings.add(settingsBtn, 2, 11);
         controlSettings.setBackground(new Background(new BackgroundFill(Color.web("f0f1f2", 1.0), CornerRadii.EMPTY, Insets.EMPTY)));
         controlSettings.setOpacity(0.6);
