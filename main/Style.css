@@ -2,3 +2,19 @@
     -fx-font-size: 25pt;
     -fx-font-family: "Chiller";
 }
+
+.lightButton {
+  -fx-background-color: #dae7f3;
+}
+
+.darkButton {
+  -fx-background-color: gray;
+}
+
+.lightButton:hover {
+  -fx-background-color:gray;
+}
+
+.darkButton:hover {
+  -fx-background-color:#dae7f3;
+}
