@@ -56,8 +56,7 @@ public class Main extends Application {
         //MAIN CODE
         Item camera = new Item("camera", "tool", "A camera given to you take any photos you wish to capture", "img/camera.jpg"); 
         user.getItem(camera);
-        user.takePhoto("img/testphoto1.jpg"); //images used are placeholders for now
-        user.takePhoto("img/testphoto2.png");
+        user.takePhoto("img/testphoto1.png");
         
         //BACKGROUND
         Image backgroundImage = new Image(Main.class.getResourceAsStream("img/backgroundImage.jpg"));
@@ -103,7 +102,6 @@ public class Main extends Application {
                         back = true;
                     }
                     else {
-                        main.setCenter(GameDisplay());
                         main.setBottom(InventoryDisplay());
                         back = false;
                     }
@@ -114,7 +112,6 @@ public class Main extends Application {
                         back = true;
                     }
                     else {
-                        main.setCenter(GameDisplay());
                         main.setBottom(InventoryDisplay());
                         back = false;
                     }
@@ -125,7 +122,6 @@ public class Main extends Application {
                         back = true;
                     }
                     else {
-                        main.setCenter(GameDisplay());
                         main.setBottom(InventoryDisplay());
                         back = false;
                     }
@@ -136,7 +132,6 @@ public class Main extends Application {
                         back = true;
                     }
                     else {
-                        main.setCenter(GameDisplay());
                         main.setBottom(InventoryDisplay());
                         back = false;
                     }
@@ -147,7 +142,6 @@ public class Main extends Application {
                         back = true;
                     }
                     else {
-                        main.setCenter(GameDisplay());
                         main.setBottom(InventoryDisplay());
                         back = false;
                     }
@@ -158,7 +152,6 @@ public class Main extends Application {
                         back = true;
                     }
                     else {
-                        main.setCenter(GameDisplay());
                         main.setBottom(InventoryDisplay());
                         back = false;
                     }
@@ -169,7 +162,6 @@ public class Main extends Application {
                         back = true;
                     }
                     else {
-                        main.setCenter(GameDisplay());
                         main.setBottom(InventoryDisplay());
                         back = false;
                     }
@@ -180,7 +172,6 @@ public class Main extends Application {
                         back = true;
                     }
                     else {
-                        main.setCenter(GameDisplay());
                         main.setBottom(InventoryDisplay());
                         back = false;
                     }
@@ -191,7 +182,6 @@ public class Main extends Application {
                         back = true;
                     }
                     else {
-                        main.setCenter(GameDisplay());
                         main.setBottom(InventoryDisplay());
                         back = false;
                     }
@@ -220,14 +210,16 @@ public class Main extends Application {
         
         TextField name = new TextField("Enter Name");
         name.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 50));
-        name.setBlendMode(BlendMode.MULTIPLY);
+        name.setBlendMode(BlendMode.SCREEN);
+        name.getStyleClass().add("transparent");
         start.getChildren().add(name);
         
         Button confirmName = new Button("Confirm name?");
         confirmName.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 25));
         confirmName.setTextFill(Color.web("800000"));
-        confirmName.setBlendMode(BlendMode.MULTIPLY);
+        confirmName.setBlendMode(BlendMode.SCREEN);
         confirmName.getStyleClass().add("lightButton");
+        confirmName.getStyleClass().add("transparent");
         start.getChildren().add(confirmName);
         
         confirmName.setOnAction(new EventHandler<ActionEvent>() {
@@ -238,8 +230,9 @@ public class Main extends Application {
                 Button startBtn = new Button("START");
                 startBtn.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 100));
                 startBtn.setTextFill(Color.web("800000"));
-                startBtn.setBlendMode(BlendMode.MULTIPLY);
+                startBtn.setBlendMode(BlendMode.SCREEN);
                 startBtn.getStyleClass().add("lightButton");
+                startBtn.getStyleClass().add("transparent");
                 start.getChildren().add(startBtn);
         
                 startBtn.setOnAction(new EventHandler<ActionEvent>() {
@@ -454,7 +447,6 @@ public class Main extends Application {
                             back = true;
                         }
                         else {
-                            main.setCenter(GameDisplay());
                             main.setBottom(InventoryDisplay());
                             back = false;
                         }
@@ -493,7 +485,7 @@ public class Main extends Application {
                 }
                 else {
                     main.setCenter(GameDisplay());
-                    main.setBottom(InventoryDisplay());
+                    main.setBottom(inventoryGrid);
                     back = false;
                }
             }
