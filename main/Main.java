@@ -2,7 +2,6 @@ package main;
 
 import javafx.application.Application;
 import static javafx.application.Application.launch;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -16,7 +15,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -100,7 +98,7 @@ public class Main extends Application {
                         back = true;
                     }
                     else {
-                        RemoveInHand(0);
+                        RemoveInHand();
                         back = false;
                     }   break;
                 case DIGIT2:
@@ -109,7 +107,7 @@ public class Main extends Application {
                         back = true;
                     }
                     else {
-                        RemoveInHand(1);
+                        RemoveInHand();
                         back = false;
                     }   break;
                 case DIGIT3:
@@ -118,7 +116,7 @@ public class Main extends Application {
                         back = true;
                     }
                     else {
-                        RemoveInHand(2);
+                        RemoveInHand();
                         back = false;
                     }   break;
                 case DIGIT4:
@@ -127,7 +125,7 @@ public class Main extends Application {
                         back = true;
                     }
                     else {
-                        RemoveInHand(3);
+                        RemoveInHand();
                         back = false;
                     }   break;
                 case DIGIT5:
@@ -136,7 +134,7 @@ public class Main extends Application {
                         back = true;
                     }
                     else {
-                        RemoveInHand(4);
+                        RemoveInHand();
                         back = false;
                     }   break;
                 case DIGIT6:
@@ -145,7 +143,7 @@ public class Main extends Application {
                         back = true;
                     }
                     else {
-                        RemoveInHand(5);
+                        RemoveInHand();
                         back = false;
                     }   break;
                 case DIGIT7:
@@ -154,7 +152,7 @@ public class Main extends Application {
                         back = true;
                     }
                     else {
-                        RemoveInHand(6);
+                        RemoveInHand();
                         back = false;
                     }   break;
                 case DIGIT8:
@@ -163,7 +161,7 @@ public class Main extends Application {
                         back = true;
                     }
                     else {
-                        RemoveInHand(7);
+                        RemoveInHand();
                         back = false;
                     }   break;
                 case DIGIT9:
@@ -172,7 +170,7 @@ public class Main extends Application {
                         back = true;
                     }
                     else {
-                        RemoveInHand(8);
+                        RemoveInHand();
                         back = false;
                     }   break;
                 default:
@@ -388,25 +386,27 @@ public class Main extends Application {
         return gallery;
     }
     
+    ImageView inHandView = new ImageView();
     private Node InHandShow(int i) {
         Item mainItem = user.getInventory()[i];
         user.equipItem(mainItem);
-        
-        ImageView inHandView = new ImageView();
+
         Image itemINHAND = new Image(Main.class.getResourceAsStream(user.getInventory()[0].getAppearance()));
         inHandView.setImage(itemINHAND);                
         inHandView.setFitHeight(200);
         inHandView.setFitWidth(200);                
         inventoryGrid.add(inHandView, 9, 0);
-        inventoryGrid.setTranslateY(-190);
-        inventoryGrid.setTranslateX(50);
+        inventoryGrid.setTranslateY(-156);
+        inventoryGrid.setTranslateX(47);
         
         return inHandView;
     } 
     
-    private Node RemoveInHand(int i) {
+    private Node RemoveInHand() {
         main.setBottom(InventoryDisplay());
-        inventoryGrid.getChildren().remove(InHandShow(i));
+        inventoryGrid.getChildren().remove(inHandView);
+        inventoryGrid.setTranslateY(0);
+        inventoryGrid.setTranslateX(0);
         return null;
     }
     
@@ -450,12 +450,15 @@ public class Main extends Application {
                             inHandView.setFitHeight(200);
                             inHandView.setFitWidth(200);
                             inventoryGrid.add(inHandView, 9, 0);
-                            inventoryGrid.setTranslateY(-190);
-                            inventoryGrid.setTranslateX(50);
+                            inventoryGrid.setTranslateY(-156);
+                            inventoryGrid.setTranslateX(47);
                             back = true;
                         }
                         else {
                             main.setBottom(InventoryDisplay());
+                            inventoryGrid.getChildren().remove(inHandView);
+                            inventoryGrid.setTranslateY(0);
+                            inventoryGrid.setTranslateX(0);
                             back = false;
                         }
                     }
