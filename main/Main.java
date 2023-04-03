@@ -90,6 +90,7 @@ public class Main extends Application {
                     }
                     else {
                         main.setCenter(GameDisplay());
+                        main.setBottom(InventoryDisplay());
                         back = false;
                     }   break;
                 case DIGIT1:
@@ -391,7 +392,7 @@ public class Main extends Application {
         Item mainItem = user.getInventory()[i];
         user.equipItem(mainItem);
 
-        Image itemINHAND = new Image(Main.class.getResourceAsStream(user.getInventory()[0].getAppearance()));
+        Image itemINHAND = new Image(Main.class.getResourceAsStream(user.getInventory()[i].getAppearance()));
         inHandView.setImage(itemINHAND);                
         inHandView.setFitHeight(200);
         inHandView.setFitWidth(200);                
@@ -496,7 +497,7 @@ public class Main extends Application {
                 }
                 else {
                     main.setCenter(GameDisplay());
-                    main.setBottom(inventoryGrid);
+                    main.setBottom(InventoryDisplay());
                     back = false;
                }
             }
