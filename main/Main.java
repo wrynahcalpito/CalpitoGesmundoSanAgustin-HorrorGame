@@ -2,6 +2,7 @@ package main;
 
 import javafx.application.Application;
 import static javafx.application.Application.launch;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -59,7 +60,7 @@ public class Main extends Application {
         user.takePhoto("img/testphoto1.png");
         
         //BACKGROUND
-        Image backgroundImage = new Image(Main.class.getResourceAsStream("img/backgroundImage.jpg"));
+        Image backgroundImage = new Image(Main.class.getResourceAsStream("img/storageRoom.png"));
         BackgroundImage bgImage = new BackgroundImage(
                 backgroundImage,
                 BackgroundRepeat.NO_REPEAT,
@@ -73,10 +74,9 @@ public class Main extends Application {
         main.setCenter(StartDisplay());
 
         //MAIN KEY EVENTS
-        main.setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent ke) {
-                if (ke.getCode().equals(KeyCode.ESCAPE)) {
+        main.setOnKeyPressed((KeyEvent ke) -> {
+            switch (ke.getCode()) {
+                case ESCAPE:
                     if(back==false) {
                         main.setCenter(SettingsDisplay());
                         back = true;
@@ -84,9 +84,8 @@ public class Main extends Application {
                     else {
                         main.setCenter(GameDisplay());
                         back = false;
-                    }  
-                }
-                else if (ke.getCode().equals(KeyCode.DIGIT0)) {
+                    }   break;
+                case DIGIT0:
                     if(back==false) {
                         main.setCenter(GalleryDisplay());
                         back = true;
@@ -94,98 +93,90 @@ public class Main extends Application {
                     else {
                         main.setCenter(GameDisplay());
                         back = false;
-                    }  
-                }
-                else if (ke.getCode().equals(KeyCode.DIGIT1)) {
+                    }   break;
+                case DIGIT1:
                     if(back==false) {
                         InHandShow(0);
                         back = true;
                     }
                     else {
-                        main.setBottom(InventoryDisplay());
+                        RemoveInHand(0);
                         back = false;
-                    }
-                }
-                else if (ke.getCode().equals(KeyCode.DIGIT2)) {
+                    }   break;
+                case DIGIT2:
                     if(back==false) {
                         InHandShow(1);
                         back = true;
                     }
                     else {
-                        main.setBottom(InventoryDisplay());
+                        RemoveInHand(1);
                         back = false;
-                    }
-                }
-                else if (ke.getCode().equals(KeyCode.DIGIT3)) {
+                    }   break;
+                case DIGIT3:
                     if(back==false) {
                         InHandShow(2);
                         back = true;
                     }
                     else {
-                        main.setBottom(InventoryDisplay());
+                        RemoveInHand(2);
                         back = false;
-                    }
-                }
-                else if (ke.getCode().equals(KeyCode.DIGIT4)) {
+                    }   break;
+                case DIGIT4:
                     if(back==false) {
                         InHandShow(3);
                         back = true;
                     }
                     else {
-                        main.setBottom(InventoryDisplay());
+                        RemoveInHand(3);
                         back = false;
-                    }
-                }
-                else if (ke.getCode().equals(KeyCode.DIGIT5)) {
+                    }   break;
+                case DIGIT5:
                     if(back==false) {
                         InHandShow(4);
                         back = true;
                     }
                     else {
-                        main.setBottom(InventoryDisplay());
+                        RemoveInHand(4);
                         back = false;
-                    }
-                }
-                else if (ke.getCode().equals(KeyCode.DIGIT6)) {
+                    }   break;
+                case DIGIT6:
                     if(back==false) {
                         InHandShow(5);
                         back = true;
                     }
                     else {
-                        main.setBottom(InventoryDisplay());
+                        RemoveInHand(5);
                         back = false;
-                    }
-                }
-                else if (ke.getCode().equals(KeyCode.DIGIT7)) {
+                    }   break;
+                case DIGIT7:
                     if(back==false) {
                         InHandShow(6);
                         back = true;
                     }
                     else {
-                        main.setBottom(InventoryDisplay());
+                        RemoveInHand(6);
                         back = false;
-                    }
-                }
-                else if (ke.getCode().equals(KeyCode.DIGIT8)) {
+                    }   break;
+                case DIGIT8:
                     if(back==false) {
                         InHandShow(7);
                         back = true;
                     }
                     else {
-                        main.setBottom(InventoryDisplay());
+                        RemoveInHand(7);
                         back = false;
-                    }
-                }
-                else if (ke.getCode().equals(KeyCode.DIGIT9)) {
+                    }   break;
+                case DIGIT9:
                     if(back==false) {
                         InHandShow(8);
                         back = true;
                     }
                     else {
-                        main.setBottom(InventoryDisplay());
+                        RemoveInHand(8);
                         back = false;
-                    }
-                }
+                    }   break;
+                default:
+                    break;
             }
         });
         
@@ -366,10 +357,21 @@ public class Main extends Application {
                     @Override
                     public void handle(ActionEvent event) {
                         if(back==false) {
+                            VBox photoView = new VBox(10);
                             galleryView.setFitHeight(600);
                             galleryView.setFitWidth(800);
-                            main.setCenter(galleryView);
-                            back = true;
+                            photoView.getChildren().add(galleryView);
+                            
+                            Button backBtn = new Button("Back");
+                            photoView.getChildren().add(backBtn);
+                            backBtn.getStyleClass().add("lightButton");
+                            
+                            backBtn.setOnAction((ActionEvent event1) -> {
+                                main.setCenter(GalleryDisplay());
+                            });
+                            
+                            main.setCenter(photoView);
+                            back = true;                            
                         }
                         else {
                             main.setCenter(GalleryDisplay());
@@ -401,6 +403,12 @@ public class Main extends Application {
         
         return inHandView;
     } 
+    
+    private Node RemoveInHand(int i) {
+        main.setBottom(InventoryDisplay());
+        inventoryGrid.getChildren().remove(InHandShow(i));
+        return null;
+    }
     
     private Pane InventoryDisplay() {
         Button[] btn = new Button[10];
