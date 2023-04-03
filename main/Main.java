@@ -174,6 +174,13 @@ public class Main extends Application {
                         RemoveInHand();
                         back = false;
                     }   break;
+                case W:
+                case A: 
+                case S:
+                case D:
+                case SPACE:
+                case CONTROL:
+                case SHIFT:
                 default:
                     break;
             }
