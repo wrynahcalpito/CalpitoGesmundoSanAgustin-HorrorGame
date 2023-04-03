@@ -38,6 +38,8 @@ import javafx.stage.Stage;
 public class Main extends Application {
     boolean back = false;
     int currentLevel = 0;
+    int horizontalMovement = 250;
+    int entityResize = 800;
     
     Protagonist user = new Protagonist("USER");
     BorderPane main = new BorderPane();
@@ -174,10 +176,22 @@ public class Main extends Application {
                         RemoveInHand();
                         back = false;
                     }   break;
-                case W:
-                case A: 
-                case S:
+                case A:
+                    horizontalMovement += 50;
+                    main.setCenter(GameDisplay());
+                    break;
                 case D:
+                    horizontalMovement -= 50;
+                    main.setCenter(GameDisplay());
+                    break;
+                case W:
+                    entityResize += 50;
+                    main.setCenter(GameDisplay());
+                    break;
+                case S:
+                    entityResize -= 50;
+                    main.setCenter(GameDisplay());
+                    break;
                 case SPACE:
                 case CONTROL:
                 case SHIFT:
@@ -315,12 +329,16 @@ public class Main extends Application {
     }
     
     private Node GameDisplay() { //SCREEN 1
+        if (entityResize >= 850) {
+            entityResize = 850;
+        }
+        
         FlowPane gameDisplay = new FlowPane();
         Image npc = new Image(Main.class.getResourceAsStream("img/npc.png"));
         ImageView gameView = new ImageView();
-        gameView.setTranslateX(250);
+        gameView.setTranslateX(horizontalMovement);
         gameView.setTranslateY(150);
-        gameView.setFitHeight(800);
+        gameView.setFitHeight(entityResize);
         gameView.setPreserveRatio(true);
         gameView.setImage(npc);
         gameDisplay.getChildren().add(gameView);
