@@ -36,10 +36,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-    boolean back = false;
-    int currentLevel = 0;
-    int horizontalMovement = 250;
-    int entityResize = 800;
+    boolean back = false, jump = false;
+    int currentLevel = 0, horizontalMovement = 250, verticalMovement = 250, entityResize = 800, xChange = 50, yChange = 100;
     
     Protagonist user = new Protagonist("USER");
     BorderPane main = new BorderPane();
@@ -55,21 +53,9 @@ public class Main extends Application {
         game.getStylesheets().add(getClass().getResource("Style.css").toExternalForm());
         
         //MAIN CODE
-        Item camera = new Item("camera", "tool", "A camera given to you take any photos you wish to capture", "img/camera.jpg"); 
+        Item camera = new Item("camera", "tool", "A camera given to you take any photos you wish to capture", "img/camera.png"); 
         user.getItem(camera);
         user.takePhoto("img/testphoto1.png");
-        
-        //BACKGROUND
-        Image backgroundImage = new Image(Main.class.getResourceAsStream("img/storageRoom.png"));
-        BackgroundImage bgImage = new BackgroundImage(
-                backgroundImage,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,  
-                BackgroundPosition.CENTER,
-                new BackgroundSize(100,100,true,true,true,true)
-                );
-        Background bg = new Background(bgImage);
-        main.setBackground(bg);
         
         main.setCenter(StartDisplay());
 
@@ -77,7 +63,7 @@ public class Main extends Application {
         main.setOnKeyPressed((KeyEvent ke) -> {
             switch (ke.getCode()) {
                 case ESCAPE:
-                    if(back==false) {
+                    if(!back) {
                         main.setCenter(SettingsDisplay());
                         back = true;
                     }
@@ -86,7 +72,7 @@ public class Main extends Application {
                         back = false;
                     }   break;
                 case DIGIT0:
-                    if(back==false) {
+                    if(!back) {
                         main.setCenter(GalleryDisplay());
                         back = true;
                     }
@@ -96,7 +82,7 @@ public class Main extends Application {
                         back = false;
                     }   break;
                 case DIGIT1:
-                    if(back==false) {
+                    if(!back) {
                         InHandShow(0);
                         back = true;
                     }
@@ -105,7 +91,7 @@ public class Main extends Application {
                         back = false;
                     }   break;
                 case DIGIT2:
-                    if(back==false) {
+                    if(!back) {
                         InHandShow(1);
                         back = true;
                     }
@@ -114,7 +100,7 @@ public class Main extends Application {
                         back = false;
                     }   break;
                 case DIGIT3:
-                    if(back==false) {
+                    if(!back) {
                         InHandShow(2);
                         back = true;
                     }
@@ -123,7 +109,7 @@ public class Main extends Application {
                         back = false;
                     }   break;
                 case DIGIT4:
-                    if(back==false) {
+                    if(!back) {
                         InHandShow(3);
                         back = true;
                     }
@@ -132,7 +118,7 @@ public class Main extends Application {
                         back = false;
                     }   break;
                 case DIGIT5:
-                    if(back==false) {
+                    if(!back) {
                         InHandShow(4);
                         back = true;
                     }
@@ -141,7 +127,7 @@ public class Main extends Application {
                         back = false;
                     }   break;
                 case DIGIT6:
-                    if(back==false) {
+                    if(!back){
                         InHandShow(5);
                         back = true;
                     }
@@ -150,7 +136,7 @@ public class Main extends Application {
                         back = false;
                     }   break;
                 case DIGIT7:
-                    if(back==false) {
+                    if(!back) {
                         InHandShow(6);
                         back = true;
                     }
@@ -159,7 +145,7 @@ public class Main extends Application {
                         back = false;
                     }   break;
                 case DIGIT8:
-                    if(back==false) {
+                    if(!back) {
                         InHandShow(7);
                         back = true;
                     }
@@ -168,7 +154,7 @@ public class Main extends Application {
                         back = false;
                     }   break;
                 case DIGIT9:
-                    if(back==false) {
+                    if(!back) {
                         InHandShow(8);
                         back = true;
                     }
@@ -177,24 +163,38 @@ public class Main extends Application {
                         back = false;
                     }   break;
                 case A:
-                    horizontalMovement += 50;
+                    horizontalMovement += xChange;
                     main.setCenter(GameDisplay());
                     break;
                 case D:
-                    horizontalMovement -= 50;
+                    horizontalMovement -= xChange;
                     main.setCenter(GameDisplay());
                     break;
                 case W:
-                    entityResize += 50;
+                    entityResize += xChange;
                     main.setCenter(GameDisplay());
                     break;
                 case S:
-                    entityResize -= 50;
+                    entityResize -= xChange;
                     main.setCenter(GameDisplay());
                     break;
                 case SPACE:
+                    jump = true;
+                    if(jump) {
+                        verticalMovement -= yChange;
+                        jump = false;
+                        main.setCenter(GameDisplay());
+                    }
+                    else {
+                        verticalMovement += yChange;
+                        break;
+                    }
                 case CONTROL:
+                    xChange *= 4;
+                    break;
                 case SHIFT:
+                    xChange *= 0.25;
+                    break;
                 default:
                     break;
             }
@@ -213,7 +213,18 @@ public class Main extends Application {
     //METHODS (TO KEEP MAIN METHOD CLEAN)
     private Node StartDisplay() {
         VBox start = new VBox(10);
-
+        
+        Image backgroundImage = new Image(Main.class.getResourceAsStream("img/startBG.png"));
+        BackgroundImage bgImage = new BackgroundImage(
+                backgroundImage,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,  
+                BackgroundPosition.CENTER,
+                new BackgroundSize(100,100,true,true,true,true)
+                );
+        Background bg = new Background(bgImage);
+        main.setBackground(bg);
+        
         Text title = new Text("Last Night, Last Night");
         title.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 200));
         title.setFill(Color.web("800000", 1.0));
@@ -233,29 +244,25 @@ public class Main extends Application {
         confirmName.getStyleClass().add("transparent");
         start.getChildren().add(confirmName);
         
-        confirmName.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                user.setName(name.getText());
-                
-                Button startBtn = new Button("START");
-                startBtn.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 100));
-                startBtn.setTextFill(Color.web("800000"));
-                startBtn.setBlendMode(BlendMode.SCREEN);
-                startBtn.getStyleClass().add("lightButton");
-                startBtn.getStyleClass().add("transparent");
-                start.getChildren().add(startBtn);
-        
-                startBtn.setOnAction(new EventHandler<ActionEvent>() {
-                    @Override
-                    public void handle(ActionEvent event) {
-                        main.setTop(HeaderDisplay());
-                        main.setLeft(LeftStatsDisplay());
-                        main.setRight(RightStatsDisplay());
-                        main.setCenter(GameDisplay());
-                        main.setBottom(InventoryDisplay());
-                }});
-        }});      
+        confirmName.setOnAction((ActionEvent event) -> {
+            user.setName(name.getText());
+            
+            Button startBtn = new Button("START");
+            startBtn.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 100));
+            startBtn.setTextFill(Color.web("800000"));
+            startBtn.setBlendMode(BlendMode.SCREEN);
+            startBtn.getStyleClass().add("lightButton");
+            startBtn.getStyleClass().add("transparent");
+            start.getChildren().add(startBtn);
+            
+            startBtn.setOnAction((ActionEvent event1) -> {
+                main.setTop(HeaderDisplay());
+                main.setLeft(LeftStatsDisplay());
+                main.setRight(RightStatsDisplay());
+                main.setCenter(GameDisplay());
+                main.setBottom(InventoryDisplay());
+            });
+        });      
                 
         start.setAlignment(Pos.CENTER);        
         return start;
@@ -328,22 +335,39 @@ public class Main extends Application {
         return statsRight;
     }
     
-    private Node GameDisplay() { //SCREEN 1
+    private void ApplyMovement(ImageView i) {
         if (entityResize >= 850) {
             entityResize = 850;
         }
         
+        i.setTranslateX(horizontalMovement);
+        i.setTranslateY(verticalMovement);
+        i.setFitHeight(entityResize);
+        i.setPreserveRatio(true);
+    }
+    
+    private Node GameDisplay() { 
         FlowPane gameDisplay = new FlowPane();
-        Image npc = new Image(Main.class.getResourceAsStream("img/npc.png"));
-        ImageView gameView = new ImageView();
-        gameView.setTranslateX(horizontalMovement);
-        gameView.setTranslateY(150);
-        gameView.setFitHeight(entityResize);
-        gameView.setPreserveRatio(true);
-        gameView.setImage(npc);
-        gameDisplay.getChildren().add(gameView);
-        gameDisplay.setPrefWrapLength(1920);
         
+        //STAGE 1
+        Image backgroundImage = new Image(Main.class.getResourceAsStream("img/stage1/storageBG.png"));
+        BackgroundImage bgImage = new BackgroundImage(
+                backgroundImage,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,  
+                BackgroundPosition.CENTER,
+                new BackgroundSize(100,100,true,true,true,true)
+                );
+        Background bg = new Background(bgImage);
+        main.setBackground(bg);
+        
+        Image npc = new Image(Main.class.getResourceAsStream("img/stage1/npc.png"));
+        ImageView npcView = new ImageView();
+        npcView.setImage(npc);
+        ApplyMovement(npcView);
+        
+        gameDisplay.getChildren().add(npcView);
+        gameDisplay.setPrefWrapLength(1920);
         return gameDisplay;
     }
     
@@ -380,7 +404,7 @@ public class Main extends Application {
                 btn[i].setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                        if(back==false) {
+                        if(!back) {
                             VBox photoView = new VBox(10);
                             galleryView.setFitHeight(600);
                             galleryView.setFitWidth(800);
@@ -471,7 +495,7 @@ public class Main extends Application {
                 btn[i].setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                        if(back==false) {
+                        if(!back) {
                             user.equipItem(mainItem);
                             inHandView.setFitHeight(200);
                             inHandView.setFitWidth(200);
@@ -496,7 +520,7 @@ public class Main extends Application {
         ImageView itemView = new ImageView();
         itemView.setFitHeight(60);
         itemView.setFitWidth(60);
-        Image item = new Image(Main.class.getResourceAsStream("img/galleryicon.jpg"));
+        Image item = new Image(Main.class.getResourceAsStream("img/galleryIcon.png"));
         itemView.setImage(item);
         btn[9].setGraphic(itemView);
         btn[9].setContentDisplay(GRAPHIC_ONLY);
@@ -515,7 +539,7 @@ public class Main extends Application {
         btn[9].setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(back==false) {
+                if(!back) {
                     main.setCenter(GalleryDisplay());
                     inventoryGrid.setTranslateX(-100);
                     back = true;
