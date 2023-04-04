@@ -15,7 +15,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import static javafx.scene.input.KeyCode.G;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -355,19 +354,31 @@ public class Main extends Application {
     private Node NPCInteractionDisplay() {
         HBox NPCInteractions = new HBox(10);
         
-        Button interactBtn = new Button("INTERACT");
-        Button getBtn = new Button("GET");
+        Button talkBtn = new Button("TALK");
+        talkBtn.setOnAction((ActionEvent event) -> {
+            //prints dialog
+        });
+        Button attackBtn = new Button("ATTACK");
+        attackBtn.setOnAction((ActionEvent event) -> {
+            //attacks npc
+        });
         
         return NPCInteractions;
     }
     
     private Node ItemInteractionDisplay() {
-        HBox ItemInteractions = new HBox(10);
+        HBox ITEMInteractions = new HBox(10);
         
-        Button talkBtn = new Button("TALK");
-        Button attackBtn = new Button("ATTACK");
+        Button interactBtn = new Button("INTERACT");
+        interactBtn.setOnAction((ActionEvent event) -> {
+            //calls interact -> the item in hand would be used on the item ; interact would be different based on if its a door w key or its a written clue
+        });
+        Button getBtn = new Button("GET");
+        getBtn.setOnAction((ActionEvent event) -> {
+            //calls addItem -> enters inventory if not full (9)
+        });
         
-        return ItemInteractions;
+        return ITEMInteractions;
     }
     
     private Node GameDisplay() { 
@@ -674,9 +685,6 @@ public class Main extends Application {
         controlSettings.add(new Text("Right"), 0, 4);
         controlSettings.add(new TextField("D"), 2, 4);
         
-        controlSettings.add(new Text("Inspect"), 0, 5);
-        controlSettings.add(new TextField("Q"), 2, 5);
-        
         controlSettings.add(new Text("Settings"), 0, 6);
         controlSettings.add(new TextField("ESC"), 2, 6);
         
@@ -684,7 +692,7 @@ public class Main extends Application {
         controlSettings.add(new TextField("0"), 2, 7);
         
         controlSettings.add(new Text("Jump"), 0, 8);
-        controlSettings.add(new TextField("SPACE"), 2, 8);
+        controlSettings.add(new TextField("F"), 2, 8);
         
         controlSettings.add(new Text("Sprint"), 0, 9);
         controlSettings.add(new TextField("CTRL"), 2, 9);
