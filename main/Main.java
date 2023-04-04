@@ -15,6 +15,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import static javafx.scene.input.KeyCode.G;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -36,8 +37,8 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-    boolean back = false, jump = false;
-    int currentLevel = 0, horizontalMovement = 250, verticalMovement = 250, entityResize = 800, xChange = 50, yChange = 100;
+    boolean back = false;
+    int currentLevel = 0, horizontalMovement = 250, verticalMovement = 250, entityResize = 800, xChange = 50;
     
     Protagonist user = new Protagonist("USER");
     BorderPane main = new BorderPane();
@@ -53,7 +54,7 @@ public class Main extends Application {
         game.getStylesheets().add(getClass().getResource("Style.css").toExternalForm());
         
         //MAIN CODE
-        Item camera = new Item("camera", "tool", "A camera given to you take any photos you wish to capture", "img/camera.png"); 
+        Item camera = new Item("camera", "item", "A camera given to you take any photos you wish to capture", "img/camera.png"); 
         user.getItem(camera);
         user.takePhoto("img/testphoto1.png");
         
@@ -178,17 +179,10 @@ public class Main extends Application {
                     entityResize -= xChange;
                     main.setCenter(GameDisplay());
                     break;
-                case SPACE:
-                    //jump = true;
-                    //if(jump) {
-                        verticalMovement -= yChange;
-                        //jump = false;
-                        //main.setCenter(GameDisplay());
-                    //}
-                    //else {
-                        //verticalMovement += yChange;
-                        break;
-                    //}
+                case F:
+                    verticalMovement += 200;
+                    main.setCenter(GameDisplay());
+                    break;
                 case CONTROL:
                     xChange *= 4;
                     break;
@@ -200,6 +194,17 @@ public class Main extends Application {
             }
         });
         
+        main.setOnKeyReleased((KeyEvent ke) -> {
+            switch (ke.getCode()) {
+                case F:
+                    verticalMovement -= 200;
+                    main.setCenter(GameDisplay());
+                    break;
+                default:
+                    break;
+            }
+        });
+            
         primaryStage.show();
     }
 
@@ -245,7 +250,8 @@ public class Main extends Application {
         start.getChildren().add(confirmName);
         
         confirmName.setOnAction((ActionEvent event) -> {
-            user.setName(name.getText());
+            if (name.getText().equals("Enter Name")) { user.setName("USER"); }
+            else { user.setName(name.getText()); }
             
             Button startBtn = new Button("START");
             startBtn.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 100));
@@ -344,6 +350,24 @@ public class Main extends Application {
         i.setTranslateY(verticalMovement);
         i.setFitHeight(entityResize);
         i.setPreserveRatio(true);
+    }
+    
+    private Node NPCInteractionDisplay() {
+        HBox NPCInteractions = new HBox(10);
+        
+        Button interactBtn = new Button("INTERACT");
+        Button getBtn = new Button("GET");
+        
+        return NPCInteractions;
+    }
+    
+    private Node ItemInteractionDisplay() {
+        HBox ItemInteractions = new HBox(10);
+        
+        Button talkBtn = new Button("TALK");
+        Button attackBtn = new Button("ATTACK");
+        
+        return ItemInteractions;
     }
     
     private Node GameDisplay() { 
