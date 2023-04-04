@@ -179,16 +179,16 @@ public class Main extends Application {
                     main.setCenter(GameDisplay());
                     break;
                 case SPACE:
-                    jump = true;
-                    if(jump) {
+                    //jump = true;
+                    //if(jump) {
                         verticalMovement -= yChange;
-                        jump = false;
-                        main.setCenter(GameDisplay());
-                    }
-                    else {
-                        verticalMovement += yChange;
+                        //jump = false;
+                        //main.setCenter(GameDisplay());
+                    //}
+                    //else {
+                        //verticalMovement += yChange;
                         break;
-                    }
+                    //}
                 case CONTROL:
                     xChange *= 4;
                     break;
@@ -336,7 +336,7 @@ public class Main extends Application {
     }
     
     private void ApplyMovement(ImageView i) {
-        if (entityResize >= 850) {
+        if (entityResize > 850) {
             entityResize = 850;
         }
         
