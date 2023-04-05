@@ -29,7 +29,8 @@ public class Item {
     }
 
     //OPERATION METHODS
-    public void interact() {
-        System.out.printf("Item: %s%nType: %s%nDescription: %s%n", identifier, type, desc);
+    public String interact() {
+        String information = "Item: " + identifier + "%nType: " + type + "%nDescription: " + desc + "%n";
+        return information;
     }
 }
