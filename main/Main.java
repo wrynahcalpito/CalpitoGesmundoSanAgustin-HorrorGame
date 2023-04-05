@@ -2,6 +2,8 @@ package main;
 
 import javafx.application.Application;
 import static javafx.application.Application.launch;
+import static javafx.beans.binding.Bindings.when;
+import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -16,6 +18,7 @@ import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
@@ -54,9 +57,7 @@ public class Main extends Application {
         
         //MAIN CODE
         Item camera = new Item("camera", "item", "A camera given to you take any photos you wish to capture", "img/camera.png"); 
-        user.getItem(camera);
-        user.takePhoto("img/testphoto1.png");
-        
+        user.getItem(camera);        
         main.setCenter(StartDisplay());
 
         //MAIN KEY EVENTS
@@ -351,31 +352,43 @@ public class Main extends Application {
         i.setPreserveRatio(true);
     }
     
-    private Node NPCInteractionDisplay() {
+    private Node NPCInteractionDisplay(ImageView img, NPC npc) {
         HBox NPCInteractions = new HBox(10);
-        
-        Button talkBtn = new Button("TALK");
-        talkBtn.setOnAction((ActionEvent event) -> {
-            //prints dialog
-        });
-        Button attackBtn = new Button("ATTACK");
-        attackBtn.setOnAction((ActionEvent event) -> {
-            //attacks npc
+
+        img.hoverProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
+            Button talkBtn = new Button("TALK");
+            NPCInteractions.getChildren().add(talkBtn);
+            talkBtn.setOnAction((ActionEvent event) -> {
+                int i = 0;
+                while(i < npc.getDialogArrLength()) {
+                    NPCInteractions.getChildren().add(new Text(npc.printDialog(i)));
+                    i++;
+                }
+            });
+            Button attackBtn = new Button("ATTACK");
+            NPCInteractions.getChildren().add(attackBtn);
+            attackBtn.setOnAction((ActionEvent event) -> {
+                npc.health(10);
+            });
         });
         
         return NPCInteractions;
     }
     
-    private Node ItemInteractionDisplay() {
+    private Node ItemInteractionDisplay(ImageView img, Item i) {
         HBox ITEMInteractions = new HBox(10);
         
-        Button interactBtn = new Button("INTERACT");
-        interactBtn.setOnAction((ActionEvent event) -> {
-            //calls interact -> the item in hand would be used on the item ; interact would be different based on if its a door w key or its a written clue
-        });
-        Button getBtn = new Button("GET");
-        getBtn.setOnAction((ActionEvent event) -> {
-            //calls addItem -> enters inventory if not full (9)
+        img.hoverProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
+            Button interactBtn = new Button("INTERACT");
+            ITEMInteractions.getChildren().add(interactBtn);
+            interactBtn.setOnAction((ActionEvent event) -> {
+                i.interact();
+            });
+            Button getBtn = new Button("GET");
+            ITEMInteractions.getChildren().add(getBtn);
+            getBtn.setOnAction((ActionEvent event) -> {
+                user.getItem(i);
+            });
         });
         
         return ITEMInteractions;
@@ -396,12 +409,17 @@ public class Main extends Application {
         Background bg = new Background(bgImage);
         main.setBackground(bg);
         
-        Image npc = new Image(Main.class.getResourceAsStream("img/stage1/npc.png"));
+        user.takePhoto("img/testphoto1.png");
+        NPC backroomsMonster = new NPC("Kobe", "img/stage1/npc.png", "RAHHHH");
+        
+        Image npc = new Image(Main.class.getResourceAsStream(backroomsMonster.getAppearance()));
         ImageView npcView = new ImageView();
         npcView.setImage(npc);
         ApplyMovement(npcView);
         
         gameDisplay.getChildren().add(npcView);
+        gameDisplay.getChildren().add(NPCInteractionDisplay(npcView, backroomsMonster));
+        
         gameDisplay.setPrefWrapLength(1920);
         return gameDisplay;
     }
