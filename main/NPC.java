@@ -1,35 +1,32 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package main;
 
 import java.util.*;
 
 public class NPC extends Character {
-    private String appearance; 
-    private ArrayList<String> dialog = new ArrayList(); //the dialog will be referenced by the index, it will be printed when approrpiate with the decision of the user
+  private String appearance; //appearance being a string is TEMPORARY (will develop proper models)
+  private static ArrayList<String> dialog = new ArrayList(); //the dialog will be referenced by the index, it will be printed when approrpiate with the decision of the user
   
-    public NPC(String name, String appearance, String d) {
-        super(name, "NPC"); 
-        this.appearance = appearance;
-        dialog.add(d);
-    }
+  public NPC(String name, String appearance, String d) {
+    super(name, "NPC"); //appearance is hardcoded in NPCs
+    this.appearance = appearance;
+    dialog.add(d);
+  }
 
-    //OPERATION METHODS
-    public String getAppearance() {
-        return appearance;
-    }
-    
-    public void interact() {
-        System.out.println(dialog);
-    }
-    
-    public void addString(String d) {
-        dialog.add(d);
-    }
-    
-    public String printDialog(int index){
-        return dialog.get(index);
-    }
-
-    public void scare() {
-        System.out.println("The NPC moved quickly toward the screen. It gets bigger and bigger, and changes its appearance.");
-    }
+  //OPERATION METHODS
+  public String getAppearance() {
+    return appearance;
+  }
+  public static int getDialogArrLength() {
+    return dialog.size();
+  }
+  public void addDialog(String d) {
+    dialog.add(d);
+  }
+  public String printDialog(int index){
+    return dialog.get(index);
+  }
 }
