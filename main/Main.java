@@ -2,7 +2,6 @@ package main;
 
 import javafx.application.Application;
 import static javafx.application.Application.launch;
-import static javafx.beans.binding.Bindings.when;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -18,7 +17,6 @@ import javafx.scene.effect.BlendMode;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.BackgroundImage;
@@ -39,7 +37,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-    boolean back = false;
+    boolean back = false, startbool = false;
     int currentLevel = 0, horizontalMovement = 250, verticalMovement = 250, entityResize = 800, xChange = 50;
     
     Protagonist user = new Protagonist("USER");
@@ -54,6 +52,7 @@ public class Main extends Application {
         Scene game = new Scene(main);
         primaryStage.setScene(game);
         game.getStylesheets().add(getClass().getResource("Style.css").toExternalForm());
+        primaryStage.setMaximized(true);
         
         //MAIN CODE
         Item camera = new Item("camera", "item", "A camera given to you take any photos you wish to capture", "img/camera.png"); 
@@ -249,25 +248,31 @@ public class Main extends Application {
         confirmName.getStyleClass().add("transparent");
         start.getChildren().add(confirmName);
         
-        confirmName.setOnAction((ActionEvent event) -> {
-            if (name.getText().equals("Enter Name")) { user.setName("USER"); }
-            else { user.setName(name.getText()); }
-            
-            Button startBtn = new Button("START");
-            startBtn.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 100));
-            startBtn.setTextFill(Color.web("800000"));
-            startBtn.setBlendMode(BlendMode.SCREEN);
-            startBtn.getStyleClass().add("lightButton");
-            startBtn.getStyleClass().add("transparent");
-            start.getChildren().add(startBtn);
-            
-            startBtn.setOnAction((ActionEvent event1) -> {
-                main.setTop(HeaderDisplay());
-                main.setLeft(LeftStatsDisplay());
-                main.setRight(RightStatsDisplay());
-                main.setCenter(GameDisplay());
-                main.setBottom(InventoryDisplay());
-            });
+        confirmName.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (name.getText().equals("Enter Name")) { user.setName("USER"); }
+                else { user.setName(name.getText()); }
+                
+                if (startbool==false) {
+                    Button startBtn = new Button("START");
+                    startBtn.setFont(Font.loadFont(Main.this.getClass().getResourceAsStream("font/who-asks-satan.ttf"), 100));
+                    startBtn.setTextFill(Color.web("800000"));
+                    startBtn.setBlendMode(BlendMode.SCREEN);
+                    startBtn.getStyleClass().add("lightButton");
+                    startBtn.getStyleClass().add("transparent");
+                    start.getChildren().add(startBtn);
+                    startbool = true;
+                    
+                    startBtn.setOnAction((ActionEvent event1) -> {
+                    main.setTop(HeaderDisplay());
+                    main.setLeft(LeftStatsDisplay());
+                    main.setRight(RightStatsDisplay());
+                    main.setCenter(GameDisplay());
+                    main.setBottom(InventoryDisplay());
+                });
+                }     
+            }
         });      
                 
         start.setAlignment(Pos.CENTER);        
