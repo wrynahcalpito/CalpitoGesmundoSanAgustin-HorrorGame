@@ -2,6 +2,7 @@ package main;
 
 import javafx.application.Application;
 import static javafx.application.Application.launch;
+import javafx.beans.InvalidationListener;
 import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -37,7 +38,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-    boolean back = false, startbool = false;
+    boolean back = false, startbool = false, interactbool = false;
     int currentLevel = 0, horizontalMovement = 250, verticalMovement = 250, entityResize = 800, xChange = 50;
     
     Protagonist user = new Protagonist("USER");
@@ -358,23 +359,35 @@ public class Main extends Application {
     }
     
     private Node NPCInteractionDisplay(ImageView img, NPC npc) {
-        HBox NPCInteractions = new HBox(10);
+        HBox NPCInteractions = new HBox(10); 
+        
+        Button talkBtn = new Button("TALK");
+        Button attackBtn = new Button("ATTACK");
+        NPCInteractions.getChildren().addAll(talkBtn, attackBtn);
 
-        img.hoverProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
-            Button talkBtn = new Button("TALK");
-            NPCInteractions.getChildren().add(talkBtn);
-            talkBtn.setOnAction((ActionEvent event) -> {
-                int i = 0;
-                while(i < npc.getDialogArrLength()) {
-                    NPCInteractions.getChildren().add(new Text(npc.printDialog(i)));
-                    i++;
-                }
-            });
-            Button attackBtn = new Button("ATTACK");
-            NPCInteractions.getChildren().add(attackBtn);
-            attackBtn.setOnAction((ActionEvent event) -> {
-                npc.health(10);
-            });
+        talkBtn.setVisible(false);
+        attackBtn.setVisible(false);
+
+        img.hoverProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue) {
+                talkBtn.setVisible(true);
+                attackBtn.setVisible(true);
+            } else {
+                talkBtn.setVisible(false);
+                attackBtn.setVisible(false);
+            }
+        });
+
+        talkBtn.setOnAction(event -> {
+            int i = 0;
+            while (i < npc.getDialogArrLength()) {
+                NPCInteractions.getChildren().add(new Text(npc.printDialog(i)));
+                i++;
+            }
+        });
+
+        attackBtn.setOnAction(event -> {
+            npc.health(10);
         });
         
         return NPCInteractions;
@@ -383,19 +396,31 @@ public class Main extends Application {
     private Node ItemInteractionDisplay(ImageView img, Item i) {
         HBox ITEMInteractions = new HBox(10);
         
-        img.hoverProperty().addListener((ChangeListener<Boolean>) (observable, oldValue, newValue) -> {
-            Button interactBtn = new Button("INTERACT");
-            ITEMInteractions.getChildren().add(interactBtn);
-            interactBtn.setOnAction((ActionEvent event) -> {
-                i.interact();
-            });
-            Button getBtn = new Button("GET");
-            ITEMInteractions.getChildren().add(getBtn);
-            getBtn.setOnAction((ActionEvent event) -> {
-                user.getItem(i);
-            });
+        Button interactBtn = new Button("INTERACT");
+        Button getBtn = new Button("GET");
+        ITEMInteractions.getChildren().addAll(interactBtn, getBtn);
+
+        interactBtn.setVisible(false);
+        getBtn.setVisible(false);
+
+        img.hoverProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue) {
+                interactBtn.setVisible(true);
+                getBtn.setVisible(true);
+            } else {
+                interactBtn.setVisible(false);
+                getBtn.setVisible(false);
+            }
         });
-        
+
+        interactBtn.setOnAction(event -> {
+            i.interact();
+        });
+
+        getBtn.setOnAction(event -> {
+            user.getItem(i);
+        });
+
         return ITEMInteractions;
     }
     
