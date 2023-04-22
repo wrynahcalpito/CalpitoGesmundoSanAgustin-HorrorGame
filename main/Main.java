@@ -38,7 +38,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class Main extends Application {
-    boolean back = false, startbool = false, interactbool = false;
+    boolean inventoryBack = false, otherBack = false, startbool = false, interactbool = false;
     int currentLevel = 0, horizontalMovement = 250, verticalMovement = 250, entityResize = 800, xChange = 50;
     
     Protagonist user = new Protagonist("USER");
@@ -64,104 +64,103 @@ public class Main extends Application {
         main.setOnKeyPressed((KeyEvent ke) -> {
             switch (ke.getCode()) {
                 case ESCAPE:
-                    if(!back) {
+                    if(!otherBack) {
                         main.setCenter(SettingsDisplay());
-                        back = true;
+                        otherBack = true;
                     }
                     else {
                         main.setCenter(GameDisplay());
-                        back = false;
+                        otherBack = false;
                     }   break;
                 case DIGIT0:
-                    if(!back) {
+                    if(!otherBack) {
                         main.setCenter(GalleryDisplay());
-                        back = true;
+                        otherBack = true;
                     }
                     else {
                         main.setCenter(GameDisplay());
-                        main.setBottom(InventoryDisplay());
-                        back = false;
+                        otherBack = false;
                     }   break;
                 case DIGIT1:
-                    if(!back) {
+                    if(!inventoryBack) {
                         InHandShow(0);
-                        back = true;
+                        inventoryBack = true;
                     }
                     else {
                         RemoveInHand();
-                        back = false;
+                        inventoryBack = false;
                     }   break;
                 case DIGIT2:
-                    if(!back) {
+                    if(!inventoryBack) {
                         InHandShow(1);
-                        back = true;
+                        inventoryBack = true;
                     }
                     else {
                         RemoveInHand();
-                        back = false;
+                        inventoryBack = false;
                     }   break;
                 case DIGIT3:
-                    if(!back) {
+                    if(!inventoryBack) {
                         InHandShow(2);
-                        back = true;
+                        inventoryBack = true;
                     }
                     else {
                         RemoveInHand();
-                        back = false;
+                        inventoryBack = false;
                     }   break;
                 case DIGIT4:
-                    if(!back) {
+                    if(!inventoryBack) {
                         InHandShow(3);
-                        back = true;
+                        inventoryBack = true;
                     }
                     else {
                         RemoveInHand();
-                        back = false;
+                        inventoryBack = false;
                     }   break;
                 case DIGIT5:
-                    if(!back) {
+                    if(!inventoryBack) {
                         InHandShow(4);
-                        back = true;
+                        inventoryBack = true;
                     }
                     else {
                         RemoveInHand();
-                        back = false;
+                        inventoryBack = false;
                     }   break;
                 case DIGIT6:
-                    if(!back){
+                    if(!inventoryBack){
                         InHandShow(5);
-                        back = true;
+                        inventoryBack = true;
                     }
                     else {
                         RemoveInHand();
-                        back = false;
+                        inventoryBack = false;
                     }   break;
                 case DIGIT7:
-                    if(!back) {
+                    if(!inventoryBack) {
                         InHandShow(6);
-                        back = true;
+                        inventoryBack = true;
                     }
                     else {
                         RemoveInHand();
-                        back = false;
+                        inventoryBack = false;
                     }   break;
                 case DIGIT8:
-                    if(!back) {
+                    if(!inventoryBack) {
                         InHandShow(7);
-                        back = true;
+                        inventoryBack = true;
                     }
                     else {
                         RemoveInHand();
-                        back = false;
+                        inventoryBack = false;
                     }   break;
                 case DIGIT9:
-                    if(!back) {
+                    if(!inventoryBack) {
                         InHandShow(8);
-                        back = true;
+                        inventoryBack = true;
                     }
                     else {
                         RemoveInHand();
-                        back = false;
+                        inventoryBack = false;
                     }   break;
                 case A:
                     horizontalMovement += xChange;
@@ -439,7 +438,9 @@ public class Main extends Application {
         Background bg = new Background(bgImage);
         main.setBackground(bg);
         
-        user.takePhoto("img/testphoto1.png");
+        if (user.getGallery()[0] == null) {
+            user.takePhoto("img/testphoto1.png");
+        }
         NPC backroomsMonster = new NPC("Kobe", "img/stage1/npc.png", "RAHHHH");
         
         Image npc = new Image(Main.class.getResourceAsStream(backroomsMonster.getAppearance()));
@@ -487,7 +488,7 @@ public class Main extends Application {
                 btn[i].setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                        if(!back) {
+                        if(!otherBack) {
                             VBox photoView = new VBox(10);
                             galleryView.setFitHeight(600);
                             galleryView.setFitWidth(800);
@@ -502,11 +503,11 @@ public class Main extends Application {
                             });
                             
                             main.setCenter(photoView);
-                            back = true;                            
+                            otherBack = true;                            
                         }
                         else {
                             main.setCenter(GalleryDisplay());
-                            back = false;
+                            otherBack = false;
                         }
                     }
                 });
@@ -578,21 +579,21 @@ public class Main extends Application {
                 btn[i].setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                        if(!back) {
+                        if(!inventoryBack) {
                             user.equipItem(mainItem);
                             inHandView.setFitHeight(200);
                             inHandView.setFitWidth(200);
                             inventoryGrid.add(inHandView, 9, 0);
                             inventoryGrid.setTranslateY(-156);
                             inventoryGrid.setTranslateX(47);
-                            back = true;
+                            inventoryBack = true;
                         }
                         else {
                             main.setBottom(InventoryDisplay());
                             inventoryGrid.getChildren().remove(inHandView);
                             inventoryGrid.setTranslateY(0);
                             inventoryGrid.setTranslateX(0);
-                            back = false;
+                            inventoryBack = false;
                         }
                     }
                 });
@@ -622,15 +623,15 @@ public class Main extends Application {
         btn[9].setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                if(!back) {
+                if(!otherBack) {
                     main.setCenter(GalleryDisplay());
                     inventoryGrid.setTranslateX(-100);
-                    back = true;
+                    otherBack = true;
                 }
                 else {
                     main.setCenter(GameDisplay());
                     main.setBottom(InventoryDisplay());
-                    back = false;
+                    otherBack = false;
                }
             }
         });
