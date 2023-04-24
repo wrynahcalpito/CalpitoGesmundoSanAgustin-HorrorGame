@@ -1,5 +1,8 @@
 package main;
 
+import javafx.animation.Animation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.beans.InvalidationListener;
@@ -36,6 +39,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 public class Main extends Application {
     boolean inventoryBack = false, otherBack = false, startbool = false, interactbool = false;
@@ -489,24 +493,18 @@ public class Main extends Application {
             Background bg = new Background(bgImage);
             main.setBackground(bg);
             
-            while(isStage1) {
-                // set the scene color to black
-                game.setFill(Color.BLACK);
-                // wait for a short amount of time
-                try {
-                    Thread.sleep(BLACKOUT_TIME_MS);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                // set the scene color back to white
-                game.setFill(null);
-                // wait for a short amount of time
-                try {
-                    Thread.sleep(BLACKOUT_TIME_MS);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
+            Timeline timeline = new Timeline(
+                new KeyFrame(Duration.ZERO, event -> {
+                    // set the scene color to black
+                    game.setFill(Color.BLACK);
+                }),
+                new KeyFrame(Duration.millis(BLACKOUT_TIME_MS), event -> {
+                    // remove the fill from the scene
+                    game.setFill(null);
+                })
+            );
+            timeline.setCycleCount(Animation.INDEFINITE);
+            timeline.play();
 
             if (user.getGallery()[0] == null) {
                 user.takePhoto("img/testphoto1.png");
