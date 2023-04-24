@@ -274,9 +274,52 @@ public class Main extends Application {
                 }     
             }
         });      
+        
+        Button manualBtn = new Button("Open Instruction Manual"); 
+        manualBtn.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 25));
+        manualBtn.setTextFill(Color.web("800000"));
+        manualBtn.setBlendMode(BlendMode.SCREEN);
+        manualBtn.getStyleClass().add("lightButton");
+        manualBtn.getStyleClass().add("transparent");
+        manualBtn.setOnAction((ActionEvent event1) -> {
+            main.setCenter(InstructionsDisplay());
+        });
+        start.getChildren().add(manualBtn);
                 
         start.setAlignment(Pos.CENTER);        
         return start;
+    }
+    
+    private Node InstructionsDisplay() {
+        VBox manual = new VBox(5);
+        manual.setStyle("-fx-background-color: transparent;");
+        manual.setBackground(new Background(new BackgroundFill(Color.web("f0f1f2", 1.0), CornerRadii.EMPTY, Insets.EMPTY)));
+        manual.setOpacity(0.6);
+        
+        Text moveIt = new Text("How to move?");
+        moveIt.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 65));
+        manual.getChildren().addAll(moveIt, new Text("Use WASD to move forward, to the left, to the right, and backwards respectively. Use F to jump, CTRL to shift, and SHIFT to crouch."));
+        
+        Text interactIt = new Text("How to interact?");
+        interactIt.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 65));
+        manual.getChildren().addAll(interactIt, new Text("To access settings, press ESC. To access gallery, press 0 or click the icon by the inventory."), new Text("To interact with NPCs and items in the game, hover over the NPC or item and click on the appearing buttons."));
+        
+        Text equipIt = new Text("How to equip items?");
+        equipIt.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 65));
+        manual.getChildren().addAll(equipIt, new Text("Click on the inventory slots below. Pick the item you want to equip."), new Text("You can also use hotkeys (keys 1-9) to equip items. Click the number corresponding to the slot of the desired item."));
+        
+        Button backBtn = new Button("Back"); 
+        backBtn.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 25));
+        backBtn.setTextFill(Color.web("800000"));
+        backBtn.setBlendMode(BlendMode.SCREEN);
+        backBtn.getStyleClass().add("lightButton");
+        backBtn.getStyleClass().add("transparent");
+        backBtn.setOnAction((ActionEvent event1) -> {
+            main.setCenter(StartDisplay());
+        });
+        manual.getChildren().add(backBtn);
+        
+        return manual;
     }
 
     private Node HeaderDisplay() {
@@ -363,7 +406,9 @@ public class Main extends Application {
         Button talkBtn = new Button("TALK");
         Button attackBtn = new Button("ATTACK");
         NPCInteractions.getChildren().addAll(talkBtn, attackBtn);
-
+        NPCInteractions.setTranslateX(horizontalMovement-200);
+        NPCInteractions.setTranslateY(verticalMovement+400);
+        
         talkBtn.setVisible(false);
         attackBtn.setVisible(false);
 
@@ -395,9 +440,11 @@ public class Main extends Application {
     private Node ItemInteractionDisplay(ImageView img, Item i) {
         HBox ITEMInteractions = new HBox(10);
         
-        Button interactBtn = new Button("INTERACT");
-        Button getBtn = new Button("GET");
+        Button interactBtn = new Button("INTERACT WITH ITEM");
+        Button getBtn = new Button("GET ITEM");
         ITEMInteractions.getChildren().addAll(interactBtn, getBtn);
+        ITEMInteractions.setTranslateX(horizontalMovement-200);
+        ITEMInteractions.setTranslateY(verticalMovement+400);
 
         interactBtn.setVisible(false);
         getBtn.setVisible(false);
