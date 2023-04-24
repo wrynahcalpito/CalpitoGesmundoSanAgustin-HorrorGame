@@ -298,9 +298,11 @@ public class Main extends Application {
     
     private Node InstructionsDisplay() {
         VBox manual = new VBox(5);
-        manual.setStyle("-fx-background-color: transparent;");
-        manual.setBackground(new Background(new BackgroundFill(Color.web("f0f1f2", 1.0), CornerRadii.EMPTY, Insets.EMPTY)));
-        manual.setOpacity(0.6);
+        manual.setStyle("-fx-background-color: rgba(255, 255, 255, 0.7);" +
+                        "-fx-border-width: 5;" +
+                        "-fx-border-insets: 5;" + 
+                        "-fx-border-color: black;");
+        manual.setOpacity(1);
         
         Text moveIt = new Text("How to move?");
         moveIt.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 65));
@@ -317,7 +319,6 @@ public class Main extends Application {
         Button backBtn = new Button("Back"); 
         backBtn.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 25));
         backBtn.setTextFill(Color.web("800000"));
-        backBtn.setBlendMode(BlendMode.SCREEN);
         backBtn.getStyleClass().add("lightButton");
         backBtn.getStyleClass().add("transparent");
         backBtn.setOnAction((ActionEvent event1) -> {
