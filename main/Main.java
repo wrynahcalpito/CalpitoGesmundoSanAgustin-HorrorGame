@@ -306,7 +306,7 @@ public class Main extends Application {
         
         Text moveIt = new Text("How to move?");
         moveIt.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 65));
-        manual.getChildren().addAll(moveIt, new Text("Use WASD to move forward, to the left, to the right, and backwards respectively. Use F to jump, CTRL to shift, and SHIFT to crouch."));
+        manual.getChildren().addAll(moveIt, new Text("Use WASD to move forward, to the left, to the right, and backwards respectively."), new Text("Use F to jump, CTRL to shift, and SHIFT to crouch."));
         
         Text interactIt = new Text("How to interact?");
         interactIt.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 65));
