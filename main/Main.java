@@ -1,8 +1,5 @@
 package main;
 
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.beans.InvalidationListener;
@@ -39,17 +36,13 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 
 public class Main extends Application {
     boolean inventoryBack = false, otherBack = false, startbool = false, interactbool = false;
     int currentLevel = 0, horizontalMovement = 250, verticalMovement = 250, entityResize = 800, xChange = 50;
-    private final static int BLACKOUT_TIME_MS = 10;
-
     
     Protagonist user = new Protagonist("USER");
     BorderPane main = new BorderPane();
-    Scene game = new Scene(main);
     GridPane inventoryGrid = new GridPane();
     
     @Override
@@ -57,6 +50,7 @@ public class Main extends Application {
         primaryStage.setTitle("Last Night, Last Night");
     
         //INITIALIZING BORDER PANE (MAIN GAME LAYOUT)
+        Scene game = new Scene(main);
         primaryStage.setScene(game);
         game.getStylesheets().add(getClass().getResource("Style.css").toExternalForm());
         primaryStage.setMaximized(true);
@@ -280,7 +274,7 @@ public class Main extends Application {
                 }     
             }
         });      
-        
+                
         Button manualBtn = new Button("Open Instruction Manual"); 
         manualBtn.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 25));
         manualBtn.setTextFill(Color.web("800000"));
@@ -325,7 +319,8 @@ public class Main extends Application {
             main.setCenter(StartDisplay());
         });
         manual.getChildren().add(backBtn);
-        
+        startbool = false;
+                
         return manual;
     }
 
@@ -413,9 +408,7 @@ public class Main extends Application {
         Button talkBtn = new Button("TALK");
         Button attackBtn = new Button("ATTACK");
         NPCInteractions.getChildren().addAll(talkBtn, attackBtn);
-        NPCInteractions.setTranslateX(horizontalMovement-200);
-        NPCInteractions.setTranslateY(verticalMovement+400);
-        
+
         talkBtn.setVisible(false);
         attackBtn.setVisible(false);
 
@@ -447,11 +440,9 @@ public class Main extends Application {
     private Node ItemInteractionDisplay(ImageView img, Item i) {
         HBox ITEMInteractions = new HBox(10);
         
-        Button interactBtn = new Button("INTERACT WITH ITEM");
-        Button getBtn = new Button("GET ITEM");
+        Button interactBtn = new Button("INTERACT");
+        Button getBtn = new Button("GET");
         ITEMInteractions.getChildren().addAll(interactBtn, getBtn);
-        ITEMInteractions.setTranslateX(horizontalMovement-200);
-        ITEMInteractions.setTranslateY(verticalMovement+400);
 
         interactBtn.setVisible(false);
         getBtn.setVisible(false);
@@ -479,47 +470,31 @@ public class Main extends Application {
     
     private Node GameDisplay() { 
         FlowPane gameDisplay = new FlowPane();
-        boolean isStage1 = true, isStage2 = false, isStage3 = false, isStage4 = false, isStage5 = false;
         
         //STAGE 1
-        while(isStage1) {
-            Image backgroundImage = new Image(Main.class.getResourceAsStream("img/stage1/storageBG.png"));
-            BackgroundImage bgImage = new BackgroundImage(
-                    backgroundImage,
-                    BackgroundRepeat.NO_REPEAT,
-                    BackgroundRepeat.NO_REPEAT,  
-                    BackgroundPosition.CENTER,
-                    new BackgroundSize(100,100,true,true,true,true)
-                    );
-            Background bg = new Background(bgImage);
-            main.setBackground(bg);
-            
-            Timeline timeline = new Timeline(
-                new KeyFrame(Duration.ZERO, event -> {
-                    // set the scene color to black
-                    game.setFill(Color.BLACK);
-                }),
-                new KeyFrame(Duration.millis(BLACKOUT_TIME_MS), event -> {
-                    // remove the fill from the scene
-                    game.setFill(null);
-                })
-            );
-            timeline.setCycleCount(Animation.INDEFINITE);
-            timeline.play();
-
-            if (user.getGallery()[0] == null) {
-                user.takePhoto("img/testphoto1.png");
-            }
-            NPC backroomsMonster = new NPC("Kobe", "img/stage1/npc.png", "RAHHHH");
-
-            Image npc = new Image(Main.class.getResourceAsStream(backroomsMonster.getAppearance()));
-            ImageView npcView = new ImageView();
-            npcView.setImage(npc);
-            ApplyMovement(npcView);
-
-            gameDisplay.getChildren().add(npcView);
-            gameDisplay.getChildren().add(NPCInteractionDisplay(npcView, backroomsMonster));
+        Image backgroundImage = new Image(Main.class.getResourceAsStream("img/stage1/storageBG.png"));
+        BackgroundImage bgImage = new BackgroundImage(
+                backgroundImage,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,  
+                BackgroundPosition.CENTER,
+                new BackgroundSize(100,100,true,true,true,true)
+                );
+        Background bg = new Background(bgImage);
+        main.setBackground(bg);
+        
+        if (user.getGallery()[0] == null) {
+            user.takePhoto("img/testphoto1.png");
         }
+        NPC backroomsMonster = new NPC("Kobe", "img/stage1/npc.png", "RAHHHH");
+        
+        Image npc = new Image(Main.class.getResourceAsStream(backroomsMonster.getAppearance()));
+        ImageView npcView = new ImageView();
+        npcView.setImage(npc);
+        ApplyMovement(npcView);
+        
+        gameDisplay.getChildren().add(npcView);
+        gameDisplay.getChildren().add(NPCInteractionDisplay(npcView, backroomsMonster));
         
         gameDisplay.setPrefWrapLength(1920);
         return gameDisplay;
