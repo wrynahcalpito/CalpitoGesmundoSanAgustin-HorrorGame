@@ -399,8 +399,11 @@ public class Main extends Application {
     }
     
     private void ApplyMovement(ImageView i) {
-        if (entityResize > 850) {
-            entityResize = 850;
+        if (entityResize >= 800) {
+            entityResize = 800;
+        }
+        if (entityResize <= 50) {
+            entityResize =  50;
         }
         
         i.setTranslateX(horizontalMovement);
