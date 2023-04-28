@@ -42,7 +42,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class Main extends Application {
-    boolean inventoryBack = false, otherBack = false, startbool = false, interactbool = false;
+    boolean inventoryBack = false, otherBack = false, startbool = false, interactbool = false, isStage1 = true, isStage2 = false, isStage3 = false;
     int currentLevel = 0, horizontalMovement = 250, verticalMovement = 250, entityResize = 800, xChange = 50;
     private final static int BLACKOUT_TIME_MS = 10;
 
@@ -326,6 +326,8 @@ public class Main extends Application {
         });
         manual.getChildren().add(backBtn);
         
+        startbool = false;
+        
         return manual;
     }
 
@@ -479,30 +481,30 @@ public class Main extends Application {
     
     private Node GameDisplay() { 
         FlowPane gameDisplay = new FlowPane();
-        boolean isStage1 = true, isStage2 = false, isStage3 = false, isStage4 = false, isStage5 = false;
         
-        //STAGE 1
-        while(isStage1) {
+        
+        //STORAGE STAGE (STAGE 1) - ASSIGNED TO WRYNAH DALE D/ CALPITO
+        //while(isStage1) {
             Image backgroundImage = new Image(Main.class.getResourceAsStream("img/stage1/storageBG.png"));
             BackgroundImage bgImage = new BackgroundImage(
-                    backgroundImage,
-                    BackgroundRepeat.NO_REPEAT,
-                    BackgroundRepeat.NO_REPEAT,  
-                    BackgroundPosition.CENTER,
-                    new BackgroundSize(100,100,true,true,true,true)
-                    );
+                backgroundImage,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(100,100,true,true,true,true)
+            );
             Background bg = new Background(bgImage);
             main.setBackground(bg);
-            
+
             Timeline timeline = new Timeline(
-                new KeyFrame(Duration.ZERO, event -> {
-                    // set the scene color to black
-                    game.setFill(Color.BLACK);
-                }),
-                new KeyFrame(Duration.millis(BLACKOUT_TIME_MS), event -> {
-                    // remove the fill from the scene
-                    game.setFill(null);
-                })
+            new KeyFrame(Duration.ZERO, event -> {
+                // set the scene color to black
+                game.setFill(Color.BLACK);
+            }),
+            new KeyFrame(Duration.millis(BLACKOUT_TIME_MS), event -> {
+                // remove the fill from the scene
+                game.setFill(null);
+            })
             );
             timeline.setCycleCount(Animation.INDEFINITE);
             timeline.play();
@@ -519,7 +521,18 @@ public class Main extends Application {
 
             gameDisplay.getChildren().add(npcView);
             gameDisplay.getChildren().add(NPCInteractionDisplay(npcView, backroomsMonster));
+        //}
+        
+        //BUTCHER STAGE (STAGE 2) - ASSIGNED TO MACKENZIE KOBE GABRIEL T. SAN AGUSTIN
+        /**while(isStage2) {
+            
         }
+        
+        while(isStage3) {
+            
+        }**/
+        
+
         
         gameDisplay.setPrefWrapLength(1920);
         return gameDisplay;
