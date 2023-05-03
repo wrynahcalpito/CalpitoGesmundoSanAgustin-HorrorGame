@@ -43,7 +43,7 @@ import javafx.util.Duration;
 
 public class Main extends Application {
     boolean inventoryBack = false, otherBack = false, startbool = false, interactbool = false, isStage1 = true, isStage2 = false, isStage3 = false;
-    int currentLevel = 0, horizontalMovement = 250, verticalMovement = 250, entityResize = 800, xChange = 50;
+    int currentLevel = 0, horizontalMovement = 250, verticalMovement = 250, entityResize = 800, xChange = 50, currentButcherRoom = 1;
     private final static int BLACKOUT_TIME_MS = 10;
 
     
@@ -482,13 +482,124 @@ public class Main extends Application {
         return ITEMInteractions;
     }
     
+    private Node DoorInteractionDisplay(ImageView img, Item i) {
+        HBox DOORInteractions = new HBox(10);
+        
+        Button openBtn = new Button("OPEN DOOR WITH KEY");
+        DOORInteractions.getChildren().addAll(openBtn);
+        DOORInteractions.setTranslateX(300);
+        DOORInteractions.setTranslateY(250);
+
+        openBtn.setVisible(false);
+
+        img.hoverProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue) {
+                //if (user.returnItem() == Key) {  
+                        openBtn.setVisible(true);
+                    //}
+            } else {
+                //openBtn.setVisible(false);
+            }
+        });
+
+        openBtn.setOnAction(event -> {
+            switch(currentButcherRoom) {
+                case 1:
+                    ChangeRoom(2);
+                    currentButcherRoom = 2;
+                    break;
+                case 2:
+                    ChangeRoom(3);
+                    currentButcherRoom = 3;
+                    break;
+                case 3:
+                    //change to the ending na
+                    ChangeRoom(1);
+                    currentButcherRoom = 1;
+                    break;
+            }
+        });
+
+        return DOORInteractions;
+    }
+    
+    private ImageView ChangeRoom(int i) {
+        ImageView newDoor = null, door;
+        Image backgroundImage, doorImage;
+        BackgroundImage bgImage;
+        Background bg;
+        switch(i) {
+            case 1:
+                backgroundImage = new Image(Main.class.getResourceAsStream("img/stage2/meatstoreBG.jpg"));
+                bgImage = new BackgroundImage(
+                    backgroundImage,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.CENTER,
+                    new BackgroundSize(100,100,true,true,true,true)
+                );
+                bg = new Background(bgImage);
+                main.setBackground(bg);
+                
+                doorImage = new Image(Main.class.getResourceAsStream("img/stage2/door.jpg"));
+                door = new ImageView();
+                door.setImage(doorImage);
+                door.setTranslateX(500);
+                door.setTranslateY(300);
+                
+                newDoor = door;
+                break;
+            case 2:
+                backgroundImage = new Image(Main.class.getResourceAsStream("img/stage2/room1.jpg"));
+                bgImage = new BackgroundImage(
+                    backgroundImage,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.CENTER,
+                    new BackgroundSize(100,100,true,true,true,true)
+                );
+                bg = new Background(bgImage);
+                main.setBackground(bg);
+                
+                doorImage = new Image(Main.class.getResourceAsStream("img/stage2/door.jpg"));
+                door = new ImageView();
+                door.setImage(doorImage);
+                door.setTranslateX(500);
+                door.setTranslateY(300);
+                
+                newDoor = door;
+                break;
+            case 3:
+                backgroundImage = new Image(Main.class.getResourceAsStream("img/stage2/room2.jpg"));
+                bgImage = new BackgroundImage(
+                    backgroundImage,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.CENTER,
+                    new BackgroundSize(100,100,true,true,true,true)
+                );
+                bg = new Background(bgImage);
+                main.setBackground(bg);
+                
+                doorImage = new Image(Main.class.getResourceAsStream("img/stage2/door.jpg"));
+                door = new ImageView();
+                door.setImage(doorImage);
+                door.setTranslateX(500);
+                door.setTranslateY(300);
+                
+                newDoor = door;
+                break;
+        }
+        return newDoor;
+    }
+    
     private Node GameDisplay() { 
         FlowPane gameDisplay = new FlowPane();
         
         
         //STORAGE STAGE (STAGE 1) - ASSIGNED TO WRYNAH DALE D/ CALPITO
         //while(isStage1) {
-            Image backgroundImage = new Image(Main.class.getResourceAsStream("img/stage1/storageBG.png"));
+            Image backgroundImage = new Image(Main.class.getResourceAsStream("img/stage2/meatstoreBG.jpg"));
             BackgroundImage bgImage = new BackgroundImage(
                 backgroundImage,
                 BackgroundRepeat.NO_REPEAT,
@@ -512,18 +623,19 @@ public class Main extends Application {
             timeline.setCycleCount(Animation.INDEFINITE);
             timeline.play();
 
-            if (user.getGallery()[0] == null) {
-                user.takePhoto("img/testphoto1.png");
-            }
-            NPC backroomsMonster = new NPC("Kobe", "img/stage1/npc.png", "RAHHHH");
+            NPC butcher = new NPC("The Butcher", "img/stage2/butcher.png", "Meat...");
 
-            Image npc = new Image(Main.class.getResourceAsStream(backroomsMonster.getAppearance()));
+            Image npc = new Image(Main.class.getResourceAsStream(butcher.getAppearance()));
             ImageView npcView = new ImageView();
             npcView.setImage(npc);
             ApplyMovement(npcView);
-
-            gameDisplay.getChildren().add(npcView);
-            gameDisplay.getChildren().add(NPCInteractionDisplay(npcView, backroomsMonster));
+            
+            //gameDisplay.getChildren().add(npcView);
+            //gameDisplay.getChildren().add(NPCInteractionDisplay(npcView, butcher));
+            
+            ImageView newDoor = ChangeRoom(1);
+            gameDisplay.getChildren().add(newDoor);
+            gameDisplay.getChildren().add(DoorInteractionDisplay(newDoor, null));
         //}
         
         //BUTCHER STAGE (STAGE 2) - ASSIGNED TO MACKENZIE KOBE GABRIEL T. SAN AGUSTIN
