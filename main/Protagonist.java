@@ -45,6 +45,10 @@ public class Protagonist extends Character {
     public void equipItem(Item i) {
         itemInUse = i;
     }
+    
+    public Item returnItem() {
+        return itemInUse;
+    }
 
     public void useItem() {
         System.out.printf("%s used item.%n", name);
