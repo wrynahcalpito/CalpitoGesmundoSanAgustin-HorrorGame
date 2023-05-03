@@ -598,7 +598,53 @@ public class Main extends Application {
         
         
         //STORAGE STAGE (STAGE 1) - ASSIGNED TO WRYNAH DALE D/ CALPITO
-        //while(isStage1) {
+        /*while(isStage1) {
+            Image backgroundImage = new Image(Main.class.getResourceAsStream("img/stage1/storageBG.png"));
+            BackgroundImage bgImage = new BackgroundImage(
+                    backgroundImage,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundRepeat.NO_REPEAT,  
+                    BackgroundPosition.CENTER,
+                    new BackgroundSize(100,100,true,true,true,true)
+                    );
+                backgroundImage,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(100,100,true,true,true,true)
+            );
+            Background bg = new Background(bgImage);
+            main.setBackground(bg);
+            
+
+            Timeline timeline = new Timeline(
+                new KeyFrame(Duration.ZERO, event -> {
+                    // set the scene color to black
+                    game.setFill(Color.BLACK);
+                }),
+                new KeyFrame(Duration.millis(BLACKOUT_TIME_MS), event -> {
+                    // remove the fill from the scene
+                    game.setFill(null);
+                })
+            new KeyFrame(Duration.ZERO, event -> {
+                // set the scene color to black
+                game.setFill(Color.BLACK);
+            }),
+            new KeyFrame(Duration.millis(BLACKOUT_TIME_MS), event -> {
+                // remove the fill from the scene
+                game.setFill(null);
+            })
+            );
+            timeline.setCycleCount(Animation.INDEFINITE);
+            timeline.play();
+@@ -519,8 +521,19 @@ private Node GameDisplay() {
+
+            gameDisplay.getChildren().add(npcView);
+            gameDisplay.getChildren().add(NPCInteractionDisplay(npcView, backroomsMonster));   
+        */}
+        
+        //BUTCHER STAGE (STAGE 2) - ASSIGNED TO MACKENZIE KOBE GABRIEL T. SAN AGUSTIN
+        //while(isStage2) {
             Image backgroundImage = new Image(Main.class.getResourceAsStream("img/stage2/meatstoreBG.jpg"));
             BackgroundImage bgImage = new BackgroundImage(
                 backgroundImage,
@@ -635,17 +681,12 @@ public class Main extends Application {
             
             ImageView newDoor = ChangeRoom(1);
             gameDisplay.getChildren().add(newDoor);
-            gameDisplay.getChildren().add(DoorInteractionDisplay(newDoor, null));
+            gameDisplay.getChildren().add(DoorInteractionDisplay(newDoor, null));  
         //}
         
-        //BUTCHER STAGE (STAGE 2) - ASSIGNED TO MACKENZIE KOBE GABRIEL T. SAN AGUSTIN
-        /**while(isStage2) {
+       //while(isStage3) {
             
-        }
-        
-        while(isStage3) {
-            
-        }**/
+        //}
         
 
         
