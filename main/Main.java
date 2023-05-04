@@ -46,6 +46,7 @@ import javafx.util.Duration;
 public class Main extends Application {
     boolean inventoryBack = false, otherBack = false, startbool = false, interactbool = false, isStage1 = true, isStage2 = false, isStage3 = false, reset = false;
     int currentLevel = 0, horizontalMovement = 250, verticalMovement = 250, entityResize = 800, xChange = 50, currentButcherRoom = 1, timer = 0;
+    Text gameTitle;
     private final static int BLACKOUT_TIME_MS = 10;
 
     
@@ -341,7 +342,7 @@ public class Main extends Application {
         header.setPadding(new Insets(20, 50, 20, 50));
         header.setHgap(20);
         
-        Text gameTitle = new Text("Last Night, Last Night");
+        gameTitle = new Text("Last Night, Last Night");
         gameTitle.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 65));
         gameTitle.setFill(Color.web("f0f1f2", 1.0));
         header.getChildren().add(gameTitle);     
@@ -559,7 +560,7 @@ public class Main extends Application {
                 @Override
                 public void run() {
                     timer += 1;
-                    System.out.println("timer 1: " + timer);
+                    gameTitle.setText("Time Remaining: " + (180-timer));
                     if (currentButcherRoom == 2) {
                         tr1.cancel();
                         System.out.println("Congrats!");
@@ -572,7 +573,7 @@ public class Main extends Application {
                 break;
             case 2:
                 timer = 0;
-                backgroundImage = new Image(Main.class.getResourceAsStream("img/stage2/room1.jpg"));
+                backgroundImage = new Image(Main.class.getResourceAsStream("img/stage2/room1.png"));
                 bgImage = new BackgroundImage(
                     backgroundImage,
                     BackgroundRepeat.NO_REPEAT,
@@ -595,7 +596,7 @@ public class Main extends Application {
                 @Override
                 public void run() {
                     timer += 1;
-                    System.out.println("timer 2: " + timer);
+                    gameTitle.setText("Time Remaining: " + (120-timer));
                     if (currentButcherRoom == 3) {
                         tr2.cancel();
                         System.out.println("Congrats!");
@@ -631,7 +632,7 @@ public class Main extends Application {
                 @Override
                 public void run() {
                     timer += 1;
-                    System.out.println("timer 3: " + timer);
+                    gameTitle.setText("Time Remaining: " + (60-timer));
                     if (currentButcherRoom == 1) {
                         tr3.cancel();
                         System.out.println("Congrats!");
