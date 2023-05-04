@@ -1,5 +1,7 @@
 package main;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -42,8 +44,8 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class Main extends Application {
-    boolean inventoryBack = false, otherBack = false, startbool = false, interactbool = false, isStage1 = true, isStage2 = false, isStage3 = false;
-    int currentLevel = 0, horizontalMovement = 250, verticalMovement = 250, entityResize = 800, xChange = 50, currentButcherRoom = 1;
+    boolean inventoryBack = false, otherBack = false, startbool = false, interactbool = false, isStage1 = true, isStage2 = false, isStage3 = false, reset = false;
+    int currentLevel = 0, horizontalMovement = 250, verticalMovement = 250, entityResize = 800, xChange = 50, currentButcherRoom = 1, timer = 0;
     private final static int BLACKOUT_TIME_MS = 10;
 
     
@@ -75,7 +77,7 @@ public class Main extends Application {
                         otherBack = true;
                     }
                     else {
-                        main.setCenter(GameDisplay());
+                        main.setCenter(GameDisplay(currentButcherRoom));
                         otherBack = false;
                     }   break;
                 case DIGIT0:
@@ -84,7 +86,7 @@ public class Main extends Application {
                         otherBack = true;
                     }
                     else {
-                        main.setCenter(GameDisplay());
+                        main.setCenter(GameDisplay(currentButcherRoom));
                         otherBack = false;
                     }   break;
                 case DIGIT1:
@@ -170,23 +172,23 @@ public class Main extends Application {
                     }   break;
                 case A:
                     horizontalMovement += xChange;
-                    main.setCenter(GameDisplay());
+                    main.setCenter(GameDisplay(currentButcherRoom));
                     break;
                 case D:
                     horizontalMovement -= xChange;
-                    main.setCenter(GameDisplay());
+                    main.setCenter(GameDisplay(currentButcherRoom));
                     break;
                 case W:
                     entityResize += xChange;
-                    main.setCenter(GameDisplay());
+                    main.setCenter(GameDisplay(currentButcherRoom));
                     break;
                 case S:
                     entityResize -= xChange;
-                    main.setCenter(GameDisplay());
+                    main.setCenter(GameDisplay(currentButcherRoom));
                     break;
                 case F:
                     verticalMovement += 200;
-                    main.setCenter(GameDisplay());
+                    main.setCenter(GameDisplay(currentButcherRoom));
                     break;
                 case CONTROL:
                     xChange *= 4;
@@ -203,7 +205,7 @@ public class Main extends Application {
             switch (ke.getCode()) {
                 case F:
                     verticalMovement -= 200;
-                    main.setCenter(GameDisplay());
+                    main.setCenter(GameDisplay(currentButcherRoom));
                     break;
                 default:
                     break;
@@ -274,7 +276,7 @@ public class Main extends Application {
                     main.setTop(HeaderDisplay());
                     main.setLeft(LeftStatsDisplay());
                     main.setRight(RightStatsDisplay());
-                    main.setCenter(GameDisplay());
+                    main.setCenter(GameDisplay(currentButcherRoom));
                     main.setBottom(InventoryDisplay());
                 });
                 }     
@@ -505,17 +507,17 @@ public class Main extends Application {
         openBtn.setOnAction(event -> {
             switch(currentButcherRoom) {
                 case 1:
-                    ChangeRoom(2);
                     currentButcherRoom = 2;
+                    main.setCenter(GameDisplay(currentButcherRoom));
                     break;
                 case 2:
-                    ChangeRoom(3);
                     currentButcherRoom = 3;
+                    main.setCenter(GameDisplay(currentButcherRoom));
                     break;
                 case 3:
-                    //change to the ending na
-                    ChangeRoom(1);
+                    //change to the ending na 
                     currentButcherRoom = 1;
+                    main.setCenter(GameDisplay(currentButcherRoom));
                     break;
             }
         });
@@ -528,9 +530,13 @@ public class Main extends Application {
         Image backgroundImage, doorImage;
         BackgroundImage bgImage;
         Background bg;
+        Timer tr1 = new Timer();
+        Timer tr2 = new Timer();
+        Timer tr3 = new Timer();
         switch(i) {
             case 1:
-                backgroundImage = new Image(Main.class.getResourceAsStream("img/stage2/meatstoreBG.jpg"));
+                timer = 0;
+                backgroundImage = new Image(Main.class.getResourceAsStream("img/stage2/meatstoreBG.png"));
                 bgImage = new BackgroundImage(
                     backgroundImage,
                     BackgroundRepeat.NO_REPEAT,
@@ -548,8 +554,24 @@ public class Main extends Application {
                 door.setTranslateY(300);
                 
                 newDoor = door;
+                
+                tr1.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    timer += 1;
+                    System.out.println("timer 1: " + timer);
+                    if (currentButcherRoom == 2) {
+                        tr1.cancel();
+                        System.out.println("Congrats!");
+                    }
+                    if(timer >= 180) {
+                        tr1.cancel();
+                        GameOver();
+                    }
+                }}, 0, 1000);
                 break;
             case 2:
+                timer = 0;
                 backgroundImage = new Image(Main.class.getResourceAsStream("img/stage2/room1.jpg"));
                 bgImage = new BackgroundImage(
                     backgroundImage,
@@ -568,8 +590,24 @@ public class Main extends Application {
                 door.setTranslateY(300);
                 
                 newDoor = door;
+                
+                tr2.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    timer += 1;
+                    System.out.println("timer 2: " + timer);
+                    if (currentButcherRoom == 3) {
+                        tr2.cancel();
+                        System.out.println("Congrats!");
+                    }
+                    if(timer >= 120) {
+                        tr2.cancel();
+                        GameOver();
+                    }
+                }}, 0, 1000);
                 break;
             case 3:
+                timer = 0;
                 backgroundImage = new Image(Main.class.getResourceAsStream("img/stage2/room2.jpg"));
                 bgImage = new BackgroundImage(
                     backgroundImage,
@@ -588,15 +626,60 @@ public class Main extends Application {
                 door.setTranslateY(300);
                 
                 newDoor = door;
+                
+                tr3.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    timer += 1;
+                    System.out.println("timer 3: " + timer);
+                    if (currentButcherRoom == 1) {
+                        tr3.cancel();
+                        System.out.println("Congrats!");
+                    }
+                    if(timer >= 3) {
+                        tr3.cancel();
+                        GameOver();
+                    }
+                }}, 0, 1000);
                 break;
         }
         return newDoor;
     }
     
-    private Node GameDisplay() { 
+    private void GameOver() {
+        Image backgroundImage = new Image(Main.class.getResourceAsStream("img/gameOverScreen.png"));
+        BackgroundImage bgImage = new BackgroundImage(
+            backgroundImage,
+            BackgroundRepeat.NO_REPEAT,
+            BackgroundRepeat.NO_REPEAT,
+            BackgroundPosition.CENTER,
+            new BackgroundSize(100,100,true,true,true,true)
+        );
+        Background bg = new Background(bgImage);
+        main.setBackground(bg);
+        main.setCenter(null);
+    }
+    
+    private Node GameOverScreen() {
+        HBox gameOverDisplay = new HBox();
+        
+        Image gameOverImage = new Image(Main.class.getResourceAsStream("img/gameOverScreen.png"));
+        ImageView gameOver = new ImageView();
+        gameOver.setImage(gameOverImage);
+        BackgroundImage bgImage = new BackgroundImage(
+            gameOverImage,
+            BackgroundRepeat.NO_REPEAT,
+            BackgroundRepeat.NO_REPEAT,
+            BackgroundPosition.CENTER,
+            new BackgroundSize(100,100,true,true,true,true)
+        );
+        Background bg = new Background(bgImage);
+        gameOverDisplay.getChildren().add(gameOver);
+        
+        return gameOverDisplay;
+    }
+    private Node GameDisplay(int i) { 
         FlowPane gameDisplay = new FlowPane();
-        
-        
         //STORAGE STAGE (STAGE 1) - ASSIGNED TO WRYNAH DALE D/ CALPITO
         /*while(isStage1) {
             Image backgroundImage = new Image(Main.class.getResourceAsStream("img/stage1/storageBG.png"));
@@ -615,7 +698,7 @@ public class Main extends Application {
             );
             Background bg = new Background(bgImage);
             main.setBackground(bg);
-            
+
 
             Timeline timeline = new Timeline(
                 new KeyFrame(Duration.ZERO, event -> {
@@ -640,12 +723,12 @@ public class Main extends Application {
 @@ -519,8 +521,19 @@ private Node GameDisplay() {
 
             gameDisplay.getChildren().add(npcView);
-            gameDisplay.getChildren().add(NPCInteractionDisplay(npcView, backroomsMonster));   
-        */}
-        
+            gameDisplay.getChildren().add(NPCInteractionDisplay(npcView, backroomsMonster));
+        }*/
+
         //BUTCHER STAGE (STAGE 2) - ASSIGNED TO MACKENZIE KOBE GABRIEL T. SAN AGUSTIN
         //while(isStage2) {
-            Image backgroundImage = new Image(Main.class.getResourceAsStream("img/stage2/meatstoreBG.jpg"));
+            Image backgroundImage = new Image(Main.class.getResourceAsStream("img/stage2/meatstoreBG.png"));
             BackgroundImage bgImage = new BackgroundImage(
                 backgroundImage,
                 BackgroundRepeat.NO_REPEAT,
@@ -675,20 +758,18 @@ public class Main extends Application {
             ImageView npcView = new ImageView();
             npcView.setImage(npc);
             ApplyMovement(npcView);
-            
+
             //gameDisplay.getChildren().add(npcView);
             //gameDisplay.getChildren().add(NPCInteractionDisplay(npcView, butcher));
-            
-            ImageView newDoor = ChangeRoom(1);
-            gameDisplay.getChildren().add(newDoor);
-            gameDisplay.getChildren().add(DoorInteractionDisplay(newDoor, null));  
-        //}
-        
-       //while(isStage3) {
-            
-        //}
-        
 
+            ImageView newDoor = ChangeRoom(i);
+            gameDisplay.getChildren().add(newDoor);
+            gameDisplay.getChildren().add(DoorInteractionDisplay(newDoor, null));
+        //}
+
+        //while(isStage3) {
+
+        //}
         
         gameDisplay.setPrefWrapLength(1920);
         return gameDisplay;
@@ -868,7 +949,7 @@ public class Main extends Application {
                     otherBack = true;
                 }
                 else {
-                    main.setCenter(GameDisplay());
+                    main.setCenter(GameDisplay(currentButcherRoom));
                     main.setBottom(InventoryDisplay());
                     otherBack = false;
                }
