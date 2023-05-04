@@ -548,11 +548,13 @@ public class Main extends Application {
                 bg = new Background(bgImage);
                 main.setBackground(bg);
                 
-                doorImage = new Image(Main.class.getResourceAsStream("img/stage2/door.jpg"));
+                doorImage = new Image(Main.class.getResourceAsStream("img/stage2/door.png"));
                 door = new ImageView();
                 door.setImage(doorImage);
                 door.setTranslateX(500);
                 door.setTranslateY(300);
+                door.setFitHeight(560);
+                door.setFitWidth(420);
                 
                 newDoor = door;
                 
@@ -584,11 +586,13 @@ public class Main extends Application {
                 bg = new Background(bgImage);
                 main.setBackground(bg);
                 
-                doorImage = new Image(Main.class.getResourceAsStream("img/stage2/door.jpg"));
+                doorImage = new Image(Main.class.getResourceAsStream("img/stage2/door.png"));
                 door = new ImageView();
                 door.setImage(doorImage);
                 door.setTranslateX(500);
                 door.setTranslateY(300);
+                door.setFitHeight(560);
+                door.setFitWidth(420);
                 
                 newDoor = door;
                 
@@ -620,11 +624,13 @@ public class Main extends Application {
                 bg = new Background(bgImage);
                 main.setBackground(bg);
                 
-                doorImage = new Image(Main.class.getResourceAsStream("img/stage2/door.jpg"));
+                doorImage = new Image(Main.class.getResourceAsStream("img/stage2/door.png"));
                 door = new ImageView();
                 door.setImage(doorImage);
                 door.setTranslateX(500);
                 door.setTranslateY(300);
+                door.setFitHeight(560);
+                door.setFitWidth(420);
                 
                 newDoor = door;
                 
