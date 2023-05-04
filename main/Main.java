@@ -44,11 +44,11 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class Main extends Application {
-    boolean inventoryBack = false, otherBack = false, startbool = false, interactbool = false, isStage1 = true, isStage2 = false, isStage3 = false, reset = false;
-    int currentLevel = 0, horizontalMovement = 250, verticalMovement = 250, entityResize = 800, xChange = 50, currentButcherRoom = 1, timer = 0;
-    Text gameTitle;
+    private Text gameTitle, introText = new Text();
     private final static int BLACKOUT_TIME_MS = 10;
-
+    private boolean inventoryBack = false, otherBack = false, startbool = false, interactbool = false, isIntro = true, isStage1 = false, isStage2 = false, isStage3 = false, reset = false;
+    private String introMessage = "Where am I? Where am I! Last night, I was in my room...last night, everything was normal. But now, I can't move! I'm paralyzed—the world around me is paralyzed. But I can see a world so strange that I could not understand. It's dark; too dark for tonight.                                                                                                                                         ";
+    private int currentLevel = 0, horizontalMovement = 250, verticalMovement = 250, entityResize = 800, xChange = 50, introMessageLength = introMessage.length(), currentCharIndex = 0, currentButcherRoom = 1, timer = 0;
     
     Protagonist user = new Protagonist("USER");
     BorderPane main = new BorderPane();
@@ -679,18 +679,50 @@ public class Main extends Application {
         
         return gameOverDisplay;
     }
+    
+    private Node IntroDisplay() {
+        FlowPane introPane = new FlowPane();
+        introPane.setStyle("-fx-background-color: black");
+        introPane.setAlignment(Pos.CENTER);
+        introText.setFill(Color.WHITE);
+        introText.setFont(Font.font("Chiller", 40));
+
+        Timeline timeline = new Timeline();
+        timeline.getKeyFrames().add(
+            new KeyFrame(Duration.millis(100), new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                if (currentCharIndex <= introMessageLength) {
+                    introText.setText(introMessage.substring(0, currentCharIndex));
+                    currentCharIndex++;
+                } else {
+                    timeline.stop();
+                }
+            }
+        })
+        );
+        timeline.setCycleCount(Animation.INDEFINITE);
+        introPane.getChildren().add(introText);
+        timeline.play();
+            
+        isIntro = false;
+        isStage1 = true;
+        return introPane;
+    }
+    
     private Node GameDisplay(int i) { 
         FlowPane gameDisplay = new FlowPane();
-        //STORAGE STAGE (STAGE 1) - ASSIGNED TO WRYNAH DALE D/ CALPITO
-        /*while(isStage1) {
+        
+        //(QUICK) INTRO
+        /**if (isIntro==true) {
+            main.setCenter(IntroDisplay());
+        }**/
+        
+        //STORAGE STAGE
+        /**while(isStage1) {
+            //BACKGROUND FOR STAGE 1
             Image backgroundImage = new Image(Main.class.getResourceAsStream("img/stage1/storageBG.png"));
             BackgroundImage bgImage = new BackgroundImage(
-                    backgroundImage,
-                    BackgroundRepeat.NO_REPEAT,
-                    BackgroundRepeat.NO_REPEAT,  
-                    BackgroundPosition.CENTER,
-                    new BackgroundSize(100,100,true,true,true,true)
-                    );
                 backgroundImage,
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
@@ -699,17 +731,9 @@ public class Main extends Application {
             );
             Background bg = new Background(bgImage);
             main.setBackground(bg);
-
-
+            
+            //FLICKERING LIGHTS CODE
             Timeline timeline = new Timeline(
-                new KeyFrame(Duration.ZERO, event -> {
-                    // set the scene color to black
-                    game.setFill(Color.BLACK);
-                }),
-                new KeyFrame(Duration.millis(BLACKOUT_TIME_MS), event -> {
-                    // remove the fill from the scene
-                    game.setFill(null);
-                })
             new KeyFrame(Duration.ZERO, event -> {
                 // set the scene color to black
                 game.setFill(Color.BLACK);
@@ -721,13 +745,35 @@ public class Main extends Application {
             );
             timeline.setCycleCount(Animation.INDEFINITE);
             timeline.play();
-@@ -519,8 +521,19 @@ private Node GameDisplay() {
 
-            gameDisplay.getChildren().add(npcView);
-            gameDisplay.getChildren().add(NPCInteractionDisplay(npcView, backroomsMonster));
-        }*/
+            if (user.getGallery()[0] == null) {
+                user.takePhoto("img/testphoto1.png");
+            }
+            
+            Item box1 = new Item("box1", "box", "img/stage1/box1.png");
+            Image box1Img = new Image(Main.class.getResourceAsStream(box1.getAppearance()));
+            ImageView box1View = new ImageView();
+            box1View.setImage(box1Img);
+            ApplyMovement(box1View);
+            
+            Item box2 = new Item("box2", "box", "img/stage1/box2.png");
+            Image box2Img = new Image(Main.class.getResourceAsStream(box2.getAppearance()));
+            ImageView box2View = new ImageView();
+            box1View.setImage(box2Img);
+            ApplyMovement(box2View);
+            
+            Item box3 = new Item("box2", "box", "img/stage1/box3.png");
+            Image box3Img = new Image(Main.class.getResourceAsStream(box2.getAppearance()));
+            ImageView box3View = new ImageView();
+            box3View.setImage(box2Img);
+            ApplyMovement(box3View);          
+            
+            gameDisplay.getChildren().addAll(box1View, ItemInteractionDisplay(box1View, box1), box2View, ItemInteractionDisplay(box2View, box2), box3View, ItemInteractionDisplay(box3View, box3));
+            
+            isStage1 = false;
+        }**/
 
-        //BUTCHER STAGE (STAGE 2) - ASSIGNED TO MACKENZIE KOBE GABRIEL T. SAN AGUSTIN
+        //BUTCHER STAGE (STAGE 2)
         //while(isStage2) {
             Image backgroundImage = new Image(Main.class.getResourceAsStream("img/stage2/meatstoreBG.png"));
             BackgroundImage bgImage = new BackgroundImage(
