@@ -636,7 +636,7 @@ public class Main extends Application {
                         tr3.cancel();
                         System.out.println("Congrats!");
                     }
-                    if(timer >= 3) {
+                    if(timer >= 60) {
                         tr3.cancel();
                         GameOver();
                     }
