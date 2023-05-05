@@ -1,5 +1,10 @@
 package main;
-
+/**
+ * Items include Keys and WrittenClues. Each Item has an identifier, type, description,
+ * and appearance. Items are interactive.
+ * 
+ * @author TRUTH
+ */
 import java.util.ArrayList;
 
 public class Item {
