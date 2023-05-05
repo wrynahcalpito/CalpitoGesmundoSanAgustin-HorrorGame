@@ -1,5 +1,10 @@
 package main;
-
+/**
+ * Characters include Protagonists and NPCs. Each Character has a name, type, health, 
+ * energy, sanity, and hunger.
+ * 
+ * @author TRUTH
+ */
 public abstract class Character {
   protected String name, type;
   protected int health, maxHealth = 100, energy, maxEnergy = 120, sanity, maxSanity = 100, hunger, maxHunger = 100; 
