@@ -2,13 +2,13 @@ package main;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
-import javafx.beans.InvalidationListener;
-import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -46,19 +46,20 @@ import javafx.util.Duration;
 public class Main extends Application {
     private Text gameTitle, introText = new Text();
     private final static int BLACKOUT_TIME_MS = 10;
-    private boolean inventoryBack = false, otherBack = false, startbool = false, interactbool = false, isIntro = true, isStage1 = false, isStage2 = false, isStage3 = false, reset = false;
+    private boolean inventoryBack = false, otherBack = false, startbool = false, interactbool = false, isIntro = false,  isStage1 = false, isStage2 = false, isStage3 = false, reset = false;
     private String introMessage = "Where am I? Where am I! Last night, I was in my room...last night, everything was normal. But now, I can't move! I'm paralyzed—the world around me is paralyzed. But I can see a world so strange that I could not understand. It's dark; too dark for tonight.                                                                                                                                         ";
-    private int currentLevel = 0, horizontalMovement = 250, verticalMovement = 250, entityResize = 800, xChange = 50, introMessageLength = introMessage.length(), currentCharIndex = 0, currentButcherRoom = 1, timer = 0;
+    private int currentLevel = 0, horizontalMovement = 250, verticalMovement = 250, entityResize = 750, xChange = 50, introMessageLength = introMessage.length(), currentCharIndex = 0, currentButcherRoom = 1, timer = 0;
     
     Protagonist user = new Protagonist("USER");
     BorderPane main = new BorderPane();
     Scene game = new Scene(main);
+    VBox start = new VBox(10);
     GridPane inventoryGrid = new GridPane();
     
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Last Night, Last Night");
-    
+            
         //INITIALIZING BORDER PANE (MAIN GAME LAYOUT)
         primaryStage.setScene(game);
         game.getStylesheets().add(getClass().getResource("Style.css").toExternalForm());
@@ -66,8 +67,83 @@ public class Main extends Application {
         
         //MAIN CODE
         Item camera = new Item("camera", "item", "A camera given to you take any photos you wish to capture", "img/camera.png"); 
-        user.getItem(camera);        
-        main.setCenter(StartDisplay());
+        user.getItem(camera);
+        
+        //START SCREEN
+        Image backgroundImage = new Image(Main.class.getResourceAsStream("img/startBG.png"));
+        BackgroundImage bgImage = new BackgroundImage(
+                backgroundImage,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,  
+                BackgroundPosition.CENTER,
+                new BackgroundSize(100,100,true,true,true,true)
+                );
+        Background bg = new Background(bgImage);
+        main.setBackground(bg);
+        
+        Text title = new Text("Last Night, Last Night");
+        title.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 200));
+        title.setFill(Color.web("800000", 1.0));
+        start.getChildren().add(title);  
+        
+        TextField name = new TextField("Enter Name");
+        name.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 50));
+        name.setBlendMode(BlendMode.SCREEN);
+        name.getStyleClass().add("transparent");
+        start.getChildren().add(name);
+        
+        Button confirmName = new Button("Confirm name?");
+        confirmName.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 25));
+        confirmName.setTextFill(Color.web("800000"));
+        confirmName.setBlendMode(BlendMode.SCREEN);
+        confirmName.getStyleClass().add("lightButton");
+        confirmName.getStyleClass().add("transparent");
+        start.getChildren().add(confirmName);
+        
+        confirmName.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (name.getText().equals("Enter Name")) { user.setName("USER"); }
+                else { user.setName(name.getText()); }
+                
+                if (startbool==false) {
+                    Button startBtn = new Button("START");
+                    startBtn.setFont(Font.loadFont(Main.this.getClass().getResourceAsStream("font/who-asks-satan.ttf"), 100));
+                    startBtn.setTextFill(Color.web("800000"));
+                    startBtn.setBlendMode(BlendMode.SCREEN);
+                    startBtn.getStyleClass().add("lightButton");
+                    startBtn.getStyleClass().add("transparent");
+                    start.getChildren().add(startBtn);
+                    startbool = true;
+                    
+                    startBtn.setOnAction((ActionEvent event1) -> {
+                    main.setTop(HeaderDisplay());
+                    main.setLeft(LeftStatsDisplay());
+                    main.setRight(RightStatsDisplay());
+                    main.setCenter(GameDisplay(currentButcherRoom));
+                    main.setBottom(InventoryDisplay());
+                    primaryStage.setMaximized(true);
+                    if (isIntro) {
+                        IntroDisplay(primaryStage);
+                        primaryStage.setMaximized(true);
+                    }
+                });
+                }     
+            }
+        });      
+        
+        Button manualBtn = new Button("Open Instruction Manual"); 
+        manualBtn.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 25));
+        manualBtn.setTextFill(Color.web("800000"));
+        manualBtn.setBlendMode(BlendMode.SCREEN);
+        manualBtn.getStyleClass().add("lightButton");
+        manualBtn.getStyleClass().add("transparent");
+        manualBtn.setOnAction((ActionEvent event1) -> {
+            main.setCenter(InstructionsDisplay());
+        });
+        start.getChildren().add(manualBtn);  
+        start.setAlignment(Pos.CENTER);
+        main.setCenter(start);
 
         //MAIN KEY EVENTS
         main.setOnKeyPressed((KeyEvent ke) -> {
@@ -222,82 +298,6 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch(args);       
     }
-
-    //METHODS (TO KEEP MAIN METHOD CLEAN)
-    private Node StartDisplay() {
-        VBox start = new VBox(10);
-        
-        Image backgroundImage = new Image(Main.class.getResourceAsStream("img/startBG.png"));
-        BackgroundImage bgImage = new BackgroundImage(
-                backgroundImage,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,  
-                BackgroundPosition.CENTER,
-                new BackgroundSize(100,100,true,true,true,true)
-                );
-        Background bg = new Background(bgImage);
-        main.setBackground(bg);
-        
-        Text title = new Text("Last Night, Last Night");
-        title.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 200));
-        title.setFill(Color.web("800000", 1.0));
-        start.getChildren().add(title);  
-        
-        TextField name = new TextField("Enter Name");
-        name.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 50));
-        name.setBlendMode(BlendMode.SCREEN);
-        name.getStyleClass().add("transparent");
-        start.getChildren().add(name);
-        
-        Button confirmName = new Button("Confirm name?");
-        confirmName.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 25));
-        confirmName.setTextFill(Color.web("800000"));
-        confirmName.setBlendMode(BlendMode.SCREEN);
-        confirmName.getStyleClass().add("lightButton");
-        confirmName.getStyleClass().add("transparent");
-        start.getChildren().add(confirmName);
-        
-        confirmName.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                if (name.getText().equals("Enter Name")) { user.setName("USER"); }
-                else { user.setName(name.getText()); }
-                
-                if (startbool==false) {
-                    Button startBtn = new Button("START");
-                    startBtn.setFont(Font.loadFont(Main.this.getClass().getResourceAsStream("font/who-asks-satan.ttf"), 100));
-                    startBtn.setTextFill(Color.web("800000"));
-                    startBtn.setBlendMode(BlendMode.SCREEN);
-                    startBtn.getStyleClass().add("lightButton");
-                    startBtn.getStyleClass().add("transparent");
-                    start.getChildren().add(startBtn);
-                    startbool = true;
-                    
-                    startBtn.setOnAction((ActionEvent event1) -> {
-                    main.setTop(HeaderDisplay());
-                    main.setLeft(LeftStatsDisplay());
-                    main.setRight(RightStatsDisplay());
-                    main.setCenter(GameDisplay(currentButcherRoom));
-                    main.setBottom(InventoryDisplay());
-                });
-                }     
-            }
-        });      
-        
-        Button manualBtn = new Button("Open Instruction Manual"); 
-        manualBtn.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 25));
-        manualBtn.setTextFill(Color.web("800000"));
-        manualBtn.setBlendMode(BlendMode.SCREEN);
-        manualBtn.getStyleClass().add("lightButton");
-        manualBtn.getStyleClass().add("transparent");
-        manualBtn.setOnAction((ActionEvent event1) -> {
-            main.setCenter(InstructionsDisplay());
-        });
-        start.getChildren().add(manualBtn);
-                
-        start.setAlignment(Pos.CENTER);        
-        return start;
-    }
     
     private Node InstructionsDisplay() {
         VBox manual = new VBox(5);
@@ -325,7 +325,7 @@ public class Main extends Application {
         backBtn.getStyleClass().add("lightButton");
         backBtn.getStyleClass().add("transparent");
         backBtn.setOnAction((ActionEvent event1) -> {
-            main.setCenter(StartDisplay());
+            main.setCenter(start);
         });
         manual.getChildren().add(backBtn);
         
@@ -534,6 +534,17 @@ public class Main extends Application {
         Timer tr1 = new Timer();
         Timer tr2 = new Timer();
         Timer tr3 = new Timer();
+        
+        doorImage = new Image(Main.class.getResourceAsStream("img/stage2/door.png"));
+        door = new ImageView();
+        door.setImage(doorImage);
+        door.setTranslateX(500);
+        door.setTranslateY(300);
+        door.setFitHeight(560);
+        door.setFitWidth(420);
+
+        newDoor = door;
+                
         switch(i) {
             case 1:
                 timer = 0;
@@ -547,16 +558,6 @@ public class Main extends Application {
                 );
                 bg = new Background(bgImage);
                 main.setBackground(bg);
-                
-                doorImage = new Image(Main.class.getResourceAsStream("img/stage2/door.png"));
-                door = new ImageView();
-                door.setImage(doorImage);
-                door.setTranslateX(500);
-                door.setTranslateY(300);
-                door.setFitHeight(560);
-                door.setFitWidth(420);
-                
-                newDoor = door;
                 
                 tr1.scheduleAtFixedRate(new TimerTask() {
                 @Override
@@ -586,16 +587,6 @@ public class Main extends Application {
                 bg = new Background(bgImage);
                 main.setBackground(bg);
                 
-                doorImage = new Image(Main.class.getResourceAsStream("img/stage2/door.png"));
-                door = new ImageView();
-                door.setImage(doorImage);
-                door.setTranslateX(500);
-                door.setTranslateY(300);
-                door.setFitHeight(560);
-                door.setFitWidth(420);
-                
-                newDoor = door;
-                
                 tr2.scheduleAtFixedRate(new TimerTask() {
                 @Override
                 public void run() {
@@ -613,7 +604,7 @@ public class Main extends Application {
                 break;
             case 3:
                 timer = 0;
-                backgroundImage = new Image(Main.class.getResourceAsStream("img/stage2/room2.jpg"));
+                backgroundImage = new Image(Main.class.getResourceAsStream("img/stage2/room2.png"));
                 bgImage = new BackgroundImage(
                     backgroundImage,
                     BackgroundRepeat.NO_REPEAT,
@@ -623,16 +614,6 @@ public class Main extends Application {
                 );
                 bg = new Background(bgImage);
                 main.setBackground(bg);
-                
-                doorImage = new Image(Main.class.getResourceAsStream("img/stage2/door.png"));
-                door = new ImageView();
-                door.setImage(doorImage);
-                door.setTranslateX(500);
-                door.setTranslateY(300);
-                door.setFitHeight(560);
-                door.setFitWidth(420);
-                
-                newDoor = door;
                 
                 tr3.scheduleAtFixedRate(new TimerTask() {
                 @Override
@@ -649,80 +630,73 @@ public class Main extends Application {
                     }
                 }}, 0, 1000);
                 break;
+            default:
+                newDoor = null;
+                break;
         }
         return newDoor;
     }
     
-    private void GameOver() {
-        Image backgroundImage = new Image(Main.class.getResourceAsStream("img/gameOverScreen.png"));
-        BackgroundImage bgImage = new BackgroundImage(
-            backgroundImage,
-            BackgroundRepeat.NO_REPEAT,
-            BackgroundRepeat.NO_REPEAT,
-            BackgroundPosition.CENTER,
-            new BackgroundSize(100,100,true,true,true,true)
-        );
-        Background bg = new Background(bgImage);
-        main.setBackground(bg);
-        main.setCenter(null);
-    }
-    
-    private Node GameOverScreen() {
-        HBox gameOverDisplay = new HBox();
-        
-        Image gameOverImage = new Image(Main.class.getResourceAsStream("img/gameOverScreen.png"));
-        ImageView gameOver = new ImageView();
-        gameOver.setImage(gameOverImage);
-        BackgroundImage bgImage = new BackgroundImage(
-            gameOverImage,
-            BackgroundRepeat.NO_REPEAT,
-            BackgroundRepeat.NO_REPEAT,
-            BackgroundPosition.CENTER,
-            new BackgroundSize(100,100,true,true,true,true)
-        );
-        Background bg = new Background(bgImage);
-        gameOverDisplay.getChildren().add(gameOver);
-        
-        return gameOverDisplay;
-    }
-    
-    private Node IntroDisplay() {
+    private void IntroDisplay(Stage ps) {
         FlowPane introPane = new FlowPane();
+        
+        if(isIntro) {
         introPane.setStyle("-fx-background-color: black");
         introPane.setAlignment(Pos.CENTER);
+
         introText.setFill(Color.WHITE);
         introText.setFont(Font.font("Chiller", 40));
-
+        
         Timeline timeline = new Timeline();
         timeline.getKeyFrames().add(
-            new KeyFrame(Duration.millis(100), new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent e) {
+            new KeyFrame(Duration.millis(250), e -> {
                 if (currentCharIndex <= introMessageLength) {
                     introText.setText(introMessage.substring(0, currentCharIndex));
                     currentCharIndex++;
                 } else {
                     timeline.stop();
+                    isIntro=false;
+                    isStage1=true;
                 }
-            }
-        })
+            })
         );
         timeline.setCycleCount(Animation.INDEFINITE);
+        
         introPane.getChildren().add(introText);
+        Scene scene = new Scene(introPane, 400, 400);
+        ps.setMaximized(true);
+        ps.setScene(scene);
+        ps.show();
+
         timeline.play();
-            
-        isIntro = false;
-        isStage1 = true;
-        return introPane;
+ 
+        Button nextBtn = new Button("NEXT");
+        nextBtn.setFont(Font.loadFont(Main.this.getClass().getResourceAsStream("font/who-asks-satan.ttf"), 25));
+        nextBtn.setTextFill(Color.web("800000"));
+        nextBtn.setBlendMode(BlendMode.SCREEN);
+        nextBtn.getStyleClass().add("lightButton");
+        nextBtn.getStyleClass().add("transparent");
+        introPane.getChildren().add(nextBtn);
+        
+        //if (timeline.onFinishedProperty() == true) {
+            //System.out.println("done");
+        //}
+        nextBtn.setOnAction((ActionEvent event1) -> {
+            timeline.stop();
+            isIntro=false;
+            isStage1=true;
+            ps.setMaximized(true);
+            main.setTop(HeaderDisplay());
+            main.setLeft(LeftStatsDisplay());
+            main.setRight(RightStatsDisplay());
+            main.setCenter(GameDisplay(currentButcherRoom));
+            main.setBottom(InventoryDisplay());
+        });
+        }
     }
     
     private Node GameDisplay(int i) { 
         FlowPane gameDisplay = new FlowPane();
-        
-        //(QUICK) INTRO
-        /**if (isIntro==true) {
-            main.setCenter(IntroDisplay());
-        }**/
         
         //STORAGE STAGE
         /**while(isStage1) {
@@ -781,16 +755,7 @@ public class Main extends Application {
 
         //BUTCHER STAGE (STAGE 2)
         //while(isStage2) {
-            Image backgroundImage = new Image(Main.class.getResourceAsStream("img/stage2/meatstoreBG.png"));
-            BackgroundImage bgImage = new BackgroundImage(
-                backgroundImage,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER,
-                new BackgroundSize(100,100,true,true,true,true)
-            );
-            Background bg = new Background(bgImage);
-            main.setBackground(bg);
+            gameDisplay.setVisible(true);
 
             Timeline timeline = new Timeline(
             new KeyFrame(Duration.ZERO, event -> {
@@ -803,28 +768,48 @@ public class Main extends Application {
             })
             );
             timeline.setCycleCount(Animation.INDEFINITE);
-            timeline.play();
+            //timeline.play();
 
             NPC butcher = new NPC("The Butcher", "img/stage2/butcher.png", "Meat...");
 
             Image npc = new Image(Main.class.getResourceAsStream(butcher.getAppearance()));
             ImageView npcView = new ImageView();
             npcView.setImage(npc);
-            ApplyMovement(npcView);
-
-            //gameDisplay.getChildren().add(npcView);
-            //gameDisplay.getChildren().add(NPCInteractionDisplay(npcView, butcher));
-
-            ImageView newDoor = ChangeRoom(i);
-            gameDisplay.getChildren().add(newDoor);
-            gameDisplay.getChildren().add(DoorInteractionDisplay(newDoor, null));
+            //ApplyMovement(npcView);
+            
+            gameDisplay.getChildren().add(npcView);
+            
+            npcView.setFitHeight(entityResize);
+            if (entityResize <= 750) {
+                entityResize = 100;
+                npcView.setFitHeight(entityResize);
+                npcView.setPreserveRatio(true);
+            }
+            else {
+                Image backgroundImage = new Image(Main.class.getResourceAsStream("img/stage2/meatstoreBG.png"));
+                BackgroundImage bgImage = new BackgroundImage(
+                    backgroundImage,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.CENTER,
+                    new BackgroundSize(100,100,true,true,true,true)
+                );
+                Background bg = new Background(bgImage);
+                main.setBackground(bg);
+                npcView.setFitHeight(entityResize);
+                npcView.setPreserveRatio(true);
+            }
+            
+            ImageView doorExit = ChangeRoom(i);
+            gameDisplay.getChildren().add(doorExit);
+            gameDisplay.getChildren().add(DoorInteractionDisplay(doorExit, null));
+                
+            gameDisplay.setPrefWrapLength(1920);
         //}
 
         //while(isStage3) {
 
         //}
-        
-        gameDisplay.setPrefWrapLength(1920);
         return gameDisplay;
     }
     
@@ -1138,4 +1123,44 @@ public class Main extends Application {
         controls.setAlignment(Pos.CENTER);
         return controls;
     }
+    
+    private void GameOver() {
+        Image gameOverImage = new Image(Main.class.getResourceAsStream("img/gameOverScreen.png"));
+        BackgroundImage bgImage = new BackgroundImage(
+            gameOverImage,
+            BackgroundRepeat.NO_REPEAT,
+            BackgroundRepeat.NO_REPEAT,
+            BackgroundPosition.CENTER,
+            new BackgroundSize(100,100,true,true,true,true)
+        );
+        Background bg = new Background(bgImage);
+        main.setBackground(bg);
+        entityResize = 800;
+        main.setCenter(GameDisplay(currentButcherRoom));
+        
+        //return gameOverPane;
+    }
+    
+    private Pane GameOverScreen() {
+        HBox gameOverDisplay = new HBox();
+        
+        Image gameOverImage = new Image(Main.class.getResourceAsStream("img/gameOverScreen.png"));
+        ImageView gameOver = new ImageView();
+        gameOver.setImage(gameOverImage);
+        BackgroundImage bgImage = new BackgroundImage(
+            gameOverImage,
+            BackgroundRepeat.NO_REPEAT,
+            BackgroundRepeat.NO_REPEAT,
+            BackgroundPosition.CENTER,
+            new BackgroundSize(100,100,true,true,true,true)
+        );
+        gameOver.setFitHeight(1920);
+        gameOver.setFitWidth(1080);
+        Background bg = new Background(bgImage);
+        gameOverDisplay.setBackground(bg);
+        gameOverDisplay.getChildren().add(gameOver);
+        
+        return gameOverDisplay;
+    }
 }
+
