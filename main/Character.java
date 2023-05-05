@@ -3,7 +3,7 @@ package main;
  * Characters include Protagonists and NPCs. Each Character has a name, type, health, 
  * energy, sanity, and hunger.
  * 
- * @author TRUTH
+ * @author TRUTH - CALPITO, GESMUNDO, SAN AGUSTIN
  */
 public abstract class Character {
   protected String name, type;
