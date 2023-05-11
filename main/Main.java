@@ -48,9 +48,9 @@ import javafx.util.Duration;
 public class Main extends Application {
     private Text gameTitle, introText = new Text();
     private final static int BLACKOUT_TIME_MS = 10;
-    private static boolean inventoryBack = false, otherBack = false, startbool = false, interactbool = false, isIntro = false,  isStage1 = false, isStage2 = false, isStage3 = false;
+    private static boolean inventoryBack = false, otherBack = false, startbool = false, interactbool = false, isIntro = false,  isStage1 = false, isStage2 = false, isStage3 = false, update = false;
     private String introMessage = "Where am I? Where am I! Last night, I was in my room...last night, everything was normal. But now, I can't move! I'm paralyzed—the world around me is paralyzed. But I can see a world so strange that I could not understand. It's dark; too dark for tonight.                                                                                                                                         ";
-    private int currentLevel = 0, horizontalMovement = 250, verticalMovement = 250, entityResize = 800, xChange = 50, introMessageLength = introMessage.length(), currentCharIndex = 0, currentButcherRoom = 1, timer = 0;
+    private int currentLevel = 0, horizontalMovement = 250, verticalMovement = 250, entityResize = 100, xChange = 50, introMessageLength = introMessage.length(), currentCharIndex = 0, currentButcherRoom = 1, timer = 0;
     
     Protagonist user = new Protagonist("USER");
     BorderPane main = new BorderPane();
@@ -58,7 +58,7 @@ public class Main extends Application {
     VBox start = new VBox(10);
     GridPane inventoryGrid = new GridPane();
     FlowPane gameDisplay = new FlowPane();
-    ImageView door;
+    ImageView door, doorExit;
     
     @Override
     public void start(Stage primaryStage) {
@@ -552,6 +552,7 @@ public class Main extends Application {
                 
         switch(i) {
             case 1:
+                entityResize = 100;
                 timer = 0;
                 backgroundImage = new Image(Main.class.getResourceAsStream("img/stage2/meatstoreBG.png"));
                 bgImage = new BackgroundImage(
@@ -569,6 +570,11 @@ public class Main extends Application {
                 public void run() {
                     timer += 1;
                     gameTitle.setText("Time Remaining: " + (180-timer));
+                    if (timer % 20 == 0) {
+                        entityResize += 33;
+                        update = true;
+                        main.setCenter(GameDisplay(currentButcherRoom));
+                    }
                     if (currentButcherRoom == 2) {
                         tr1.cancel();
                         timer = 0;
@@ -583,6 +589,7 @@ public class Main extends Application {
                 }}, 0, 1000);
                 break;
             case 2:
+                entityResize = 100;
                 backgroundImage = new Image(Main.class.getResourceAsStream("img/stage2/room1.png"));
                 bgImage = new BackgroundImage(
                     backgroundImage,
@@ -599,6 +606,11 @@ public class Main extends Application {
                 public void run() {
                     timer += 1;
                     gameTitle.setText("Time Remaining: " + (120-timer));
+                    if (timer % 15 == 0) {
+                        entityResize += 37.5;
+                        update = true;
+                        main.setCenter(GameDisplay(currentButcherRoom));
+                    }
                     if (currentButcherRoom == 3) {
                         tr2.cancel();
                         timer = 0;
@@ -613,6 +625,7 @@ public class Main extends Application {
                 }}, 0, 1000);
                 break;
             case 3:
+                entityResize = 100;
                 backgroundImage = new Image(Main.class.getResourceAsStream("img/stage2/room2.png"));
                 bgImage = new BackgroundImage(
                     backgroundImage,
@@ -629,6 +642,11 @@ public class Main extends Application {
                 public void run() {
                     timer += 1;
                     gameTitle.setText("Time Remaining: " + (60-timer));
+                    if (timer % 10 == 0) {
+                        entityResize += 30;
+                        update = true;
+                        main.setCenter(GameDisplay(currentButcherRoom));
+                    }
                     if (currentButcherRoom == 1) {
                         tr3.cancel();
                         timer = 0;
@@ -784,11 +802,21 @@ public class Main extends Application {
             //timeline.play();
 
             NPC butcher = new NPC("The Butcher", "img/stage2/butcher.png", "Meat...");
-
-            //gameDisplay.getChildren().add(butcherView);
+            Image npc = new Image(Main.class.getResourceAsStream(butcher.getAppearance()));
+            ImageView npcView = new ImageView();
+            npcView.setImage(npc);
+            npcView.setFitHeight(entityResize);
+            npcView.setPreserveRatio(true);
             gameDisplay.setPrefWrapLength(1920);
-            ImageView doorExit = ChangeRoom(i);
             gameDisplay.getChildren().clear();
+            if (!update) {
+                doorExit = ChangeRoom(i);
+            }
+            else {
+                System.out.println("updated");
+                update = false;
+            }
+            gameDisplay.getChildren().add(npcView);
             gameDisplay.getChildren().add(doorExit);
             gameDisplay.getChildren().add(DoorInteractionDisplay(doorExit, null));
         //}
