@@ -841,7 +841,7 @@ public class Main extends Application {
                 btn[i] = new Button("Button-"+i);
                 ImageView galleryView = new ImageView();
                 galleryView.setFitHeight(300);
-                galleryView.setFitWidth(400);
+                galleryView.setFitWidth(300);
                 Image photo = new Image(Main.class.getResourceAsStream("img/null.png"));
                 galleryView.setImage(photo);
                 btn[i].setGraphic(galleryView);
@@ -852,7 +852,7 @@ public class Main extends Application {
                 btn[i] = new Button("Button-"+i);
                 ImageView galleryView = new ImageView();
                 galleryView.setFitHeight(300);
-                galleryView.setFitWidth(400);
+                galleryView.setFitWidth(300);
                 Image photo = new Image(Main.class.getResourceAsStream(user.getGallery()[i]));    
                 galleryView.setImage(photo);
                 btn[i].setGraphic(galleryView);
@@ -904,7 +904,7 @@ public class Main extends Application {
         inHandView.setFitHeight(200);
         inHandView.setFitWidth(200);                
         inventoryGrid.add(inHandView, 9, 0);
-        inventoryGrid.setTranslateY(-156);
+        inventoryGrid.setTranslateY(0);
         inventoryGrid.setTranslateX(47);
         
         return inHandView;
