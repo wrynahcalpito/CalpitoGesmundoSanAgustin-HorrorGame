@@ -1140,6 +1140,12 @@ public class Main extends Application {
     }
     
     private void GameOver() {
+        ResizeButcher(1000);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        }
         Image gameOverImage = new Image(Main.class.getResourceAsStream("img/gameOverScreen.png"));
         BackgroundImage bgImage = new BackgroundImage(
             gameOverImage,
@@ -1150,7 +1156,6 @@ public class Main extends Application {
         );
         Background bg = new Background(bgImage);
         main.setBackground(bg);
-        ResizeButcher(800);
         
         gameDisplay.setVisible(false);
     }
