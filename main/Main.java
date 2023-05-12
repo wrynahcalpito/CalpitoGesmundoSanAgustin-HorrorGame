@@ -58,8 +58,7 @@ public class Main extends Application {
     VBox start = new VBox(10);
     GridPane inventoryGrid = new GridPane();
     FlowPane gameDisplay = new FlowPane();
-    ImageView door, doorExit;
-    
+    ImageView door, doorExit, npcView;
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Last Night, Last Night");
@@ -126,6 +125,7 @@ public class Main extends Application {
                     main.setRight(RightStatsDisplay());
                     main.setCenter(GameDisplay(currentButcherRoom));
                     main.setBottom(InventoryDisplay());
+                    npcView.setImage(new Image(Main.class.getResourceAsStream("img/stage2/butcher.png")));
                     primaryStage.setMaximized(true);
         
                     if (isIntro) {
@@ -572,8 +572,7 @@ public class Main extends Application {
                     gameTitle.setText("Time Remaining: " + (180-timer));
                     if (timer % 20 == 0) {
                         entityResize += 33;
-                        update = true;
-                        main.setCenter(GameDisplay(currentButcherRoom));
+                        ResizeButcher(entityResize);
                     }
                     if (currentButcherRoom == 2) {
                         tr1.cancel();
@@ -607,9 +606,8 @@ public class Main extends Application {
                     timer += 1;
                     gameTitle.setText("Time Remaining: " + (120-timer));
                     if (timer % 15 == 0) {
-                        entityResize += 37.5;
-                        update = true;
-                        main.setCenter(GameDisplay(currentButcherRoom));
+                        entityResize += 37;
+                        ResizeButcher(entityResize);
                     }
                     if (currentButcherRoom == 3) {
                         tr2.cancel();
@@ -644,8 +642,7 @@ public class Main extends Application {
                     gameTitle.setText("Time Remaining: " + (60-timer));
                     if (timer % 10 == 0) {
                         entityResize += 30;
-                        update = true;
-                        main.setCenter(GameDisplay(currentButcherRoom));
+                        ResizeButcher(entityResize);
                     }
                     if (currentButcherRoom == 1) {
                         tr3.cancel();
@@ -667,6 +664,11 @@ public class Main extends Application {
         
         newDoor = door;
         return newDoor;
+    }
+    
+    private void ResizeButcher (int i) {
+        npcView.setFitHeight(i);
+        npcView.setPreserveRatio(true);
     }
     
     private void IntroDisplay(Stage ps) {
@@ -803,22 +805,22 @@ public class Main extends Application {
 
             NPC butcher = new NPC("The Butcher", "img/stage2/butcher.png", "Meat...");
             Image npc = new Image(Main.class.getResourceAsStream(butcher.getAppearance()));
-            ImageView npcView = new ImageView();
+            npcView = new ImageView();
             npcView.setImage(npc);
             npcView.setFitHeight(entityResize);
             npcView.setPreserveRatio(true);
             gameDisplay.setPrefWrapLength(1920);
-            gameDisplay.getChildren().clear();
             if (!update) {
                 doorExit = ChangeRoom(i);
             }
             else {
                 System.out.println("updated");
-                update = false;
             }
             gameDisplay.getChildren().add(npcView);
             gameDisplay.getChildren().add(doorExit);
             gameDisplay.getChildren().add(DoorInteractionDisplay(doorExit, null));
+            
+            update = false;
         //}
 
         //while(isStage3) {
@@ -991,7 +993,6 @@ public class Main extends Application {
         }
         
         inventoryGrid.setAlignment(Pos.BOTTOM_CENTER);
-                
         btn[9].setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -1149,26 +1150,7 @@ public class Main extends Application {
         );
         Background bg = new Background(bgImage);
         main.setBackground(bg);
-        
-        //jumpscare in progress
-        /*ImageView butcherView = new ImageView();
-        butcherView.setImage(new Image(Main.class.getResourceAsStream("img/stage2/butcher.png")));
-        Timer gameOverTR = new Timer();
-        gameOverTR.scheduleAtFixedRate(new TimerTask() {
-            int gameOverTimer = 0;
-            @Override
-            public void run() {
-                System.out.println(butcherView);
-                gameOverTimer += 1;
-                entityResize = (gameOverTimer*10);
-                butcherView.setFitHeight(entityResize);
-                butcherView.setPreserveRatio(true);
-                gameDisplay.setVisible(false);
-                main.setCenter(butcherView);
-                if(gameOverTimer >= 80) {
-                    gameOverTR.cancel();
-                }
-            }}, 0, 2000);*/
+        ResizeButcher(800);
         
         gameDisplay.setVisible(false);
     }
