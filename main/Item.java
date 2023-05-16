@@ -1,9 +1,9 @@
 package main;
 /**
- * Items include Keys and WrittenClues. Each Item has an identifier, type, description,
- * and appearance. Items are interactive.
+ * Items include Keys and WrittenClues. 
+ * Each Item has an identifier, type, description, and appearance. Items are interactive.
  * 
- * @author TRUTH
+ * @author TRUTH - CALPITO, GESMUNDO, SAN AGUSTIN
  */
 import java.util.ArrayList;
 
@@ -17,9 +17,9 @@ public class Item {
     private static ArrayList<Item> itemList = new ArrayList();
     
     /** Initializes the item with parameters
-     * @param identifier
-     * @param type
-     * @param appearance 
+     * @param identifier acts as the name of the Item
+     * @param type used to reference for several items
+     * @param appearance image file name and location
      * Adds the item when declared to the itemList
      */
     public Item(String identifier, String type, String appearance) {
