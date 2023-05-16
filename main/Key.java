@@ -1,20 +1,19 @@
 package main;
 
 /**
- * A subclass of Item. An added variable is compatibleDoor. 
+ * A subclass of Item, and the Key is the Item that the Protagonist will be using to progress through doors in the game.
+ * An added variable is compatibleDoor. 
  * 
  * @author TRUTH - CALPITO, GESMUNDO, SAN AGUSTIN
  */
 public class Key extends Item {
-    /**
-     * compatibleDoor: the door that the key could open
-     */
-    protected String compatibleDoor;
+    /*** The door that the key could open
+     */ protected String compatibleDoor;
     
     /**
      * Initializes the key with parameters
-     * @param identifier functions as the name of the key
-     * @param compatibleDoor the door that it can open
+     * @param identifier Functions as the name of the key
+     * @param compatibleDoor The door that it can open
      */
     public Key(String identifier, String compatibleDoor) {
         super(identifier, "key", "AKeyModel");
@@ -31,7 +30,7 @@ public class Key extends Item {
 
     /**
      * Evaluates if compatibleDoor of the key is equivalent to x through its identifier
-     * @param x item that is trying to open the door
+     * @param x Item that is trying to open the door
      */
     public void openDoor(Item x) {
         if(compatibleDoor.equals(x.getIdentifier())) {
