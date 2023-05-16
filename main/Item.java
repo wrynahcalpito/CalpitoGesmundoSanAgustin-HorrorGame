@@ -1,25 +1,27 @@
 package main;
+import java.util.ArrayList;
+
 /**
- * Items include Keys and WrittenClues. 
+ * Items include Keys and WrittenClues that exist in the game. 
  * Each Item has an identifier, type, description, and appearance. Items are interactive.
  * 
  * @author TRUTH - CALPITO, GESMUNDO, SAN AGUSTIN
  */
-import java.util.ArrayList;
 
 public class Item {
-    /**
-     * identifier: functions as a name, unique to the item
-     * type: used to reference to a kind of item
-     * appearance: image file name for the appearance of the item
-     */
-    protected String identifier, type, appearance; //appearance is hardcoded
-    private static ArrayList<Item> itemList = new ArrayList();
+    /** Functions as a name, unique to the item
+     */ protected String identifier;
+    /** Used to reference to a kind of item
+     */ protected String type;
+    /** Image file name for the appearance of the item
+     */ protected String appearance; 
+    /** List of all items
+     */ private static ArrayList<Item> itemList = new ArrayList();
     
     /** Initializes the item with parameters
-     * @param identifier acts as the name of the Item
-     * @param type used to reference for several items
-     * @param appearance image file name and location
+     * @param identifier Acts as the name of the Item
+     * @param type Used to reference for several items
+     * @param appearance Image file name and location
      * Adds the item when declared to the itemList
      */
     public Item(String identifier, String type, String appearance) {
@@ -29,15 +31,24 @@ public class Item {
         itemList.add(this);
     }
 
-    /** GETTER METHODS
-     * @return values of variables 
+    /** 
+     * Gets the identifier of the item
+     * @return identifier
      */
     public String getIdentifier() {
         return identifier;
     }
+    /**
+     * Gets the type of the item
+     * @return type
+     */
     public String getType() {
         return type;
     }
+    /** 
+     * Gets the file name and location of the image for the item
+     * @return appearannce
+     */
     public String getAppearance() {
         return appearance;
     }
