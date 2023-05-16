@@ -21,8 +21,9 @@ public class Key extends Item {
         this.compatibleDoor = compatibleDoor;
     }
   
-    /** GETTER METHODS
-     * @return values of variables 
+    /** 
+     * Gets the door that the Key can open
+     * @return compatibleDoor
      */
     public String getCompatibleDoor() {
         return compatibleDoor;
