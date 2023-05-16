@@ -8,28 +8,32 @@ package main;
  */
 
 public abstract class Character {
-    /**
-     * name: which identifies the character 
-     * type: clusters characters in one kind 
-     */
-    protected String name, type;
-    /**
-     * health: health of the character
-     * maxHealth: maximum value of health variable, set at 100
-     * energy: the amount of energy left in the character
-     * maxEnergy: maximum value of energy variable, set to 120
-     * sanity: sanity of the character
-     * maxSanity: maximum value of sanity variable, set to 100
-     * hunger: hunger of the character
-     * maxHunger: maximum value of hunger, set to 100
-     */
-    protected int health, maxHealth = 100, energy, maxEnergy = 120, sanity, maxSanity = 100, hunger, maxHunger = 100;           
+    /*** Identifies the character 
+     */ protected String name;
+    /*** Clusters characters in one kind 
+     */ protected String type;
+    /*** Health of the character
+     */ protected int health;
+    /*** Maximum value of health variable, set at 100
+     */ protected int maxHealth = 100;
+    /*** The amount of energy left in the character
+     */ protected int energy;
+    /*** Maximum value of energy variable, set to 120
+     */ protected int maxEnergy = 120;
+    /*** Sanity of the character
+     */ protected int sanity;
+    /*** Maximum value of sanity variable, set to 100
+     */ protected int maxSanity = 100;
+    /*** Hunger of the character
+     */ protected int hunger;
+    /*** Maximum value of hunger, set to 100
+     */ protected int maxHunger = 100;           
         
     /**
      * Initializes a character with parameters. 
      * Health, energy, sanity, and hunger are set to maximum value. 
-     * @param name
-     * @param type 
+     * @param name name of the Character
+     * @param type refers to multiple characters
      */
     public Character(String name, String type) {
         this.name = name;
@@ -40,43 +44,89 @@ public abstract class Character {
         hunger = 100;
     }
     
-    /** GETTER METHODS
-     * @return values of variables 
+    /**
+     * Gets the name of the Character
+     * @return name
      */
     public String getName() {
         return name;
     }
+    
+    /**
+     * Gets the type of the character
+     * @return type
+     */
     public String getType() {
         return type;
     }
+    
+    /** 
+     * Gets the health of the character
+     * @return health
+     */
     public int getHealth() {
         return health;
     }
+    
+    /**
+     * Gets the energy of the character 
+     * @return energy
+     */
     public int getEnergy() {
         return energy;
     }
+    
+    /**
+     * Gets the sanity of the character
+     * @return sanity
+     */
     public int getSanity() {
         return sanity;
     }
+    
+    /**
+     * Gets the hunger of the character
+     * @return hunger
+     */
     public int getHunger() {
         return hunger;
     } 
+    
+    /** 
+     * Gets the maximum health value
+     * @return maxHealth
+     */
     public int getMaxHealth() {
         return maxHealth;
     }
+    
+    /**
+     * Gets the maximum energy value
+     * @return maxEnergy
+     */
     public int getMaxEnergy() {
         return maxEnergy;
     }
+    
+    /**
+     * Gets the maximum sanity value
+     * @return maxSanity
+     */
     public int getMaxSanity() {
         return maxSanity;
     }
+    
+    /** 
+     * Gets the maximum hunger value
+     * @return maxHunger
+     */
     public int getMaxHunger() {
         return maxHunger;
     }
   
     /** 
      * Sets a new name for the character
-     * @param n: new name for character
+     * @param n New name for character
      */
     public void setName(String n) {
         name = n;
@@ -89,7 +139,7 @@ public abstract class Character {
         health -= 1;
     }
     /**
-     * @param atk increases the amount of decrease of the variable by its value
+     * @param atk Increases the amount of decrease of the variable by its value
      */
     public void health(int atk) {
         health -= 1*atk;
