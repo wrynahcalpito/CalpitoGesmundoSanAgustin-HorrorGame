@@ -1,7 +1,5 @@
 package main;
 
-import java.awt.AWTException;
-import java.awt.Robot;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
