@@ -1,8 +1,8 @@
 package main;
 
 /**
- * Characters include Protagonists and NPCs. Each Character has a name, type, health, 
- * energy, sanity, and hunger.
+ * Characters include Protagonists and NPCs and is the general class for declaring characters in the game. 
+ * Each Character has a name, type, health, energy, sanity, and hunger.
  * 
  * @author TRUTH - CALPITO, GESMUNDO, SAN AGUSTIN
  */
