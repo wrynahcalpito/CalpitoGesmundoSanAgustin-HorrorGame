@@ -2,19 +2,21 @@ package main;
 import java.util.*;
 
 /**
- * A subclass of Character. An added variable is an appearance and dialog array. 
+ * A subclass of Character that deals with the characters that the Protagonist will be interacting with in the game (NPCs). An added variable is an appearance and dialog array. 
  * 
  * @author TRUTH - CALPITO, GESMUNDO, SAN AGUSTIN
  */
 public class NPC extends Character {
-    private String appearance; 
-    private static ArrayList<String> dialog = new ArrayList(); 
+    /*** The image file name and location of the appearance of the NPCs
+     */ private String appearance; 
+    /*** The dialog of the NPCs
+     */ private static ArrayList<String> dialog = new ArrayList(); 
   
     /**
      * Initializes an NPC with parameters. 
-     * @param name the name of the NPC
-     * @param appearance the file name and location of the appearance of the NPC
-     * @param d adds a line of dialog to the array
+     * @param name The name of the NPC
+     * @param appearance The file name and location of the appearance of the NPC
+     * @param d Adds a line of dialog to the array
      */
     public NPC(String name, String appearance, String d) {
         super(name, "NPC");
