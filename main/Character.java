@@ -84,11 +84,13 @@ public abstract class Character {
     
     /**
      * Decreases health variable by 1 every time the method is called
-     * @param atk: increases the decrease of the variable by its value
      */
     public void health() {
         health -= 1;
     }
+    /**
+     * @param atk increases the amount of decrease of the variable by its value
+     */
     public void health(int atk) {
         health -= 1*atk;
     }
