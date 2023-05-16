@@ -50,7 +50,8 @@ public class Main extends Application {
     private final static int BLACKOUT_TIME_MS = 10;
     private static boolean inventoryBack = false, otherBack = false, startbool = false, interactbool = false, isIntro = false,  isStage1 = false, isStage2 = false, isStage3 = false, update = false;
     private String introMessage = "Where am I? Where am I! Last night, I was in my room...last night, everything was normal. But now, I can't move! I'm paralyzed—the world around me is paralyzed. But I can see a world so strange that I could not understand. It's dark; too dark for tonight.                                                                                                                                         ";
-    private int currentLevel = 0, horizontalMovement = 250, verticalMovement = 250, entityResize = 100, xChange = 50, introMessageLength = introMessage.length(), currentCharIndex = 0, currentButcherRoom = 1, timer = 0;
+    private int currentLevel = 0, horizontalMovement = 250, verticalMovement = 250, entityResize = 100, zMovement = 100, xChange = 50, introMessageLength = introMessage.length(), currentCharIndex = 0, currentButcherRoom = 1, timer = 0;
+    
     
     Protagonist user = new Protagonist("USER");
     BorderPane main = new BorderPane();
@@ -59,6 +60,7 @@ public class Main extends Application {
     GridPane inventoryGrid = new GridPane();
     FlowPane gameDisplay = new FlowPane();
     ImageView door, doorExit, npcView;
+    Item doorKey = new Item("Door Key", "Key", "img/camera.png");
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Last Night, Last Night");
@@ -69,8 +71,9 @@ public class Main extends Application {
         primaryStage.setMaximized(true);
         
         //MAIN CODE
-        Item camera = new Item("camera", "item", "A camera given to you take any photos you wish to capture", "img/camera.png"); 
+        Item camera = new Item("camera", "item", "img/camera.png"); 
         user.getItem(camera);
+        user.getItem(doorKey);
         
         //START SCREEN
         Image backgroundImage = new Image(Main.class.getResourceAsStream("img/startBG.png"));
@@ -160,6 +163,7 @@ public class Main extends Application {
                     }
                     else {
                         main.setCenter(GameDisplay(currentButcherRoom));
+                        update = true;
                         otherBack = false;
                     }   break;
                 case DIGIT0:
@@ -169,6 +173,7 @@ public class Main extends Application {
                     }
                     else {
                         main.setCenter(GameDisplay(currentButcherRoom));
+                        update = true;
                         otherBack = false;
                     }   break;
                 case DIGIT1:
@@ -255,18 +260,23 @@ public class Main extends Application {
                 case A:
                     horizontalMovement += xChange;
                     main.setCenter(GameDisplay(currentButcherRoom));
+                    update = true;
                     break;
                 case D:
                     horizontalMovement -= xChange;
                     main.setCenter(GameDisplay(currentButcherRoom));
+                    update = true;
                     break;
                 case W:
-                    entityResize += xChange;
+                    zMovement += xChange;
                     main.setCenter(GameDisplay(currentButcherRoom));
+                    update = true;
                     break;
                 case S:
-                    entityResize -= xChange;
+                    zMovement -= xChange;
                     main.setCenter(GameDisplay(currentButcherRoom));
+                    
+                    update = true;
                     break;
                 case F:
                     verticalMovement += 200;
@@ -314,7 +324,7 @@ public class Main extends Application {
         
         Text moveIt = new Text("How to move?");
         moveIt.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 65));
-        manual.getChildren().addAll(moveIt, new Text("Use WASD to move forward, to the left, to the right, and backwards respectively."), new Text("Use F to jump, CTRL to shift, and SHIFT to crouch."));
+        manual.getChildren().addAll(moveIt, new Text("Use WASD to move forward, to the left, to the right, and backwards respectively."), new Text("Use F to jump, CTRL to sprint, and SHIFT to crouch."));
         
         Text interactIt = new Text("How to interact?");
         interactIt.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 65));
@@ -407,11 +417,11 @@ public class Main extends Application {
     }
     
     private void ApplyMovement(ImageView i) {
-        if (entityResize >= 800) {
-            entityResize = 800;
+        if (zMovement >= 800) {
+            zMovement = 800;
         }
-        if (entityResize <= 50) {
-            entityResize =  50;
+        if (zMovement <= 50) {
+            zMovement =  50;
         }
         
         i.setTranslateX(horizontalMovement);
@@ -497,17 +507,15 @@ public class Main extends Application {
         DOORInteractions.getChildren().addAll(openBtn);
         DOORInteractions.setTranslateX(300);
         DOORInteractions.setTranslateY(250);
-
+        
         openBtn.setVisible(false);
 
         img.hoverProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue) {
-                //if (user.returnItem() == Key) {  
-                        openBtn.setVisible(true);
-                    //}
-            } else {
-                //openBtn.setVisible(false);
-            }
+                if (user.returnItem() == doorKey) {  
+                    openBtn.setVisible(true);
+                }
+            } 
         });
 
         openBtn.setOnAction(event -> {
@@ -515,17 +523,22 @@ public class Main extends Application {
                 case 1:
                     currentButcherRoom = 2;
                     main.setCenter(GameDisplay(currentButcherRoom));
+                    openBtn.setVisible(false);
                     break;
                 case 2:
                     currentButcherRoom = 3;
                     main.setCenter(GameDisplay(currentButcherRoom));
+                    openBtn.setVisible(false);
                     break;
                 case 3:
                     //change to the ending na 
                     currentButcherRoom = 1;
                     main.setCenter(GameDisplay(currentButcherRoom));
+                    openBtn.setVisible(false);
                     break;
             }
+            RemoveInHand();
+            openBtn.setVisible(false);
         });
 
         return DOORInteractions;
@@ -570,8 +583,8 @@ public class Main extends Application {
                 public void run() {
                     timer += 1;
                     gameTitle.setText("Time Remaining: " + (180-timer));
-                    if (timer % 20 == 0) {
-                        entityResize += 33;
+                    if (timer % 2 == 0) {
+                        entityResize += 3;
                         ResizeButcher(entityResize);
                     }
                     if (currentButcherRoom == 2) {
@@ -605,8 +618,8 @@ public class Main extends Application {
                 public void run() {
                     timer += 1;
                     gameTitle.setText("Time Remaining: " + (120-timer));
-                    if (timer % 15 == 0) {
-                        entityResize += 37;
+                    if (timer % 2 == 0) {
+                        entityResize += 5;
                         ResizeButcher(entityResize);
                     }
                     if (currentButcherRoom == 3) {
@@ -640,8 +653,8 @@ public class Main extends Application {
                 public void run() {
                     timer += 1;
                     gameTitle.setText("Time Remaining: " + (60-timer));
-                    if (timer % 10 == 0) {
-                        entityResize += 30;
+                    if (timer % 2 == 0) {
+                        entityResize += 6;
                         ResizeButcher(entityResize);
                     }
                     if (currentButcherRoom == 1) {
@@ -815,6 +828,7 @@ public class Main extends Application {
             }
             else {
                 System.out.println("updated");
+                update = false;
             }
             gameDisplay.getChildren().add(npcView);
             gameDisplay.getChildren().add(doorExit);
@@ -912,6 +926,7 @@ public class Main extends Application {
     
     private Node RemoveInHand() {
         main.setBottom(InventoryDisplay());
+        user.equipItem(null);
         inventoryGrid.getChildren().remove(inHandView);
         inventoryGrid.setTranslateY(0);
         inventoryGrid.setTranslateX(0);
@@ -958,7 +973,7 @@ public class Main extends Application {
                             inHandView.setFitHeight(200);
                             inHandView.setFitWidth(200);
                             inventoryGrid.add(inHandView, 9, 0);
-                            inventoryGrid.setTranslateY(-156);
+                            inventoryGrid.setTranslateY(0);
                             inventoryGrid.setTranslateX(47);
                             inventoryBack = true;
                         }
@@ -1140,9 +1155,9 @@ public class Main extends Application {
     }
     
     private void GameOver() {
-        ResizeButcher(1000);
+        ResizeButcher(800);
         try {
-            Thread.sleep(1000);
+            Thread.sleep(500);
         } catch (InterruptedException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
