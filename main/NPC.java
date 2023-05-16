@@ -23,6 +23,7 @@ public class NPC extends Character {
     }
     
     /** 
+     * Gets the image file as the appearance of the NPC
      * @return appearance variable 
      */
     public String getAppearance() {
@@ -30,6 +31,7 @@ public class NPC extends Character {
     }
     
     /**
+     * Gets the number of dialogs an NPC has
      * @return size of the dialog array
      */
     public static int getDialogArrLength() {
@@ -37,6 +39,7 @@ public class NPC extends Character {
     }
     
     /**
+     * Adds a dialog to the list of the NPC
      * @param d adds a line of dialog to the array
      */
     public void addDialog(String d) {
@@ -45,6 +48,7 @@ public class NPC extends Character {
     
     /**
      * The dialog is referenced by the index and printed in the game 
+     * @param index index of the dialog
      */
     public String printDialog(int index){
         return dialog.get(index);
