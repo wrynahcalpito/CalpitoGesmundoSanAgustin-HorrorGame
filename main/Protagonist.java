@@ -12,9 +12,8 @@ public class Protagonist extends Character {
     private Item itemInUse;
 
     /**
-     * Initializes the item with parameters
+     * Initializes the item with parameters and the skill level at 1 for the beginning
      * @param name 
-     * Initializes skill level at 1 for the beggining
      */
     public Protagonist(String name) {
         super(name, "Protagonist");
@@ -22,18 +21,21 @@ public class Protagonist extends Character {
     }
 
     /** 
+     * Gets the inventory of the Protagonist
      * @return inventory array
      */
     public Item[] getInventory() {
         return inventory;
     }
     /**
+     * Gets the gallery of the protagonist
      * @return gallery array
      */
     public String[] getGallery() {
         return gallery;
     }
     /**
+     * Gets the skill level of the Protagonist
      * @return skillLevel
      */
     public int getSkillLevel() {
@@ -41,6 +43,7 @@ public class Protagonist extends Character {
     }
     
     /**
+     * Gets the item that the Protagonist is currently using
      * @return itemInUse
      */
     public Item returnItem() {
@@ -56,7 +59,7 @@ public class Protagonist extends Character {
     
     /**
      * Inspects items and NPCs by calling the Interactive interact() method
-     * @param i 
+     * @param i item that is inspected or interacted with by the Protagonist
      */
     public void inspect(Interactive i) {
         i.interact();
@@ -64,7 +67,7 @@ public class Protagonist extends Character {
     
     /**
      * Gets the item which is added to the inventory array
-     * @param i 
+     * @param i item to be added to the inventory
      */
     public void getItem(Item i) {
         for(int j = 0; j < 9; j++) {
@@ -80,7 +83,7 @@ public class Protagonist extends Character {
     
     /**
      * Sets i as itemInUse
-     * @param i 
+     * @param i item that is currently being used
      */
     public void equipItem(Item i) {
         itemInUse = i;
@@ -88,7 +91,7 @@ public class Protagonist extends Character {
     
     /**
      * Takes a photo which is added to the gallery array
-     * @param photo 
+     * @param photo image taken and to be displayed in the gallery
      */
     public void takePhoto(String photo) {
         //code here on taking a photo in the game + animations
