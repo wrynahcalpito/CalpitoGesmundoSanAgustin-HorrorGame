@@ -1,5 +1,7 @@
 package main;
 
+import java.awt.AWTException;
+import java.awt.Robot;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -57,8 +59,8 @@ public class Main extends Application {
     VBox start = new VBox(10);
     GridPane inventoryGrid = new GridPane();
     FlowPane gameDisplay = new FlowPane();
-    ImageView door, doorExit, npcView;
-    Item doorKey = new Item("Door Key", "Key", "img/camera.png");
+    ImageView door, doorExit, npcView, itemView;
+    Item doorKey = new Item("Door Key", "Key", "img/stage2/key.png");
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Last Night, Last Night");
@@ -71,7 +73,6 @@ public class Main extends Application {
         //MAIN CODE
         Item camera = new Item("camera", "item", "img/camera.png"); 
         user.getItem(camera);
-        user.getItem(doorKey);
         
         //START SCREEN
         Image backgroundImage = new Image(Main.class.getResourceAsStream("img/startBG.png"));
@@ -465,34 +466,33 @@ public class Main extends Application {
         return NPCInteractions;
     }
     
-    private Node ItemInteractionDisplay(ImageView img, Item i) {
+    private Node ItemInteractionDisplay(ImageView img, Item i, int y, int x) {
         HBox ITEMInteractions = new HBox(10);
         
-        Button interactBtn = new Button("INTERACT WITH ITEM");
         Button getBtn = new Button("GET ITEM");
-        ITEMInteractions.getChildren().addAll(interactBtn, getBtn);
-        ITEMInteractions.setTranslateX(horizontalMovement-200);
-        ITEMInteractions.setTranslateY(verticalMovement+400);
+        ITEMInteractions.getChildren().addAll(getBtn);
+        ITEMInteractions.setTranslateX(50+x);
+        ITEMInteractions.setTranslateY(75+y);
 
-        interactBtn.setVisible(false);
         getBtn.setVisible(false);
 
         img.hoverProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue) {
-                interactBtn.setVisible(true);
                 getBtn.setVisible(true);
             } else {
-                interactBtn.setVisible(false);
-                getBtn.setVisible(false);
+                //interactBtn.setVisible(false);
+                //getBtn.setVisible(false);
             }
         });
 
-        interactBtn.setOnAction(event -> {
-            i.interact();
-        });
-
-        getBtn.setOnAction(event -> {
+        getBtn.setOnAction((ActionEvent event) -> {
+            for (int t = 0; t<9; t++) {
+                if (user.getInventory()[t] == i) {
+                    user.removeItem(t);
+                }
+            }
             user.getItem(i);
+            main.setBottom(InventoryDisplay());
         });
 
         return ITEMInteractions;
@@ -535,6 +535,7 @@ public class Main extends Application {
                     openBtn.setVisible(false);
                     break;
             }
+            inventoryBack = false;
             RemoveInHand();
             openBtn.setVisible(false);
         });
@@ -678,8 +679,9 @@ public class Main extends Application {
     }
     
     private void ResizeButcher (int i) {
-        npcView.setFitHeight(i);
+        npcView.setFitWidth(i);
         npcView.setPreserveRatio(true);
+        doorExit.setTranslateX(600-i);
     }
     
     private void IntroDisplay(Stage ps) {
@@ -742,6 +744,11 @@ public class Main extends Application {
     
     private Node GameDisplay(int i) {
         gameDisplay.getChildren().clear();
+        for (int t = 0; t<9; t++) {
+            if (user.getInventory()[t] == doorKey) {
+                user.removeItem(t);
+            }
+        }
         
         //STORAGE STAGE
         /**while(isStage1) {
@@ -818,9 +825,8 @@ public class Main extends Application {
             Image npc = new Image(Main.class.getResourceAsStream(butcher.getAppearance()));
             npcView = new ImageView();
             npcView.setImage(npc);
-            npcView.setFitHeight(entityResize);
+            npcView.setFitWidth(entityResize);
             npcView.setPreserveRatio(true);
-            gameDisplay.setPrefWrapLength(1920);
             if (!update) {
                 doorExit = ChangeRoom(i);
             }
@@ -828,10 +834,46 @@ public class Main extends Application {
                 System.out.println("updated");
                 update = false;
             }
+            
+            int translateY = 0, translateX = 0;
+            switch(currentButcherRoom) {
+                case 1:
+                    Image key1 = new Image(Main.class.getResourceAsStream("img/stage2/findKey.png"));
+                    itemView = new ImageView();
+                    itemView.setImage(key1);
+                    itemView.setFitHeight(50);
+                    itemView.setPreserveRatio(true);
+                    translateY = 100;
+                    translateX = 50;
+                    break;
+                case 2:
+                    Image key2 = new Image(Main.class.getResourceAsStream("img/stage2/findKey.png"));
+                    itemView = new ImageView();
+                    itemView.setImage(key2);
+                    itemView.setFitHeight(50);
+                    itemView.setPreserveRatio(true);
+                    translateY = 100;
+                    translateX = 50;
+                    break;
+                case 3:
+                    Image key3 = new Image(Main.class.getResourceAsStream("img/stage2/findKey.png"));
+                    itemView = new ImageView();
+                    itemView.setImage(key3);
+                    itemView.setFitHeight(50);
+                    itemView.setPreserveRatio(true);
+                    translateY = 100;
+                    translateX = 50;
+                    break;
+            }
+            itemView.setTranslateY(translateY);
+            itemView.setTranslateX(translateX);
+            gameDisplay.getChildren().add(itemView);
+            gameDisplay.getChildren().add(ItemInteractionDisplay(itemView, doorKey, translateY, translateX));
             gameDisplay.getChildren().add(npcView);
             gameDisplay.getChildren().add(doorExit);
             gameDisplay.getChildren().add(DoorInteractionDisplay(doorExit, null));
             
+            gameDisplay.setPrefWrapLength(1920);
             update = false;
         //}
 
@@ -963,23 +1005,16 @@ public class Main extends Application {
                 btn[i].setContentDisplay(GRAPHIC_ONLY);
                 btn[i].getStyleClass().add("darkButton");
                 
+                int inventoryNumber = i;
                 btn[i].setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
                         if(!inventoryBack) {
-                            user.equipItem(mainItem);
-                            inHandView.setFitHeight(200);
-                            inHandView.setFitWidth(200);
-                            inventoryGrid.add(inHandView, 9, 0);
-                            inventoryGrid.setTranslateY(0);
-                            inventoryGrid.setTranslateX(47);
+                            InHandShow(inventoryNumber);
                             inventoryBack = true;
                         }
                         else {
-                            main.setBottom(InventoryDisplay());
-                            inventoryGrid.getChildren().remove(inHandView);
-                            inventoryGrid.setTranslateY(0);
-                            inventoryGrid.setTranslateX(0);
+                            RemoveInHand();
                             inventoryBack = false;
                         }
                     }
