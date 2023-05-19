@@ -70,6 +70,10 @@ public class Protagonist extends Character {
         i.interact();
     }
     
+    /**
+     * Removes the item from the inventory array
+     * @param i 
+     */
     public void removeItem(int i) {
         inventory[i] = null;
     }
