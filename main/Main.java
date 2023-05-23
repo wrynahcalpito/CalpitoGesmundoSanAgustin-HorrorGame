@@ -466,7 +466,7 @@ public class Main extends Application {
         return NPCInteractions;
     }
     
-    private Node ItemInteractionDisplay(ImageView img, Item i, int y, int x) {
+    private Node ItemInteractionDisplay(ImageView img, Item i, int x, int y) {
         HBox ITEMInteractions = new HBox(10);
         
         Button getBtn = new Button("GET ITEM");
@@ -751,7 +751,7 @@ public class Main extends Application {
         }
         
         //STORAGE STAGE
-        /**while(isStage1) {
+        /**while(isStage1) {**/
             //BACKGROUND FOR STAGE 1
             Image backgroundImage = new Image(Main.class.getResourceAsStream("img/stage1/storageBG.png"));
             BackgroundImage bgImage = new BackgroundImage(
@@ -794,19 +794,19 @@ public class Main extends Application {
             ApplyMovement(box2View);
             
             Item box3 = new Item("box2", "box", "img/stage1/box3.png");
-            Image box3Img = new Image(Main.class.getResourceAsStream(box2.getAppearance()));
+            Image box3Img = new Image(Main.class.getResourceAsStream(box3.getAppearance()));
             ImageView box3View = new ImageView();
-            box3View.setImage(box2Img);
+            box3View.setImage(box3Img);
             ApplyMovement(box3View);          
             
-            gameDisplay.getChildren().addAll(box1View, ItemInteractionDisplay(box1View, box1), box2View, ItemInteractionDisplay(box2View, box2), box3View, ItemInteractionDisplay(box3View, box3));
+            gameDisplay.getChildren().addAll(box1View, ItemInteractionDisplay(box1View, box1, 100, 100), box2View, ItemInteractionDisplay(box2View, box2, 100, 100), box3View, ItemInteractionDisplay(box3View, box3, 100, 100));
             
             isStage1 = false;
-        }**/
+        //}**/
 
         //BUTCHER STAGE (STAGE 2)
         //while(isStage2) {
-            gameDisplay.setVisible(true);
+            /*gameDisplay.setVisible(true);
             
             Timeline timeline = new Timeline(
             new KeyFrame(Duration.ZERO, event -> {
@@ -879,7 +879,7 @@ public class Main extends Application {
 
         //while(isStage3) {
 
-        //}
+        //}*/
         return gameDisplay;
     }
     
