@@ -1,7 +1,5 @@
 package main;
 
-import java.awt.AWTException;
-import java.awt.Robot;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -45,10 +43,32 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+/**
+ * Main is the class where the environment of the game is set up. 
+ * Main has the Instructions Display, Header Display, Bars Displays, LeftStats Display, RightStats Display, Gallery Display, Inventory Display, Interaction Displays, Intro Display, Game Display, Settings Display, Controls Display, Game Over Screen, and Ending Screen. 
+ * 
+ * @author TRUTH - CALPITO, GESMUNDO, SAN AGUSTIN
+ */
+
 public class Main extends Application {
-    private Text gameTitle, introText = new Text();
-    private final static int BLACKOUT_TIME_MS = 10;
-    private static boolean inventoryBack = false, otherBack = false, startbool = false, interactbool = false, isIntro = false,  isStage1 = false, isStage2 = false, isStage3 = false, update = false;
+    /** Initializes text for the game title displayed 
+     */ private Text gameTitle = new Text();
+    /** Initializes text for the introduction screen
+     */ private Text introText = new Text();
+    /** Variable for the introduction animation
+     */ private final static int BLACKOUT_TIME_MS = 10;
+    /** Checks if the inventory is returned 
+     */ private static boolean inventoryBack = false;
+    /** Checks if the gallery or settings is returned
+     */ private static boolean otherBack = false;
+    /** Checks if the start 
+     */ private static boolean startbool = false; 
+    /**
+     */ private static boolean interactbool = false;
+    /**
+     */ private static boolean isIntro = false;
+    /**
+     */ private static boolean isStage1 = false, isStage2 = false, update = false;
     private String introMessage = "Where am I? Where am I! Last night, I was in my room...last night, everything was normal. But now, I can't move! I'm paralyzed—the world around me is paralyzed. But I can see a world so strange that I could not understand. It's dark; too dark for tonight.                                                                                                                                         ";
     private int currentLevel = 0, horizontalMovement = 250, verticalMovement = 250, entityResize = 100, zMovement = 100, xChange = 50, introMessageLength = introMessage.length(), currentCharIndex = 0, currentButcherRoom = 1, timer = 0;
     
