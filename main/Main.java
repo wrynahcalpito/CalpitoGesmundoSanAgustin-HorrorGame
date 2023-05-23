@@ -471,8 +471,8 @@ public class Main extends Application {
         
         Button getBtn = new Button("GET ITEM");
         ITEMInteractions.getChildren().addAll(getBtn);
-        ITEMInteractions.setTranslateX(50+x);
-        ITEMInteractions.setTranslateY(75+y);
+        ITEMInteractions.setTranslateX(10+x);
+        ITEMInteractions.setTranslateY(125+y);
 
         getBtn.setVisible(false);
 
@@ -503,7 +503,7 @@ public class Main extends Application {
         
         Button openBtn = new Button("OPEN DOOR WITH KEY");
         DOORInteractions.getChildren().addAll(openBtn);
-        DOORInteractions.setTranslateX(300);
+        DOORInteractions.setTranslateX(100);
         DOORInteractions.setTranslateY(250);
         
         openBtn.setVisible(false);
@@ -852,8 +852,8 @@ public class Main extends Application {
                     itemView.setImage(key2);
                     itemView.setFitHeight(50);
                     itemView.setPreserveRatio(true);
-                    translateY = 100;
-                    translateX = 50;
+                    translateY = 500;
+                    translateX = 100;
                     break;
                 case 3:
                     Image key3 = new Image(Main.class.getResourceAsStream("img/stage2/findKey.png"));
@@ -861,8 +861,8 @@ public class Main extends Application {
                     itemView.setImage(key3);
                     itemView.setFitHeight(50);
                     itemView.setPreserveRatio(true);
-                    translateY = 100;
-                    translateX = 50;
+                    translateY = 500;
+                    translateX = 200;
                     break;
             }
             itemView.setTranslateY(translateY);
