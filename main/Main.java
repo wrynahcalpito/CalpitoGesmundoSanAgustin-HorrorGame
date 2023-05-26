@@ -68,7 +68,7 @@ public class Main extends Application {
     /**
      */ private static boolean isIntro = false;
     /**
-     */ private static boolean isStage1 = false, isStage2 = false, update = false;
+     */ private static boolean isStage1 = true, isStage2 = false, update = false;
     private String introMessage = "Where am I? Where am I! Last night, I was in my room...last night, everything was normal. But now, I can't move! I'm paralyzed—the world around me is paralyzed. But I can see a world so strange that I could not understand. It's dark; too dark for tonight.                                                                                                                                         ";
     private int currentLevel = 0, horizontalMovement = 250, verticalMovement = 250, entityResize = 100, zMovement = 100, xChange = 50, introMessageLength = introMessage.length(), currentCharIndex = 0, currentButcherRoom = 1, timer = 0;
     
@@ -490,6 +490,7 @@ public class Main extends Application {
         HBox ITEMInteractions = new HBox(10);
         
         Button getBtn = new Button("GET ITEM");
+        getBtn.getStyleClass().add("lightButton");
         ITEMInteractions.getChildren().addAll(getBtn);
         ITEMInteractions.setTranslateX(10+x);
         ITEMInteractions.setTranslateY(125+y);
@@ -518,13 +519,47 @@ public class Main extends Application {
         return ITEMInteractions;
     }
     
-    private Node DoorInteractionDisplay(ImageView img, Item i) {
+    private Node BoxInteractionDisplay(ImageView box, int x, int y, boolean hasKey) {
+        HBox BOXInteractions = new HBox(10);
+        
+        Button openBtn = new Button("OPEN BOX");
+        openBtn.getStyleClass().add("lightButton");
+        BOXInteractions.getChildren().addAll(openBtn);
+        BOXInteractions.setTranslateX(10+x);
+        BOXInteractions.setTranslateY(125+y);
+
+        openBtn.setVisible(false);
+
+        box.hoverProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue) {
+                openBtn.setVisible(true);
+            } else {
+                //openBtn.setVisible(false);
+            }
+        });
+
+        openBtn.setOnAction((ActionEvent event) -> {
+            if(hasKey == true) {
+                openBtn.setText("Key Found!");
+                user.getItem(doorKey);
+            }
+            else {
+                openBtn.setText("No Key Found");
+            }
+            main.setBottom(InventoryDisplay());
+        });
+
+        return BOXInteractions;
+    }
+    
+    private Node DoorInteractionDisplay(ImageView img, int x, int y, int stage) {
         HBox DOORInteractions = new HBox(10);
         
         Button openBtn = new Button("OPEN DOOR WITH KEY");
+        openBtn.getStyleClass().add("lightButton");
         DOORInteractions.getChildren().addAll(openBtn);
-        DOORInteractions.setTranslateX(100);
-        DOORInteractions.setTranslateY(250);
+        DOORInteractions.setTranslateX(100+x);
+        DOORInteractions.setTranslateY(250+y);
         
         openBtn.setVisible(false);
 
@@ -537,26 +572,43 @@ public class Main extends Application {
         });
 
         openBtn.setOnAction(event -> {
-            switch(currentButcherRoom) {
-                case 1:
-                    currentButcherRoom = 2;
-                    main.setCenter(GameDisplay(currentButcherRoom));
-                    openBtn.setVisible(false);
-                    break;
-                case 2:
-                    currentButcherRoom = 3;
-                    main.setCenter(GameDisplay(currentButcherRoom));
-                    openBtn.setVisible(false);
-                    break;
-                case 3:
-                    //change to the ending na 
-                    currentButcherRoom = 1;
-                    main.setCenter(GameDisplay(currentButcherRoom));
-                    openBtn.setVisible(false);
-                    break;
+            if (stage == 1) {
+                //Move to Stage 2
+                isStage1 = false;
+                isStage2 = true;
+                openBtn.setVisible(false);
+                for (int t = 0; t<9; t++) {
+                    if (user.getInventory()[t] == doorKey) {
+                        user.removeItem(t);
+                    }
+                }
+                inventoryBack = false;
+                RemoveInHand();
+                doorExit = ChangeRoom(currentButcherRoom);
+                main.setCenter(GameDisplay(currentButcherRoom));
             }
-            inventoryBack = false;
-            RemoveInHand();
+            else if (stage == 2) {
+                switch(currentButcherRoom) {
+                    case 1:
+                        currentButcherRoom = 2;
+                        main.setCenter(GameDisplay(currentButcherRoom));
+                        openBtn.setVisible(false);
+                        break;
+                    case 2:
+                        currentButcherRoom = 3;
+                        main.setCenter(GameDisplay(currentButcherRoom));
+                        openBtn.setVisible(false);
+                        break;
+                    case 3:
+                        //change to the ending na 
+                        currentButcherRoom = 1;
+                        main.setCenter(GameDisplay(currentButcherRoom));
+                        openBtn.setVisible(false);
+                        break;
+                }
+                inventoryBack = false;
+                RemoveInHand();
+            }
             openBtn.setVisible(false);
         });
 
@@ -771,7 +823,7 @@ public class Main extends Application {
         }
         
         //STORAGE STAGE
-        /**while(isStage1) {**/
+        if (isStage1 == true) {
             //BACKGROUND FOR STAGE 1
             Image backgroundImage = new Image(Main.class.getResourceAsStream("img/stage1/storageBG.png"));
             BackgroundImage bgImage = new BackgroundImage(
@@ -817,30 +869,23 @@ public class Main extends Application {
             Image box3Img = new Image(Main.class.getResourceAsStream(box3.getAppearance()));
             ImageView box3View = new ImageView();
             box3View.setImage(box3Img);
-            ApplyMovement(box3View);          
+            ApplyMovement(box3View);
             
-            gameDisplay.getChildren().addAll(box1View, ItemInteractionDisplay(box1View, box1, 100, 100), box2View, ItemInteractionDisplay(box2View, box2, 100, 100), box3View, ItemInteractionDisplay(box3View, box3, 100, 100));
-            
-            isStage1 = false;
-        //}**/
+            Image doorImage = new Image(Main.class.getResourceAsStream("img/stage2/door.png"));
+            doorExit = new ImageView();
+            doorExit.setImage(doorImage);
+            doorExit.setTranslateX(100);
+            doorExit.setTranslateY(100);
+            doorExit.setFitHeight(600);
+            doorExit.setPreserveRatio(true);
+        
+            gameDisplay.getChildren().addAll(box1View, BoxInteractionDisplay(box1View, 100, 125, true), box2View, BoxInteractionDisplay(box2View, 100, 125, false), box3View, BoxInteractionDisplay(box3View, 100, 125, false));
+            gameDisplay.getChildren().add(doorExit);
+            gameDisplay.getChildren().add(DoorInteractionDisplay(doorExit, 0, -200, 1));
+        }
 
         //BUTCHER STAGE (STAGE 2)
-        //while(isStage2) {
-            /*gameDisplay.setVisible(true);
-            
-            Timeline timeline = new Timeline(
-            new KeyFrame(Duration.ZERO, event -> {
-                // set the scene color to black
-                game.setFill(Color.BLACK);
-            }),
-            new KeyFrame(Duration.millis(BLACKOUT_TIME_MS), event -> {
-                // remove the fill from the scene
-                game.setFill(null);
-            })
-            );
-            timeline.setCycleCount(Animation.INDEFINITE);
-            //timeline.play();
-
+        else if (isStage2 == true) {
             NPC butcher = new NPC("The Butcher", "img/stage2/butcher.png", "Meat...");
             Image npc = new Image(Main.class.getResourceAsStream(butcher.getAppearance()));
             npcView = new ImageView();
@@ -891,14 +936,12 @@ public class Main extends Application {
             gameDisplay.getChildren().add(ItemInteractionDisplay(itemView, doorKey, translateY, translateX));
             gameDisplay.getChildren().add(npcView);
             gameDisplay.getChildren().add(doorExit);
-            gameDisplay.getChildren().add(DoorInteractionDisplay(doorExit, null));
+            gameDisplay.getChildren().add(DoorInteractionDisplay(doorExit, 0, 0, 2));
             
             gameDisplay.setPrefWrapLength(1920);
             update = false;
-        //}
-
+        }
         //while(isStage3) {
-
         //}*/
         return gameDisplay;
     }
