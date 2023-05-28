@@ -98,12 +98,10 @@ public class Main extends Application {
          */ currentSlide = 0;
     ImageView door, doorExit, npcView, itemView;
     /** Declares a door key with the type key and a link to the appearance
-     */ 
-    Item doorKey = new Item("Door Key", "Key", "img/stage2/key.png");
+     */ Item doorKey = new Item("Door Key", "Key", "img/stage2/key.png");
           
     /** Initializes the protagonist with the default name as USER
-     */
-    Protagonist user = new Protagonist("USER");
+     */ Protagonist user = new Protagonist("USER");
     /** Initializes the main layout of the game which is BorderPane
      */ BorderPane main = new BorderPane();
     /** Initializes the JavaFX scene
@@ -111,32 +109,40 @@ public class Main extends Application {
     /** Initializes the VBox for the start display
      */ VBox start = new VBox(10);
     /** Initializes the GridPane for the inventory grid display
-     */
-    GridPane inventoryGrid = new GridPane();
-    /**
-     * Initializes the FlowPane for the game display
-     */
-    FlowPane gameDisplay = new FlowPane();
+     */ GridPane inventoryGrid = new GridPane();
+    /** Initializes the FlowPane for the game display
+     */ FlowPane gameDisplay = new FlowPane();
         
     /** Creates timers for the three rooms in the butcher stage
      */ Timer tr1 = new Timer();
         Timer tr2 = new Timer();
         Timer tr3 = new Timer();
         
+    /**
+     * This is the main method. It initializes the general layout and the start screen of the game. This shows the title, a text field for the name, a confirm name button, instruction manual button, and a start button.
+     * This also includes the KeyEvents that corresponds to movement and interactions in the game. 
+     * 
+     * @param primaryStage Stage of the game
+     */
     @Override
     public void start(Stage primaryStage) {
+        /**
+         * Initializing the primaryStage and adding the CSS file for the style of the game
+         */
         primaryStage.setTitle("Last Night, Last Night");
-            
-        //INITIALIZING BORDER PANE (MAIN GAME LAYOUT)
         primaryStage.setScene(game);
         game.getStylesheets().add(getClass().getResource("Style.css").toExternalForm());
         primaryStage.setMaximized(true);
         
-        //MAIN CODE
+        /**
+         * Gives item camera to the player
+         */
         Item camera = new Item("camera", "item", "img/camera.png"); 
         user.getItem(camera);
         
-        //START SCREEN
+        /**
+         * Adds and formats the background image of the game
+         */
         Image backgroundImage = new Image(Main.class.getResourceAsStream("img/startBG.png"));
         BackgroundImage bgImage = new BackgroundImage(
                 backgroundImage,
@@ -148,6 +154,9 @@ public class Main extends Application {
         Background bg = new Background(bgImage);
         main.setBackground(bg);
         
+        /**
+         * Sets the START DISPLAY of the game by providing a title, a text field for the name, a confirm name button, instruction manual button, and a start button
+         */
         Text title = new Text("Last Night, Last Night");
         title.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 200));
         title.setFill(Color.web("800000", 1.0));
@@ -214,9 +223,14 @@ public class Main extends Application {
         start.setAlignment(Pos.CENTER);
         main.setCenter(start);
 
-        //MAIN KEY EVENTS
+        /**
+         * Sets the KeyEvents of the game that constitutes to many of the processes in the game
+         */
         main.setOnKeyPressed((KeyEvent ke) -> {
             switch (ke.getCode()) {
+                /**
+                 * Escape key is used for displaying the settings and exiting the settings
+                 */
                 case ESCAPE:
                     if(!otherBack) {
                         main.setCenter(SettingsDisplay());
@@ -227,6 +241,9 @@ public class Main extends Application {
                         update = true;
                         otherBack = false;
                     }   break;
+                /**
+                 * 0 key is used for displaying the gallery and exiting the gallery display
+                 */
                 case DIGIT0:
                     if(!otherBack) {
                         main.setCenter(GalleryDisplay());
@@ -237,6 +254,9 @@ public class Main extends Application {
                         update = true;
                         otherBack = false;
                     }   break;
+                /**
+                 * Digits 1 to 9 are used as hotkeys to access items in the inventory of the player
+                 */
                 case DIGIT1:
                     if(!inventoryBack) {
                         InHandShow(0);
@@ -318,34 +338,54 @@ public class Main extends Application {
                         RemoveInHand();
                         inventoryBack = false;
                     }   break;
+                /**
+                 * The A key moves the player to the left by moving entities to the right.
+                 */
                 case A:
                     horizontalMovement += xChange;
                     main.setCenter(GameDisplay(currentButcherRoom));
                     update = true;
                     break;
+                /**
+                 * The D key moves the player to the right by moving entities to the left.
+                 */
                 case D:
                     horizontalMovement -= xChange;
                     main.setCenter(GameDisplay(currentButcherRoom));
                     update = true;
                     break;
+                /**
+                 * The W key moves the player forward by making the entity larger. 
+                 */
                 case W:
                     zMovement += xChange;
                     main.setCenter(GameDisplay(currentButcherRoom));
                     update = true;
                     break;
+                /**
+                 * The S key moves the player backward by making the entity smaller.
+                 */
                 case S:
                     zMovement -= xChange;
                     main.setCenter(GameDisplay(currentButcherRoom));
-                    
                     update = true;
                     break;
+                /**
+                 * The F key makes the player jump. This is done by moving it downward when the key is pressed. 
+                 */
                 case F:
                     verticalMovement += 200;
                     main.setCenter(GameDisplay(currentButcherRoom));
                     break;
+                /**
+                 * The CTRL key increases the change in horizontal movement by 4.
+                 */
                 case CONTROL:
                     xChange *= 4;
                     break;
+                /**
+                 * The CTRL key decreases the change in horizontal movement by 4.
+                 */
                 case SHIFT:
                     xChange *= 0.25;
                     break;
@@ -354,6 +394,9 @@ public class Main extends Application {
             }
         });
         
+        /**
+         * The F key makes the player jump. This is done by moving it back to its original position when the key is released. 
+         */
         main.setOnKeyReleased((KeyEvent ke) -> {
             switch (ke.getCode()) {
                 case F:
@@ -373,6 +416,22 @@ public class Main extends Application {
      */
     public static void main(String[] args) {
         launch(args);       
+    }
+    
+    private Node HeaderDisplay() {
+        FlowPane header = new FlowPane();
+        
+        header.setBackground(new Background(new BackgroundFill(Color.web("800000", 1.0), CornerRadii.EMPTY, Insets.EMPTY)));
+        header.setAlignment(Pos.TOP_CENTER);
+        header.setPadding(new Insets(20, 50, 20, 50));
+        header.setHgap(20);
+        
+        gameTitle = new Text("Last Night, Last Night");
+        gameTitle.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 65));
+        gameTitle.setFill(Color.web("f0f1f2", 1.0));
+        header.getChildren().add(gameTitle);     
+        
+        return header;
     }
     
     private Node InstructionsDisplay() {
@@ -410,21 +469,7 @@ public class Main extends Application {
         return manual;
     }
 
-    private Node HeaderDisplay() {
-        FlowPane header = new FlowPane();
-        
-        header.setBackground(new Background(new BackgroundFill(Color.web("800000", 1.0), CornerRadii.EMPTY, Insets.EMPTY)));
-        header.setAlignment(Pos.TOP_CENTER);
-        header.setPadding(new Insets(20, 50, 20, 50));
-        header.setHgap(20);
-        
-        gameTitle = new Text("Last Night, Last Night");
-        gameTitle.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 65));
-        gameTitle.setFill(Color.web("f0f1f2", 1.0));
-        header.getChildren().add(gameTitle);     
-        
-        return header;
-    }
+    
     
     private Node BarsDisplay(int statValue, int maxStatValue) {
         FlowPane bar = new FlowPane();
