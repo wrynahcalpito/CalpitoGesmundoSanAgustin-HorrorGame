@@ -467,6 +467,14 @@ public class Main extends Application {
         equipIt.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 65));
         manual.getChildren().addAll(equipIt, new Text("Click on the inventory slots below. Pick the item you want to equip."), new Text("You can also use hotkeys (keys 1-9) to equip items. Click the number corresponding to the slot of the desired item."));
         
+        Text doorsIt = new Text("How to open doors?");
+        doorsIt.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 65));
+        manual.getChildren().addAll(doorsIt, new Text("You need to have a doorkey to open a door, select the doorkey by using hotbar keys or click it in your inventory, then hover over the door and click the 'OPEN DOOR WITH KEY' button."));
+        
+        Text specificIt = new Text("Stuck on a specific stage?");
+        specificIt.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 65));
+        manual.getChildren().addAll(specificIt, new Text("Stage 1: Use WASD keys to navigate around the room to reveal boxes and open these boxes to get keys for the door."), new Text("Stage 2: Find the hidden key in the background and hover over it to collect it, proceed to open the door to get to the next room."));
+        
         Button backBtn = new Button("Back"); 
         backBtn.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 25));
         backBtn.setTextFill(Color.web("800000"));
@@ -481,8 +489,6 @@ public class Main extends Application {
         
         return manual;
     }
-
-    
     
     private Node BarsDisplay(int statValue, int maxStatValue) {
         FlowPane bar = new FlowPane();
