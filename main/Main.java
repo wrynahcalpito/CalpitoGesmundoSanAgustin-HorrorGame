@@ -633,7 +633,7 @@ public class Main extends Application {
         openBtn.getStyleClass().add("lightButton");
         BOXInteractions.getChildren().addAll(openBtn);
         BOXInteractions.setTranslateX(10+x);
-        BOXInteractions.setTranslateY(125+y);
+        BOXInteractions.setTranslateY(225+y);
 
         openBtn.setVisible(false);
 
@@ -1042,7 +1042,7 @@ public class Main extends Application {
             itemView.setTranslateY(translateY);
             itemView.setTranslateX(translateX);
             gameDisplay.getChildren().add(itemView);
-            gameDisplay.getChildren().add(ItemInteractionDisplay(itemView, doorKey, translateY, translateX));
+            gameDisplay.getChildren().add(ItemInteractionDisplay(itemView, doorKey, translateX, translateY));
             gameDisplay.getChildren().add(npcView);
             gameDisplay.getChildren().add(doorExit);
             gameDisplay.getChildren().add(DoorInteractionDisplay(doorExit, 0, 0, 2));
@@ -1050,7 +1050,6 @@ public class Main extends Application {
             gameDisplay.setPrefWrapLength(1920);
             update = false;
         }
-        
         
         return gameDisplay;
     }
