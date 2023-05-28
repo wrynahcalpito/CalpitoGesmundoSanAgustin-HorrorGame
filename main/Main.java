@@ -1,4 +1,4 @@
-package pkg3qinitialtest;
+package main;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -51,41 +51,77 @@ import javafx.util.Duration;
  * 
  * @author TRUTH - CALPITO, GESMUNDO, SAN AGUSTIN
  */
-
 public class Main extends Application {
     /** Initializes text for the game title displayed 
-     */ private Text gameTitle = new Text();
-    /** Initializes text for the introduction screen
-     */ private Text introText = new Text();
+     */ private Text gameTitle = new Text(),
+        /** Initializes text for the introduction screen
+         */ introText = new Text();
     /** Variable for the introduction animation
      */ private final static int BLACKOUT_TIME_MS = 10;
     /** Checks if the inventory is returned 
-     */ private static boolean inventoryBack = false;
-    /** Checks if the gallery or settings is returned
-     */ private static boolean otherBack = false;
-    /** Checks if the start 
-     */ private static boolean startbool = false; 
-    /**
-     */ private static boolean interactbool = false;
-    /**
-     */ private static boolean isIntro = false;
-    /**
-     */ private static boolean isStage1 = true, isStage2 = false, isStage3 = false, update = false;
-    private String introMessage = "Where am I? Where am I! Last night, I was in my room...last night, everything was normal. But now, I can't move! I'm paralyzed—the world around me is paralyzed. But I can see a world so strange that I could not understand. It's dark; too dark for tonight.                                                                                                                                         ";
-    private int currentLevel = 0, horizontalMovement = 250, verticalMovement = 250, entityResize = 100, zMovement = 100, xChange = 50, introMessageLength = introMessage.length(), currentCharIndex = 0, currentButcherRoom = 1, timer = 0, currentSlide = 0;
-    
-    
-    Protagonist user = new Protagonist("USER");
-    BorderPane main = new BorderPane();
-    Scene game = new Scene(main);
-    VBox start = new VBox(10);
-    GridPane inventoryGrid = new GridPane();
-    FlowPane gameDisplay = new FlowPane();
+     */ private static boolean inventoryBack = false,
+        /** Checks if the gallery or settings is returned
+         */ otherBack = false, 
+        /** Checks if the start button is already shown
+         */ startbool = false, 
+        /** Checks if intro is displayed
+         */ isIntro = false, 
+        /** Checks if the player is in stage 1
+         */ isStage1 = true, 
+        /** Checks if the player is in stage 2
+         */ isStage2 = false, 
+        /** Checks if the player is in stage 
+         */ isStage3 = false, 
+        /** Checks if the room in stage 2 is changed
+         */ update = false;
+    /** Initializes the message that is displayed in the intro animation
+     */ private String introMessage = "Where am I? Where am I! Last night, I was in my room...last night, everything was normal. But now, I can't move! I'm paralyzed—the world around me is paralyzed. But I can see a world so strange that I could not understand. It's dark; too dark for tonight.                                                                                                                                         ";
+    /** Initializes the level of the player at 0
+     */ private int currentLevel = 0, 
+        /** Sets that the horizontal movement would be 250
+         */ horizontalMovement = 250, 
+        /** Sets that the vertical movement would be 250
+         */ verticalMovement = 250,  
+        /** Sets that the entity resize would be 100
+         */ entityResize = 100, 
+        /** Sets the zMovement at 100
+         */ zMovement = 100, 
+        /** Sets the xChange to 50
+         */ xChange = 50,
+        /** Establishes the starting point of the intro animation at index 0 of the characters of the text to be animated
+         */ currentCharIndex = 0,
+        /** Initializes the butcher room that the player is in at 1
+         */ currentButcherRoom = 1,
+        /** Initializes the timer at 0
+         */ timer = 0,
+        /** Initializes the current slide for the ending scene at 0
+         */ currentSlide = 0;
     ImageView door, doorExit, npcView, itemView;
+    /** Declares a door key with the type key and a link to the appearance
+     */ 
     Item doorKey = new Item("Door Key", "Key", "img/stage2/key.png");
-    Timer tr1 = new Timer();
-    Timer tr2 = new Timer();
-    Timer tr3 = new Timer();
+          
+    /** Initializes the protagonist with the default name as USER
+     */
+    Protagonist user = new Protagonist("USER");
+    /** Initializes the main layout of the game which is BorderPane
+     */ BorderPane main = new BorderPane();
+    /** Initializes the JavaFX scene
+     */ Scene game = new Scene(main);
+    /** Initializes the VBox for the start display
+     */ VBox start = new VBox(10);
+    /** Initializes the GridPane for the inventory grid display
+     */
+    GridPane inventoryGrid = new GridPane();
+    /**
+     * Initializes the FlowPane for the game display
+     */
+    FlowPane gameDisplay = new FlowPane();
+        
+    /** Creates timers for the three rooms in the butcher stage
+     */ Timer tr1 = new Timer();
+        Timer tr2 = new Timer();
+        Timer tr3 = new Timer();
         
     @Override
     public void start(Stage primaryStage) {
@@ -770,7 +806,7 @@ public class Main extends Application {
         Timeline timeline = new Timeline();
         timeline.getKeyFrames().add(
             new KeyFrame(Duration.millis(250), e -> {
-                if (currentCharIndex <= introMessageLength) {
+                if (currentCharIndex <= introMessage.length()) {
                     introText.setText(introMessage.substring(0, currentCharIndex));
                     currentCharIndex++;
                 } else {
