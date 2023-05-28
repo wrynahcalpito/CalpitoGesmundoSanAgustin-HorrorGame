@@ -65,9 +65,9 @@ public class Main extends Application {
         /** Checks if the start button is already shown
          */ startbool = false, 
         /** Checks if intro is displayed
-         */ isIntro = false, 
+         */ isIntro = true, 
         /** Checks if the player is in stage 1
-         */ isStage1 = true, 
+         */ isStage1 = false, 
         /** Checks if the player is in stage 2
          */ isStage2 = false, 
         /** Checks if the player is in stage 
@@ -88,6 +88,8 @@ public class Main extends Application {
          */ zMovement = 100, 
         /** Sets the xChange to 50
          */ xChange = 50,
+        /** Gets the length of the intro message
+         */ introMessageLength = introMessage.length(),
         /** Establishes the starting point of the intro animation at index 0 of the characters of the text to be animated
          */ currentCharIndex = 0,
         /** Initializes the butcher room that the player is in at 1
@@ -193,24 +195,25 @@ public class Main extends Application {
                     startbool = true;
                     
                     startBtn.setOnAction((ActionEvent event1) -> {
-                    main.setTop(HeaderDisplay());
-                    main.setLeft(LeftStatsDisplay());
-                    main.setRight(RightStatsDisplay());
-                    main.setCenter(GameDisplay(currentButcherRoom));
-                    main.setBottom(InventoryDisplay());
-                    npcView.setImage(new Image(Main.class.getResourceAsStream("img/stage2/butcher.png")));
                     primaryStage.setMaximized(true);
-        
                     if (isIntro) {
-                        IntroDisplay(primaryStage);
-                        primaryStage.setMaximized(true);
+                        IntroDisplay();
+                        isIntro = false;
+                    }
+                    else {
+                        main.setTop(HeaderDisplay());
+                        main.setLeft(LeftStatsDisplay());
+                        main.setRight(RightStatsDisplay());
+                        main.setCenter(GameDisplay(currentButcherRoom));
+                        main.setBottom(InventoryDisplay());
+                        npcView.setImage(new Image(Main.class.getResourceAsStream("img/stage2/butcher.png")));
                     }
                 });
                 }     
             }
-        });      
+        });       
         
-        Button manualBtn = new Button("Open Instruction Manual"); 
+        Button manualBtn = new Button("Open Instruction Manual");
         manualBtn.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 25));
         manualBtn.setTextFill(Color.web("800000"));
         manualBtn.setBlendMode(BlendMode.SCREEN);
@@ -342,40 +345,50 @@ public class Main extends Application {
                  * The A key moves the player to the left by moving entities to the right.
                  */
                 case A:
-                    horizontalMovement += xChange;
-                    main.setCenter(GameDisplay(currentButcherRoom));
-                    update = true;
+                    if (isStage1) {
+                        horizontalMovement += xChange;
+                        main.setCenter(GameDisplay(currentButcherRoom));
+                        update = true;
+                    }
                     break;
                 /**
                  * The D key moves the player to the right by moving entities to the left.
                  */
                 case D:
-                    horizontalMovement -= xChange;
-                    main.setCenter(GameDisplay(currentButcherRoom));
-                    update = true;
+                    if (isStage1) {
+                        horizontalMovement -= xChange;
+                        main.setCenter(GameDisplay(currentButcherRoom));
+                        update = true;
+                    }
                     break;
                 /**
                  * The W key moves the player forward by making the entity larger. 
                  */
                 case W:
-                    zMovement += xChange;
-                    main.setCenter(GameDisplay(currentButcherRoom));
-                    update = true;
+                    if (isStage1) {
+                        zMovement += xChange;
+                        main.setCenter(GameDisplay(currentButcherRoom));
+                        update = true;
+                    }
                     break;
                 /**
                  * The S key moves the player backward by making the entity smaller.
                  */
                 case S:
-                    zMovement -= xChange;
-                    main.setCenter(GameDisplay(currentButcherRoom));
-                    update = true;
+                    if (isStage1) {
+                        zMovement -= xChange;
+                        main.setCenter(GameDisplay(currentButcherRoom));
+                        update = true;
+                    }
                     break;
                 /**
                  * The F key makes the player jump. This is done by moving it downward when the key is pressed. 
                  */
                 case F:
-                    verticalMovement += 200;
-                    main.setCenter(GameDisplay(currentButcherRoom));
+                    if (isStage1) {
+                        verticalMovement += 200;
+                        main.setCenter(GameDisplay(currentButcherRoom));
+                    };
                     break;
                 /**
                  * The CTRL key increases the change in horizontal movement by 4.
@@ -838,7 +851,8 @@ public class Main extends Application {
         doorExit.setTranslateX(600-i);
     }
     
-    private void IntroDisplay(Stage ps) {
+    private void IntroDisplay() {
+        Stage intro = new Stage();
         FlowPane introPane = new FlowPane();
         
         if(isIntro) {
@@ -850,14 +864,20 @@ public class Main extends Application {
         
         Timeline timeline = new Timeline();
         timeline.getKeyFrames().add(
-            new KeyFrame(Duration.millis(250), e -> {
-                if (currentCharIndex <= introMessage.length()) {
+            new KeyFrame(Duration.millis(100), e -> {
+                if (currentCharIndex <= introMessageLength) {
                     introText.setText(introMessage.substring(0, currentCharIndex));
                     currentCharIndex++;
                 } else {
                     timeline.stop();
                     isIntro=false;
                     isStage1=true;
+                    intro.close();
+                    main.setTop(HeaderDisplay());
+                    main.setLeft(LeftStatsDisplay());
+                    main.setRight(RightStatsDisplay());
+                    main.setCenter(GameDisplay(currentButcherRoom));
+                    main.setBottom(InventoryDisplay());
                 }
             })
         );
@@ -865,9 +885,10 @@ public class Main extends Application {
         
         introPane.getChildren().add(introText);
         Scene scene = new Scene(introPane, 400, 400);
-        ps.setMaximized(true);
-        ps.setScene(scene);
-        ps.show();
+        intro.setMaximized(true);
+        intro.setScene(scene);
+        intro.show();
+        intro.setAlwaysOnTop(true);
 
         timeline.play();
  
@@ -879,14 +900,11 @@ public class Main extends Application {
         nextBtn.getStyleClass().add("transparent");
         introPane.getChildren().add(nextBtn);
         
-        //if (timeline.onFinishedProperty() == true) {
-            //System.out.println("done");
-        //}
         nextBtn.setOnAction((ActionEvent event1) -> {
             timeline.stop();
             isIntro=false;
             isStage1=true;
-            ps.setMaximized(true);
+            intro.close();
             main.setTop(HeaderDisplay());
             main.setLeft(LeftStatsDisplay());
             main.setRight(RightStatsDisplay());
