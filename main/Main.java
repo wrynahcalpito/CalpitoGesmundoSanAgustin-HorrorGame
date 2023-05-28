@@ -987,7 +987,7 @@ public class Main extends Application {
         
             gameDisplay.getChildren().addAll(box1View, BoxInteractionDisplay(box1View, 100, 125, true), box2View, BoxInteractionDisplay(box2View, 100, 125, false), box3View, BoxInteractionDisplay(box3View, 100, 125, false));
             gameDisplay.getChildren().add(doorExit);
-            gameDisplay.getChildren().add(DoorInteractionDisplay(doorExit, 0, -200, 1));
+            gameDisplay.getChildren().add(DoorInteractionDisplay(doorExit, 750, -700, 1));
         }
 
         //BUTCHER STAGE (STAGE 2)
