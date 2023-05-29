@@ -181,9 +181,15 @@ public class Main extends Application {
         confirmName.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                /**
+                 * If the player does not enter a name, it sets it to the default value "USER" 
+                 */
                 if (name.getText().equals("Enter Name")) { user.setName("USER"); }
                 else { user.setName(name.getText()); }
                 
+                /**
+                 * If the startbool is set false, it means that the Start button is not yet displayed. The code below displays the Start button. 
+                 */
                 if (startbool==false) {
                     Button startBtn = new Button("START");
                     startBtn.setFont(Font.loadFont(Main.this.getClass().getResourceAsStream("font/who-asks-satan.ttf"), 100));
@@ -194,6 +200,9 @@ public class Main extends Application {
                     start.getChildren().add(startBtn);
                     startbool = true;
                     
+                    /**
+                     * Displays the intro animation to start the game
+                     */
                     startBtn.setOnAction((ActionEvent event1) -> {
                     primaryStage.setMaximized(true);
                     if (isIntro) {
@@ -211,7 +220,7 @@ public class Main extends Application {
                 });
                 }     
             }
-        });       
+        });
         
         Button manualBtn = new Button("Open Instruction Manual");
         manualBtn.setFont(Font.loadFont(getClass().getResourceAsStream("font/who-asks-satan.ttf"), 25));
@@ -431,6 +440,10 @@ public class Main extends Application {
         launch(args);       
     }
     
+    /**
+     * Layouts the FlowPane header for the header of the game. Displays the title of the game using the font Who Asks Satan.
+     * @return header FlowPane
+     */
     private Node HeaderDisplay() {
         FlowPane header = new FlowPane();
         
@@ -447,6 +460,11 @@ public class Main extends Application {
         return header;
     }
     
+    /**
+     * Layouts the instructions display integrated into the game to help the players manage their controls properly.
+     * Includes text on how to use controls in the game and a back button to return to the start display
+     * @return manual VBox
+     */
     private Node InstructionsDisplay() {
         VBox manual = new VBox(5);
         manual.setStyle("-fx-background-color: rgba(255, 255, 255, 0.7);" +
@@ -490,6 +508,229 @@ public class Main extends Application {
         return manual;
     }
     
+    /**
+     * Layouts the intro display which shows a text animation to give the player some set-up for the game
+     * The animation has a black background with white text 
+     * Once it ends, it proceeds to the game itself
+     * It also loads a Next button that displays the game itself when it is pressed
+     */
+    private void IntroDisplay() {
+        Stage intro = new Stage();
+        FlowPane introPane = new FlowPane();
+        
+        if(isIntro) {
+        introPane.setStyle("-fx-background-color: black");
+        introPane.setAlignment(Pos.CENTER);
+
+        introText.setFill(Color.WHITE);
+        introText.setFont(Font.font("Chiller", 40));
+        
+        Timeline timeline = new Timeline();
+        timeline.getKeyFrames().add(
+            new KeyFrame(Duration.millis(100), e -> {
+                if (currentCharIndex <= introMessageLength) {
+                    introText.setText(introMessage.substring(0, currentCharIndex));
+                    currentCharIndex++;
+                } else {
+                    timeline.stop();
+                    isIntro=false;
+                    isStage1=true;
+                    intro.close();
+                    main.setTop(HeaderDisplay());
+                    main.setLeft(LeftStatsDisplay());
+                    main.setRight(RightStatsDisplay());
+                    main.setCenter(GameDisplay(currentButcherRoom));
+                    main.setBottom(InventoryDisplay());
+                }
+            })
+        );
+        timeline.setCycleCount(Animation.INDEFINITE);
+        
+        introPane.getChildren().add(introText);
+        Scene scene = new Scene(introPane, 400, 400);
+        intro.setMaximized(true);
+        intro.setScene(scene);
+        intro.show();
+        intro.setAlwaysOnTop(true);
+
+        timeline.play();
+ 
+        Button nextBtn = new Button("NEXT");
+        nextBtn.setFont(Font.loadFont(Main.this.getClass().getResourceAsStream("font/who-asks-satan.ttf"), 25));
+        nextBtn.setTextFill(Color.web("800000"));
+        nextBtn.setBlendMode(BlendMode.SCREEN);
+        nextBtn.getStyleClass().add("lightButton");
+        nextBtn.getStyleClass().add("transparent");
+        introPane.getChildren().add(nextBtn);
+        
+        nextBtn.setOnAction((ActionEvent event1) -> {
+            timeline.stop();
+            isIntro=false;
+            isStage1=true;
+            intro.close();
+            main.setTop(HeaderDisplay());
+            main.setLeft(LeftStatsDisplay());
+            main.setRight(RightStatsDisplay());
+            main.setCenter(GameDisplay(currentButcherRoom));
+            main.setBottom(InventoryDisplay());
+        });
+        }
+    }
+    
+    /**
+     * Displays the stages of the game, namely Stage 1 which is the Storage Stage, Stage 2 which is the Butcher Stage, and Stage 3 which is the Ending 
+     * @param i Sets the CurrentButcherRoom for stage 2, which is either room 1, 2, or 3
+     * @return gameDisplay FlowPane
+     */
+    private Node GameDisplay(int i) {
+        
+        /**
+         * Everytime the game display is loaded, it resets it so that a different stage will be shown
+         */
+        gameDisplay.getChildren().clear();
+        for (int t = 0; t<9; t++) {
+            if (user.getInventory()[t] == doorKey) {
+                user.removeItem(t);
+            }
+        }
+        
+        /**
+         * This is the Stage 1 or the Storage Stage
+         * Has a background image of an illustration of a storage room
+         * The player has to explore the room and look in the boxes to find the key
+         * For testing: The key is found by moving using the D (to the right) and clicking on the first box. Use said key placed in the inventory on the door
+         */
+        if (isStage1 == true) {
+            
+            Image backgroundImage = new Image(Main.class.getResourceAsStream("img/stage1/storageBG.png"));
+            BackgroundImage bgImage = new BackgroundImage(
+                backgroundImage,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(100,100,true,true,true,true)
+            );
+            Background bg = new Background(bgImage);
+            main.setBackground(bg);
+            if (user.getGallery()[0] == null) {
+                user.takePhoto("img/testphoto1.png");
+            }
+            
+            currentLevel += 1;
+            
+            Item box1 = new Item("box1", "box", "img/stage1/box1.png");
+            Image box1Img = new Image(Main.class.getResourceAsStream(box1.getAppearance()));
+            ImageView box1View = new ImageView();
+            box1View.setImage(box1Img);
+            ApplyMovement(box1View);
+            
+            Item box2 = new Item("box2", "box", "img/stage1/box2.png");
+            Image box2Img = new Image(Main.class.getResourceAsStream(box2.getAppearance()));
+            ImageView box2View = new ImageView();
+            box1View.setImage(box2Img);
+            ApplyMovement(box2View);
+            
+            Item box3 = new Item("box2", "box", "img/stage1/box3.png");
+            Image box3Img = new Image(Main.class.getResourceAsStream(box3.getAppearance()));
+            ImageView box3View = new ImageView();
+            box3View.setImage(box3Img);
+            ApplyMovement(box3View);
+            
+            Image doorImage = new Image(Main.class.getResourceAsStream("img/stage2/door.png"));
+            doorExit = new ImageView();
+            doorExit.setImage(doorImage);
+            doorExit.setTranslateX(100);
+            doorExit.setTranslateY(100);
+            doorExit.setFitHeight(600);
+            doorExit.setPreserveRatio(true);
+        
+            gameDisplay.getChildren().addAll(box1View, BoxInteractionDisplay(box1View, 100, 125, true), box2View, BoxInteractionDisplay(box2View, 100, 125, false), box3View, BoxInteractionDisplay(box3View, 100, 125, false));
+            gameDisplay.getChildren().add(doorExit);
+            gameDisplay.getChildren().add(DoorInteractionDisplay(doorExit, 750, -700, 1));
+        }
+
+        /**
+         * This is Stage 2 or the Butcher Stage
+         * Includes 3 rooms that the player has to explore to find the key that will open the door
+         * For testing: In room 1, the key is found in a piece of meat at the middle left direction
+         *              In room 2, the key is found under the left skull
+         *              In room 3, the key is found in the pool of blood at lower left
+         */
+        else if (isStage2 == true) {
+            
+            /**
+             * If the boolean indicates that stage 3 shall already be displayed, it calls the Ending() method
+             */
+            if (isStage3 == true) {
+                Ending();
+            }
+            
+            NPC butcher = new NPC("The Butcher", "img/stage2/butcher.png", "Meat...");
+            currentLevel += 1;
+            Image npc = new Image(Main.class.getResourceAsStream(butcher.getAppearance()));
+            npcView = new ImageView();
+            npcView.setImage(npc);
+            npcView.setFitWidth(entityResize);
+            npcView.setPreserveRatio(true);
+            if (!update) {
+                doorExit = ChangeRoom(i);
+            }
+            else {
+                System.out.println("updated");
+                update = false;
+            }
+            
+            int translateY = 0, translateX = 0;
+            switch(currentButcherRoom) {
+                case 1:
+                    Image key1 = new Image(Main.class.getResourceAsStream("img/stage2/findKey.png"));
+                    itemView = new ImageView();
+                    itemView.setImage(key1);
+                    itemView.setFitHeight(50);
+                    itemView.setPreserveRatio(true);
+                    translateY = 100;
+                    translateX = 50;
+                    break;
+                case 2:
+                    Image key2 = new Image(Main.class.getResourceAsStream("img/stage2/findKey.png"));
+                    itemView = new ImageView();
+                    itemView.setImage(key2);
+                    itemView.setFitHeight(50);
+                    itemView.setPreserveRatio(true);
+                    translateY = 500;
+                    translateX = 100;
+                    break;
+                case 3:
+                    Image key3 = new Image(Main.class.getResourceAsStream("img/stage2/findKey.png"));
+                    itemView = new ImageView();
+                    itemView.setImage(key3);
+                    itemView.setFitHeight(50);
+                    itemView.setPreserveRatio(true);
+                    translateY = 500;
+                    translateX = 200;
+                    break;
+            }
+            itemView.setTranslateY(translateY);
+            itemView.setTranslateX(translateX);
+            gameDisplay.getChildren().add(itemView);
+            gameDisplay.getChildren().add(ItemInteractionDisplay(itemView, doorKey, translateX, translateY));
+            gameDisplay.getChildren().add(npcView);
+            gameDisplay.getChildren().add(doorExit);
+            gameDisplay.getChildren().add(DoorInteractionDisplay(doorExit, 0, 0, 2));
+            
+            gameDisplay.setPrefWrapLength(1920);
+            update = false;
+        }
+        
+        return gameDisplay;
+    }
+    
+    /**
+     * Serves as the template for the bars displayed on top of the screen by making rectangles that has the width of the value indicated
+     * @param statValue Uses the variable for the actual value of the stat
+     * @param maxStatValue Uses the max variable which does not change and holds the maximum value the stat could have
+     * @return bar FlowPane
+     */
     private Node BarsDisplay(int statValue, int maxStatValue) {
         FlowPane bar = new FlowPane();
         
@@ -501,6 +742,10 @@ public class Main extends Application {
         return bar;
     } 
     
+    /**
+     * Layouts the stats found at the upper left corner of the screen
+     * @return statsLeft VBox
+     */
     private Node LeftStatsDisplay() {
         VBox statsLeft = new VBox();
         
@@ -521,6 +766,10 @@ public class Main extends Application {
         return statsLeft;
     }
 
+    /**
+     * Layouts the stats found at the upper right corner of the screen
+     * @return statsRight VBox
+     */
     private Node RightStatsDisplay() {
         VBox statsRight = new VBox();
         
@@ -541,6 +790,10 @@ public class Main extends Application {
         return statsRight;
     }
     
+    /**
+     * Applies the movement to the image of the NPC or the Item
+     * @param i ImageView of the NPC or the Item
+     */
     private void ApplyMovement(ImageView i) {
         if (zMovement >= 800) {
             zMovement = 800;
@@ -555,6 +808,12 @@ public class Main extends Application {
         i.setPreserveRatio(true);
     }
     
+    /**
+     * Shows the interaction buttons, namely Talk and Attack button, for the NPC 
+     * @param img ImageView of the NPC
+     * @param npc The NPC that shows the interaction buttons
+     * @return NPC interactions HBox that contains the buttons
+     */
     private Node NPCInteractionDisplay(ImageView img, NPC npc) {
         HBox NPCInteractions = new HBox(10); 
         
@@ -592,6 +851,14 @@ public class Main extends Application {
         return NPCInteractions;
     }
     
+    /**
+     * Shows the interaction buttons, namely Get button, for the Item
+     * @param img ImageView of the Item
+     * @param i The item that shows the interactive buttons
+     * @param x Moves the buttons relative to the image's x-axis
+     * @param y Moves the buttons relative to the image's y-axis
+     * @return Item interactions HBox that contains the buttons
+     */
     private Node ItemInteractionDisplay(ImageView img, Item i, int x, int y) {
         HBox ITEMInteractions = new HBox(10);
         
@@ -606,9 +873,6 @@ public class Main extends Application {
         img.hoverProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue) {
                 getBtn.setVisible(true);
-            } else {
-                //interactBtn.setVisible(false);
-                //getBtn.setVisible(false);
             }
         });
 
@@ -626,6 +890,15 @@ public class Main extends Application {
         return ITEMInteractions;
     }
     
+    /**
+     * Shows the interaction buttons, namely Open Box button, for the Box
+     * If the box contains the key, the user gets the key and text indicates that key is found; if it does not contain the key, it is indicated that no key is found
+     * @param box ImageView of the box
+     * @param x Moves the buttons relative to the image's x-axis
+     * @param y Moves the buttons relative to the image's y-axis
+     * @param hasKey Boolean that evaluates whether the box has the key or does not 
+     * @return Box interactions HBox that contains the buttons
+     */
     private Node BoxInteractionDisplay(ImageView box, int x, int y, boolean hasKey) {
         HBox BOXInteractions = new HBox(10);
         
@@ -640,8 +913,6 @@ public class Main extends Application {
         box.hoverProperty().addListener((obs, oldValue, newValue) -> {
             if (newValue) {
                 openBtn.setVisible(true);
-            } else {
-                //openBtn.setVisible(false);
             }
         });
 
@@ -659,6 +930,15 @@ public class Main extends Application {
         return BOXInteractions;
     }
     
+    /**
+     * Shows the interaction buttons, namely Open Door, of the door
+     * When you open the door for each stage, it shows the next stage or room for the Butcher Stage
+     * @param img ImageView of the door
+     * @param x Moves the buttons relative to the image's x-axis
+     * @param y Moves the buttons relative to the image's y-axis
+     * @param stage Indicates which stage the player is in
+     * @return Door interactions HBox that contains the buttons
+     */
     private Node DoorInteractionDisplay(ImageView img, int x, int y, int stage) {
         HBox DOORInteractions = new HBox(10);
         
@@ -719,6 +999,11 @@ public class Main extends Application {
         return DOORInteractions;
     }
     
+    /**
+     * Changes the room for the Butcher stage when the door is opened
+     * @param i The current room in the Butcher Stage
+     * @return newDoor that becomes the door for that room
+     */
     private ImageView ChangeRoom(int i) {
         ImageView newDoor = null;
         Image backgroundImage, doorImage;
@@ -851,210 +1136,24 @@ public class Main extends Application {
         return newDoor;
     }
     
+    /**
+     * Resizes the butcher according to i
+     * @param i Indicates by how much the butcher is resized
+     */
     private void ResizeButcher (int i) {
         npcView.setFitWidth(i);
         npcView.setPreserveRatio(true);
         doorExit.setTranslateX(600-i);
     }
     
-    private void IntroDisplay() {
-        Stage intro = new Stage();
-        FlowPane introPane = new FlowPane();
-        
-        if(isIntro) {
-        introPane.setStyle("-fx-background-color: black");
-        introPane.setAlignment(Pos.CENTER);
-
-        introText.setFill(Color.WHITE);
-        introText.setFont(Font.font("Chiller", 40));
-        
-        Timeline timeline = new Timeline();
-        timeline.getKeyFrames().add(
-            new KeyFrame(Duration.millis(100), e -> {
-                if (currentCharIndex <= introMessageLength) {
-                    introText.setText(introMessage.substring(0, currentCharIndex));
-                    currentCharIndex++;
-                } else {
-                    timeline.stop();
-                    isIntro=false;
-                    isStage1=true;
-                    intro.close();
-                    main.setTop(HeaderDisplay());
-                    main.setLeft(LeftStatsDisplay());
-                    main.setRight(RightStatsDisplay());
-                    main.setCenter(GameDisplay(currentButcherRoom));
-                    main.setBottom(InventoryDisplay());
-                }
-            })
-        );
-        timeline.setCycleCount(Animation.INDEFINITE);
-        
-        introPane.getChildren().add(introText);
-        Scene scene = new Scene(introPane, 400, 400);
-        intro.setMaximized(true);
-        intro.setScene(scene);
-        intro.show();
-        intro.setAlwaysOnTop(true);
-
-        timeline.play();
- 
-        Button nextBtn = new Button("NEXT");
-        nextBtn.setFont(Font.loadFont(Main.this.getClass().getResourceAsStream("font/who-asks-satan.ttf"), 25));
-        nextBtn.setTextFill(Color.web("800000"));
-        nextBtn.setBlendMode(BlendMode.SCREEN);
-        nextBtn.getStyleClass().add("lightButton");
-        nextBtn.getStyleClass().add("transparent");
-        introPane.getChildren().add(nextBtn);
-        
-        nextBtn.setOnAction((ActionEvent event1) -> {
-            timeline.stop();
-            isIntro=false;
-            isStage1=true;
-            intro.close();
-            main.setTop(HeaderDisplay());
-            main.setLeft(LeftStatsDisplay());
-            main.setRight(RightStatsDisplay());
-            main.setCenter(GameDisplay(currentButcherRoom));
-            main.setBottom(InventoryDisplay());
-        });
-        }
-    }
-    
-    private Node GameDisplay(int i) {
-        gameDisplay.getChildren().clear();
-        for (int t = 0; t<9; t++) {
-            if (user.getInventory()[t] == doorKey) {
-                user.removeItem(t);
-            }
-        }
-        
-        //STORAGE STAGE
-        if (isStage1 == true) {
-            //BACKGROUND FOR STAGE 1
-            Image backgroundImage = new Image(Main.class.getResourceAsStream("img/stage1/storageBG.png"));
-            BackgroundImage bgImage = new BackgroundImage(
-                backgroundImage,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER,
-                new BackgroundSize(100,100,true,true,true,true)
-            );
-            Background bg = new Background(bgImage);
-            main.setBackground(bg);
-            
-            //FLICKERING LIGHTS CODE
-            Timeline timeline = new Timeline(
-            new KeyFrame(Duration.ZERO, event -> {
-                // set the scene color to black
-                game.setFill(Color.BLACK);
-            }),
-            new KeyFrame(Duration.millis(BLACKOUT_TIME_MS), event -> {
-                // remove the fill from the scene
-                game.setFill(null);
-            })
-            );
-            timeline.setCycleCount(Animation.INDEFINITE);
-            timeline.play();
-            if (user.getGallery()[0] == null) {
-                user.takePhoto("img/testphoto1.png");
-            }
-            
-            Item box1 = new Item("box1", "box", "img/stage1/box1.png");
-            Image box1Img = new Image(Main.class.getResourceAsStream(box1.getAppearance()));
-            ImageView box1View = new ImageView();
-            box1View.setImage(box1Img);
-            ApplyMovement(box1View);
-            
-            Item box2 = new Item("box2", "box", "img/stage1/box2.png");
-            Image box2Img = new Image(Main.class.getResourceAsStream(box2.getAppearance()));
-            ImageView box2View = new ImageView();
-            box1View.setImage(box2Img);
-            ApplyMovement(box2View);
-            
-            Item box3 = new Item("box2", "box", "img/stage1/box3.png");
-            Image box3Img = new Image(Main.class.getResourceAsStream(box3.getAppearance()));
-            ImageView box3View = new ImageView();
-            box3View.setImage(box3Img);
-            ApplyMovement(box3View);
-            
-            Image doorImage = new Image(Main.class.getResourceAsStream("img/stage2/door.png"));
-            doorExit = new ImageView();
-            doorExit.setImage(doorImage);
-            doorExit.setTranslateX(100);
-            doorExit.setTranslateY(100);
-            doorExit.setFitHeight(600);
-            doorExit.setPreserveRatio(true);
-        
-            gameDisplay.getChildren().addAll(box1View, BoxInteractionDisplay(box1View, 100, 125, true), box2View, BoxInteractionDisplay(box2View, 100, 125, false), box3View, BoxInteractionDisplay(box3View, 100, 125, false));
-            gameDisplay.getChildren().add(doorExit);
-            gameDisplay.getChildren().add(DoorInteractionDisplay(doorExit, 750, -700, 1));
-        }
-
-        //BUTCHER STAGE (STAGE 2)
-        else if (isStage2 == true) {
-            if (isStage3 == true) {
-                Ending();
-            }
-            NPC butcher = new NPC("The Butcher", "img/stage2/butcher.png", "Meat...");
-            Image npc = new Image(Main.class.getResourceAsStream(butcher.getAppearance()));
-            npcView = new ImageView();
-            npcView.setImage(npc);
-            npcView.setFitWidth(entityResize);
-            npcView.setPreserveRatio(true);
-            if (!update) {
-                doorExit = ChangeRoom(i);
-            }
-            else {
-                System.out.println("updated");
-                update = false;
-            }
-            
-            int translateY = 0, translateX = 0;
-            switch(currentButcherRoom) {
-                case 1:
-                    Image key1 = new Image(Main.class.getResourceAsStream("img/stage2/findKey.png"));
-                    itemView = new ImageView();
-                    itemView.setImage(key1);
-                    itemView.setFitHeight(50);
-                    itemView.setPreserveRatio(true);
-                    translateY = 100;
-                    translateX = 50;
-                    break;
-                case 2:
-                    Image key2 = new Image(Main.class.getResourceAsStream("img/stage2/findKey.png"));
-                    itemView = new ImageView();
-                    itemView.setImage(key2);
-                    itemView.setFitHeight(50);
-                    itemView.setPreserveRatio(true);
-                    translateY = 500;
-                    translateX = 100;
-                    break;
-                case 3:
-                    Image key3 = new Image(Main.class.getResourceAsStream("img/stage2/findKey.png"));
-                    itemView = new ImageView();
-                    itemView.setImage(key3);
-                    itemView.setFitHeight(50);
-                    itemView.setPreserveRatio(true);
-                    translateY = 500;
-                    translateX = 200;
-                    break;
-            }
-            itemView.setTranslateY(translateY);
-            itemView.setTranslateX(translateX);
-            gameDisplay.getChildren().add(itemView);
-            gameDisplay.getChildren().add(ItemInteractionDisplay(itemView, doorKey, translateX, translateY));
-            gameDisplay.getChildren().add(npcView);
-            gameDisplay.getChildren().add(doorExit);
-            gameDisplay.getChildren().add(DoorInteractionDisplay(doorExit, 0, 0, 2));
-            
-            gameDisplay.setPrefWrapLength(1920);
-            update = false;
-        }
-        
-        return gameDisplay;
-    }
-    
-    private Node GalleryDisplay(){ //SCREEN 2
+    /**
+     * Layouts the gallery display that shows photos taken
+     * Makes use of a for loop system that makes three buttons in a button array and checks the gallery array if the index for that button array and the array contains an image or is null
+     * If not null, adds the image to the gallery display
+     * If null, adds the null image which is a solid gray photo
+     * @return gallery HBox
+     */
+    private Node GalleryDisplay(){ //Screen 2
         HBox gallery = new HBox();
         Button[] btn = new Button[3];
         gallery.setOpacity(0.7);
@@ -1119,7 +1218,16 @@ public class Main extends Application {
         return gallery;
     }
     
+    /**
+     * Initializes the inHandView ImageView that holds the image of the item that the player is using 
+     */
     ImageView inHandView = new ImageView();
+    
+    /**
+     * Sets the image of the item to show on top of the inventory bar, mimicking an item that is supposedly in the hand of the player
+     * @param i Index of the item in the invetory to be shown
+     * @return inHandView ImageView that is displayed on top of the inventory bar
+     */
     private Node InHandShow(int i) {
         Item mainItem = user.getInventory()[i];
         user.equipItem(mainItem);
@@ -1135,6 +1243,10 @@ public class Main extends Application {
         return inHandView;
     } 
     
+    /**
+     * Removes the item shown on top of the inventory
+     * @return null to remove the display of the item
+     */
     private Node RemoveInHand() {
         main.setBottom(InventoryDisplay());
         user.equipItem(null);
@@ -1144,6 +1256,14 @@ public class Main extends Application {
         return null;
     }
     
+    /**
+     * Sets the inventory box at the bottom of the main BorderPane that shows the items that the player currently has 
+     * Makes use of a for loop system that makes nine buttons in a button array and checks the inventory array if the index for that button array and the array contains an item or is null
+     * If not null, adds the image of the item to the inventory bar
+     * If null, adds the null image which is a solid gray photo
+     * Displays the item on top of the inventory bar if chosen by the player
+     * @return Inventory GridPane
+     */
     private Pane InventoryDisplay() {
         Button[] btn = new Button[10];
         
@@ -1231,7 +1351,12 @@ public class Main extends Application {
         return inventoryGrid;
     }
     
-    private Pane SettingsDisplay() { //SCREEN 3
+    /**
+     * Layouts the settings display that includes the name for the movement. Includes the name of the user, current room, the stats, and the setting name accompanied by a slider
+     * Includes a Settings button that shows the settings display on mouse click
+     * @return controls GridPane()
+     */
+    private Pane SettingsDisplay() { //screen 3
         GridPane settings = new GridPane();
         settings.setStyle("-fx-background-color: transparent;");
         
@@ -1306,6 +1431,11 @@ public class Main extends Application {
         return settings;
     }
     
+    /**
+     * Layouts the controls display that includes the name for the movement displayed as text and a text field where the player enters their desired controls
+     * Includes a Settings button that shows the settings display on mouse click
+     * @return controls GridPane()
+     */
     private Pane ControlsDisplay() {
         GridPane controls = new GridPane();
         controls.setStyle("-fx-background-color: transparent;");
@@ -1358,6 +1488,9 @@ public class Main extends Application {
         return controls;
     }
     
+    /**
+     * The GameOver() method displays the Game Over art and removes the game display
+     */
     private void GameOver() {
         ResizeButcher(800);
         try {
@@ -1379,6 +1512,9 @@ public class Main extends Application {
         gameDisplay.setVisible(false);
     }
     
+    /**
+     * The Ending() method removes the game display from the screen and other displays around it. Displays the series of photos for the ending display using a for loop.
+     */
     private void Ending() {
         gameDisplay.setVisible(false);
         main.setLeft(null);
@@ -1392,6 +1528,10 @@ public class Main extends Application {
             endingImages.add(new Image(Main.class.getResourceAsStream("img/stage3/" + "END_" + slideNumber + ".png")));
         }
         
+        /**
+         * Sets the animation for the display of the ending images
+         * After 14 images, the animation ends and the game is officially done
+         */
         Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(3), event -> {
             BackgroundImage endingSlide = new BackgroundImage(
                    endingImages.get(currentSlide),
