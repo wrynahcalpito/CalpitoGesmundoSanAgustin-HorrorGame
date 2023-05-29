@@ -1,4 +1,4 @@
-package main;
+package pkg3qinitialtest;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -612,11 +612,23 @@ public class Main extends Application {
             );
             Background bg = new Background(bgImage);
             main.setBackground(bg);
+            
+            //FLICKERING LIGHTS CODE	
+            Timeline timeline = new Timeline(	
+            new KeyFrame(Duration.ZERO, event -> {	
+                // set the scene color to black	
+                game.setFill(Color.BLACK);	
+            }),	
+            new KeyFrame(Duration.millis(BLACKOUT_TIME_MS), event -> {	
+                // remove the fill from the scene	
+                game.setFill(null);	
+            })	
+            );	
+            timeline.setCycleCount(Animation.INDEFINITE);	
+            timeline.play();
             if (user.getGallery()[0] == null) {
                 user.takePhoto("img/testphoto1.png");
             }
-            
-            currentLevel += 1;
             
             Item box1 = new Item("box1", "box", "img/stage1/box1.png");
             Image box1Img = new Image(Main.class.getResourceAsStream(box1.getAppearance()));
